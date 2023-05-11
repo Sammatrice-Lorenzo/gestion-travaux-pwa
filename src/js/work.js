@@ -1,33 +1,5 @@
 import jwt_decode from 'jwt-decode'
 
-// export async function getWorkByUser() {
-//     const token = localStorage.getItem('token')
-//     const tokenDecoded = jwt_decode(token)
-//     const url = new URL('/api/worksByUser/' + tokenDecoded.id, API_URL)
-
-//     let workByUser = []
-//     await fetch(url, {
-//         method: 'GET',
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'Authorization': `Bearer ${token}`
-//         },
-//     }).then(response =>
-//         response.json().then(function (data) {
-//             for (const iterator of data['hydra:member']) {
-//                 workByUser.push(iterator)
-//             }
-//             // return data['hydra:member']
-//             return workByUser
-//         })
-//     )
-//     .catch(error => {
-//         console.log(error)
-//     })
-
-//     return workByUser
-// }
-
     async function getCacheWorkByUser(url) {
         const cache = await caches.open('v1');
         const cachedResponse = await cache.match(url);
@@ -88,7 +60,10 @@ import jwt_decode from 'jwt-decode'
             .clone() // Cloner la réponse pour stockRespondeInCache
             .json()
             .then(function (data) {
-                stockRespondeInCache(url, response.clone()); // Utiliser la réponse clonée
+                if (process.env.NODE_ENV === 'production') {
+                    stockRespondeInCache(url, response.clone()); // Utiliser la réponse clonée
+                }
+
                 for (const iterator of data["hydra:member"]) {
                     workByUser.push(iterator);
                 }

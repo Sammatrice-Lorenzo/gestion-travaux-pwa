@@ -9,7 +9,7 @@
             <div class="block-title">Informations sur les prestations</div>
             ${worksByUser.map((item) => $h`
             <div class="card color-card">
-                <div class="card-header">Nom de la prestation</div>
+                <div class="card-header">${item.name}</div>
                 <div class="card-content card-content-padding display-flex align-content-center">
                     <div class="col">
                         <div class="row">Prestation réalisé à ${item.city}</div>
@@ -18,6 +18,9 @@
                         <div class="row">Etat: ${item.progression}</div>
                         <div class="row">
                             ${item.equipements}
+                        </div>
+                        <div class="row">
+                            Pour ${item.client.lastname} ${item.client.firstname}
                         </div>
                     </div>
                 </div>
@@ -28,10 +31,6 @@
                 </div>
             </div>
             `)}
-
-            <!-- "@id": "/api/worksByUser/26"
-            equipement: Array [ "Router" ]
-            typeOfWorks: Array(5) [ "/api/type_of_works/126", "/api/type_of_works/127", "/api/type_of_works/128", … ] -->
         </div>
     </div>
 </template>
