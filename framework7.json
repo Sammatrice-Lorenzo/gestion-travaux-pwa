@@ -1,0 +1,19 @@
+{
+  "cwd": "C:\\Users\\loren\\OneDrive\\Documents\\WebSeverPerso\\apps\\gestion-travaux-pwa",
+  "type": [
+    "pwa",
+    "web"
+  ],
+  "name": "gestion-travaux-pwa",
+  "framework": "core",
+  "template": "single-view",
+  "bundler": "vite",
+  "cssPreProcessor": "scss",
+  "theming": {
+    "customColor": true,
+    "color": "#0077B6",
+    "darkMode": true,
+    "iconFonts": true
+  },
+  "customBuild": false
+}
