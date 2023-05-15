@@ -11,7 +11,7 @@ export function login(username, password, $f7) {
                     $f7.views.main.router.navigate('/prestation/');
                 });
             }
-    //         // Si la réponse n'est pas dans le cache, on fait une requête réseau
+            // Si la réponse n'est pas dans le cache, on fait une requête réseau
             return fetch(url, {
                 method: 'POST',
                 headers: {
@@ -24,7 +24,7 @@ export function login(username, password, $f7) {
             }).then(response =>
                 response.clone().json().then(function (token) {
                     if ('code' in token && token.code === 401) {
-                        $f7.dialog.alert('Vos indentifants sont incorect!')
+                        $f7.dialog.alert('Vos identifiants sont incorrects!')
                     } else {
                         // Cloner la réponse pour pouvoir la stocker en cache
                         let responseToCache = response.clone();
@@ -37,7 +37,7 @@ export function login(username, password, $f7) {
 
                     }
                 }
-                    // Pour utliser le token dans l'appli
+                    // Pour utiliser le token dans l'appli
                     // const token = localStorage.getItem('token')
                 )
             )

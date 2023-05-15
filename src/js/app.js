@@ -33,7 +33,7 @@ const app = new Framework7({
 });
 
 
-if ('serviceWorker' in navigator) {
+if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
     window.addEventListener('load', function () {
         navigator.serviceWorker.register('../www/service-worker.js').then(function (registration) {
             // Service worker enregistré avec succès
@@ -57,7 +57,21 @@ if ('serviceWorker' in navigator) {
             console.log('ServiceWorker registration failed: ', err);
         });
     });
+
+    clearCache()
 }
 
+/**
+ * Le cache va se supprimer toute les heures
+ */
+function clearCache() {
+    setInterval(function () {
+        caches.delete('v1').then(function (result) {
+        }).catch(function (error) {
+            console.error('Erreur lors de la suppression du cache "v1":', error);
+        });
+    }, 3600000); // 36000
+    // }, 	60000); // 60 sec
+}
 
 export default app;
