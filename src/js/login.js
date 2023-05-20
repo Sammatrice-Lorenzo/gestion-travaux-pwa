@@ -26,12 +26,9 @@ export function login(username, password, $f7) {
                     if ('code' in token && token.code === 401) {
                         $f7.dialog.alert('Vos identifiants sont incorrects!')
                     } else {
-                        // Cloner la réponse pour pouvoir la stocker en cache
-                        let responseToCache = response.clone();
-                        // Stockage de la réponse en cache
-                        caches.open('v1').then(function (cache) {
-                            cache.put(url, responseToCache);
-                        });
+                        if (process.env.NODE_ENV === 'production') {
+                            cloneLoginCache(response, url)
+                        }
                         localStorage.setItem('token', token.token)
                         $f7.views.main.router.navigate('/prestation/')
 
@@ -47,6 +44,13 @@ export function login(username, password, $f7) {
         });
 }
 
+function cloneLoginCache(response, url) {
+    let responseToCache = response.clone();
+    // Stockage de la réponse en cache
+    caches.open('v1').then(function (cache) {
+        cache.put(url, responseToCache);
+    });
+}
 
 function getCacheLogin(url) {
     return caches.open('v1').then(function (cache) {

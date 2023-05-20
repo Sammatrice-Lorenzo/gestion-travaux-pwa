@@ -33,18 +33,27 @@
             `)}
         </div>
     </div>
+    
+  
+      
 </template>
 <script>
     import Framework7 from 'framework7/bundle';
     import Dom7 from 'Dom7';
-
+    
     import { getWorkByUser } from '../../js/work.js'
+    import { sendNotificationPushForProgression } from '../../js/notification'
 
     export default async (props, { $, $on, $f7 }) => {
         var $$ = Dom7;
 
         const works = await getWorkByUser()
         let worksByUser = works
+
+        setTimeout(() => {
+            sendNotificationPushForProgression()
+        // }, 300000)
+        }, 60000)
 
         return $render;
     }
