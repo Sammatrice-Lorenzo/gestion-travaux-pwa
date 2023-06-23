@@ -5,8 +5,33 @@
                 <div class="title">Mes prestations</div>
             </div>
         </div>
+        <div class="toolbar tabbar tabbar-icons toolbar-bottom">
+            <div class="toolbar-inner">
+                <a href="#tab-1" class="tab-link">
+                    <i class="f7-icons">person</i>
+                    <span class="tabbar-label">Mon profil</span>
+                </a>
+                <a href="/prestation/" class="tab-link tab-link-active">
+                    <i class="material-icons">home</i>
+                    <span class="tabbar-label">Prestations</span>
+                </a>
+                <a href="/" @click="${logout}" class="tab-link">
+                    <i class="f7-icons blue">arrow_right_circle</i>
+                    <span class="tabbar-label">Déconnexion</span>
+                </a>
+            </div>
+        </div>
         <div class="page-content">
-            <div class="block-title">Informations sur les prestations</div>
+            <div class="block-title">
+                <div class="col-6 display-flex justify-content-center">
+                    <span>Informations sur les prestations</span>
+                    <span>
+                        <a href="/form-work/">
+                            <i class="f7-icons">plus_app_fill</i>
+                        </a>
+                    </span>
+                </div>
+            </div>
             ${worksByUser.map((item) => $h`
             <div class="card color-card">
                 <div class="card-header">${item.name}</div>
@@ -15,9 +40,9 @@
                         <div class="row">Prestation réalisé à ${item.city}</div>
                         <div class="row">Date de début : ${item.start}</div>
                         <div class="row">Date de fin: ${item.end}</div>
-                        <div class="row">Etat: ${item.progression}</div>
+                        <div class="row">État : ${item.progression}</div>
                         <div class="row">
-                            ${item.equipements}
+                            Les équipements utilisées : ${item.equipements}
                         </div>
                         <div class="row">
                             Pour ${item.client.lastname} ${item.client.firstname}
@@ -25,7 +50,7 @@
                     </div>
                 </div>
                 <div class="card-footer d-flex justify-content-end">
-                    <a href="/prestation/"${item.id}>
+                    <a href="/prestation/"${item['@id'].split('/').pop()}>
                         <i class="f7-icons">eye_fill</i>
                     </a>
                 </div>
@@ -33,14 +58,11 @@
             `)}
         </div>
     </div>
-    
-  
-      
 </template>
 <script>
     import Framework7 from 'framework7/bundle';
     import Dom7 from 'Dom7';
-    
+
     import { getWorkByUser } from '../../js/work.js'
     import { sendNotificationPushForProgression } from '../../js/notification'
 
@@ -48,7 +70,11 @@
         var $$ = Dom7;
 
         const works = await getWorkByUser()
-        let worksByUser = works
+        let worksByUser = works.reverse()
+
+        const logout = () => {
+            localStorage.removeItem('token')
+        }
 
         setTimeout(() => {
             sendNotificationPushForProgression()

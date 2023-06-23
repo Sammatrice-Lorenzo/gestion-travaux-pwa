@@ -2,6 +2,9 @@ import HomePage from '../pages/home.f7';
 import AboutPage from '../pages/about.f7';
 import FormPage from '../pages/form.f7';
 import WorkIndex from '../pages/work/indexWork.f7';
+import FormWork from '../pages/work/form-work.f7';
+import FormUpdateWork from '../pages/work/form-update-work.f7';
+import ShowWork from '../pages/work/show-work.f7';
 
 
 import DynamicRoutePage from '../pages/dynamic-route.f7';
@@ -16,6 +19,18 @@ let routes = [
     {
         path: '/prestation/',
         component: WorkIndex,
+    },
+    {
+        path: '/form-work/',
+        component: FormWork,
+    },
+    {
+        path: '/form-work/update/:prestationId',
+        component: FormUpdateWork,
+    },
+    {
+        path: '/prestation/:prestationId',
+        component: ShowWork,
     },
     {
         path: '/about/',

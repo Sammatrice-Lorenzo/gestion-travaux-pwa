@@ -1,5 +1,9 @@
+const ERROR_SERVER = 'La requête n\'as pa pu aboutir'
+
 export function login(username, password, $f7) {
     const url = new URL('/api/login', API_URL);
+
+    if (!checkInputFormLogin(username, password, $f7)) return
 
     // Récupération de la réponse depuis le cache
     getCacheLogin(url)
@@ -33,13 +37,11 @@ export function login(username, password, $f7) {
                         $f7.views.main.router.navigate('/prestation/')
 
                     }
-                }
-                    // Pour utiliser le token dans l'appli
-                    // const token = localStorage.getItem('token')
-                )
+                })
             )
         })
         .catch(function (error) {
+            $f7.dialog.alert(ERROR_SERVER)
             console.error('Error in fetch handler:', error);
         });
 }
@@ -65,4 +67,19 @@ function getCacheLogin(url) {
         // Gestion des erreurs
         console.error('Error in fetch handler:', error);
     });
+}
+
+function checkInputFormLogin(username, password, $f7) {
+    let returnedValue = false
+
+    if (!username) {
+        $f7.dialog.alert('Veuillez renseigner votre nom d\'utilisateur!')
+        return returnedValue
+    } else if (!password) {
+        $f7.dialog.alert('Veuillez renseigner votre mot de passe!')
+        return returnedValue
+    } else {
+        returnedValue = true
+        return returnedValue
+    }
 }

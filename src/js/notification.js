@@ -23,7 +23,7 @@ export function sendNotificationPushForProgression() {
 
     const notificationTitle = 'Progression des prestations'
     const notificationOptions = {
-        body: 'Veuillez mettre à jours l\'état des prestations.',
+        body: 'Veuillez mettre à jour l\'état des prestations.',
         silent: false
     }
 

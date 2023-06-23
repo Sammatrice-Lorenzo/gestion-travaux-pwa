@@ -1,5 +1,5 @@
 import Framework7 from 'framework7/bundle'
-import { getToken } from './token'
+import { getToken, isExpired } from './token'
 
 import { askUserPermissionForSendANotificationPush, messaging } from './notification.js'
 
@@ -76,8 +76,9 @@ function clearCache() {
 
 function checkAuthentication() {
     const isAuthenticated = getToken()
+    const tokenIsExpired = isExpired()
 
-    return isAuthenticated ? true : false
+    return Boolean(isAuthenticated && !tokenIsExpired)
 }
 
 // Écouter l'événement 'pageInit' de Framework7

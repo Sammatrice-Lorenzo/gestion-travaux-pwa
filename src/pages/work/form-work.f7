@@ -1,0 +1,134 @@
+<template>
+    <div class="page" data-name="form">
+        <div class="navbar">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner sliding">
+                <div class="left">
+                    <a href="#" class="link back">
+                        <i class="icon icon-back"></i>
+                        <span class="if-not-md">Retour</span>
+                    </a>
+                </div>
+                <div class="title">Nouvelle prestation</div>
+            </div>
+        </div>
+        <div class="page-content">
+            <form id="form-work">
+                <div class="block-title">Création d'une prestation</div>
+                <div class="list list-strong-ios list-dividers-ios list-outline-ios">
+                    <ul>
+                        <li>
+                            <div class="item-content item-input">
+                                <div class="item-inner">
+                                    <div class="item-title item-label">Nom</div>
+                                    <div class="item-input-wrap">
+                                        <input name='name' type="text" placeholder="Nom prestation" />
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content item-input">
+                                <div class="item-inner">
+                                    <div class="item-title item-label">Ville</div>
+                                    <div class="item-input-wrap">
+                                        <input name='city' type="text" placeholder="Paris" />
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content item-input">
+                                <div class="item-inner">
+                                    <div class="item-title item-label">Client</div>
+                                    <div class="item-input-wrap">
+                                        <select name="client">
+                                            ${clients.map((client) => $h`
+                                                <option value='${client["@id"]}'>${client.firstname} ${client.lastname}</option>
+                                            `)}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content item-input">
+                                <div class="item-inner">
+                                    <div class="item-title item-label">Progression</div>
+                                    <div class="item-input-wrap">
+                                        <select name="progression">
+                                            <option>Pas commencé</option>
+                                            <option>En cours</option>
+                                            <option>Terminé</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content item-input">
+                                <div class="item-inner">
+                                    <div class="item-title item-label">Date de début</div>
+                                    <div class="item-input-wrap">
+                                        <input name='start' type="datetime-local" placeholder="Date de début" value="2023-05-08 09:00" />
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content item-input">
+                                <div class="item-inner">
+                                    <div class="item-title item-label">Date de fin</div>
+                                    <div class="item-input-wrap">
+                                        <input name='end' type="datetime-local" placeholder="Date de fin" value="2023-05-08 18:00" />
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li id="equipements-list">
+                            <div class="item-content item-input equipement">
+                                <div class="item-inner">
+                                    <div class="item-title item-label">Équipement</div>
+                                    <div class="item-input-wrap display-flex justify-content-end">
+                                        <input name='equipements' type="text" placeholder="Cables réseaux" />
+                                        <a href="#" @click="${addEquipement}" class="tooltip-init add-equipement"
+                                            data-tooltip="Ajouter d'autre équipements"
+                                        >
+                                            <i class="f7-icons">plus_app_fill</i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+    
+            </form>
+            <button class="button button-small button-round button-fill" @click="${send}">Sauvegarder</button>
+        </div>
+    </div>
+</template>
+<script>
+    import Framework7 from 'framework7/bundle'
+    import Dom7 from 'Dom7'
+
+    import { createWork } from '../../js/work.js'
+    import { getClientsByUser } from '../../js/client.js'
+    import { addInputEquipement, getEquipementsInForm } from '../../js/work/component/btnComponent.js'
+
+    export default async (props, {$, $on, $f7, $onBeforeUnmount } ) => {
+        var $$ = Dom7
+        
+        const clients = await getClientsByUser()
+        const send = () => {
+            const equipements = getEquipementsInForm()
+            var formData = $f7.form.convertToData('#form-work')
+            createWork(formData, equipements, $f7)
+        }
+
+        const addEquipement = () => addInputEquipement()
+
+        return $render
+    }
+
+</script>
