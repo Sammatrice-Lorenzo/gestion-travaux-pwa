@@ -64,6 +64,7 @@
     import Dom7 from 'Dom7';
 
     import { getWorkByUser } from '../../js/work.js'
+    import { logout } from '../../js/token.js'
     import { sendNotificationPushForProgression } from '../../js/notification'
 
     export default async (props, { $, $on, $f7 }) => {
@@ -72,9 +73,9 @@
         const works = await getWorkByUser()
         let worksByUser = works.reverse()
 
-        const logout = () => {
-            localStorage.removeItem('token')
-        }
+        // const logout = () => {
+        //     localStorage.removeItem('token')
+        // }
 
         setTimeout(() => {
             sendNotificationPushForProgression()

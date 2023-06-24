@@ -1,44 +1,27 @@
-import { getToken, getDecodedToken } from './token'
-import { clearCache } from './cache'
+import { getToken } from './token'
+import { getUrlByUser, getUrlUser, getUrl, getUrlById} from './urlGenerator'
+import { clearCache, checkDataToGetOfAResponseCached, responseIsCached, stockResponseInCache } from './cache'
 
 const SUCCESS_INSERTION_FORM = 'L\'insertion a été bien prise en compte!'
 const SUCCESS_DELETE_FORM = 'La suppression a été bien prise en compte!'
 const ERROR_SERVER = 'La requête n\'as pa pu aboutir'
-
-async function getCacheWorkByUser(url) {
-    const cache = await caches.open('v1')
-    const cachedResponse = await cache.match(url)
-
-    return Boolean(cachedResponse)
-}
-
-function stockResponseInCache(url, responseToCache) {
-    // Stockage de la réponse en cache
-    caches.open('v1').then(function (cache) {
-        cache.put(url, responseToCache)
-    })
-}
-
-function getUrlWorkByUser() {
-    const tokenDecoded = getDecodedToken()
-
-    return new URL('/api/worksByUser/' + tokenDecoded.id, API_URL)
-}
+const URL_WORK = '/api/works/'
+const URL_WORK_BY_USER = '/api/worksByUser/'
 
 export async function getWorkByUser() {
     let worksByUser = []
-    const url = getUrlWorkByUser()
+    const url = getUrlByUser(URL_WORK_BY_USER)
 
-    const cache = await getCacheWorkByUser(url)
+    const cache = await responseIsCached(url)
     if (cache) {
-        return checkDataToGetOfWorkByUser(worksByUser)
+        return checkDataToGetOfAResponseCached(url)
     }
 
     return callApi(worksByUser)
 }
 
 async function callApi(workByUser) {
-    const url = getUrlWorkByUser()
+    const url = getUrlByUser(URL_WORK_BY_USER)
     const token = getToken()
 
     await fetch(url, {
@@ -70,35 +53,10 @@ async function callApi(workByUser) {
     return workByUser
 }
 
-async function checkDataToGetOfWorkByUser(worksByUser) {
-    const url = getUrlWorkByUser()
-
-    const cache = await caches.open('v1')
-    const cachedResponse = await cache.match(url)
-    if (cachedResponse) {
-        // Utilisation de la réponse en cache
-        const cachedData = await cachedResponse.json()
-        for (const iterator of cachedData['hydra:member']) {
-            worksByUser.push(iterator)
-        }
-    }
-
-    return worksByUser
-}
-
-function getUrlCreateWork()
-{
-    return new URL('/api/works', API_URL)
-}
-
-function getUrlWorkById(id)
-{
-    return new URL('/api/works/'+ id, API_URL)
-}
 
 export async function findWorkById(id, $f7)
 {
-    const url = getUrlWorkById(id)
+    const url = getUrlById(URL_WORK, id)
     let work = {}
 
     await fetch(url, {
@@ -135,10 +93,8 @@ export async function findWorkById(id, $f7)
 
 export function createWork(form, equipements, $f7)
 {
-    const url = getUrlCreateWork()
-    const tokenDecoded = getDecodedToken()
-
-    const urlAPiUser = '/api/user/' + tokenDecoded.id
+    const url = getUrl(URL_WORK)
+    const urlAPiUser = getUrlUser()
 
     if (!customValidation(form, equipements, $f7)) {
         return
@@ -177,7 +133,7 @@ export function createWork(form, equipements, $f7)
 
 export function deleteWork(idWork, $f7)
 {
-    const url = getUrlWorkById(idWork)
+    const url = getUrlById(URL_WORK, idWork)
 
     fetch(url, {
         method: 'DELETE',
@@ -226,10 +182,8 @@ function apiPost(url, method, body, $f7)
 
 export function updateWork(form, equipements, idWork, $f7)
 {
-    const url = getUrlWorkById(idWork)
-    const tokenDecoded = getDecodedToken()
-
-    const urlAPiUser = '/api/user/' + tokenDecoded.id
+    const url = getUrlById(URL_WORK, idWork)
+    const urlAPiUser = getUrlUser()
 
     const body = JSON.stringify({
         name: form.name,

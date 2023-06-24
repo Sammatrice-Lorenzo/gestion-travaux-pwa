@@ -55,6 +55,7 @@
     import Dom7 from 'Dom7';
 
     import { findWorkById, deleteWork } from '../../js/work.js'
+    import { logout } from '../../js/token.js'
 
     export default async (props, { $, $on, $f7 }) => {
         var $$ = Dom7
@@ -66,10 +67,6 @@
             $f7.dialog.confirm(CONFIRMATION_TO_DELETE, function () {
                 deleteWork($$('.delete')[0].id, $f7)
             })
-        }
-
-        const logout = () => {
-            localStorage.removeItem('token')
         }
 
         return $render

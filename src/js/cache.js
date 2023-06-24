@@ -1,8 +1,9 @@
 
 const ERROR_DELETE_CACHE = 'Erreur lors de la suppression du cache "v1":'
+const CACHE_V1 = 'v1'
 
 export async function responseIsCached(url) {
-    const cache = await caches.open('v1')
+    const cache = await caches.open(CACHE_V1)
     const cachedResponse = await cache.match(url)
 
     return Boolean(cachedResponse)
@@ -10,7 +11,7 @@ export async function responseIsCached(url) {
 
 export function stockResponseInCache(url, responseToCache) {
     // Stockage de la réponse en cache
-    caches.open('v1').then(function (cache) {
+    caches.open(CACHE_V1).then(function (cache) {
         cache.put(url, responseToCache)
     })
 }
@@ -18,7 +19,7 @@ export function stockResponseInCache(url, responseToCache) {
 export async function checkDataToGetOfAResponseCached(url) {
 
     let responseInCache = []
-    const cache = await caches.open('v1')
+    const cache = await caches.open(CACHE_V1)
     const cachedResponse = await cache.match(url)
 
     if (cachedResponse) {
@@ -33,7 +34,7 @@ export async function checkDataToGetOfAResponseCached(url) {
 }
 
 export function clearCache() {
-    caches.delete('v1').then(function (result) {
+    caches.delete(CACHE_V1).then(function (result) {
     }).catch(function (error) {
         console.error(ERROR_DELETE_CACHE, error)
     })

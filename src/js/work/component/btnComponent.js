@@ -62,7 +62,7 @@ export function deleteEquipement(event)
 /**
  * @return {Array} equipements
  */
-export function getEquipementsInForm() {
+export function getEquipementsInForm(Dom7) {
     let $$ = Dom7
 
     let equipements = []

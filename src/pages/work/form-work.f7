@@ -121,7 +121,7 @@
         
         const clients = await getClientsByUser()
         const send = () => {
-            const equipements = getEquipementsInForm()
+            const equipements = getEquipementsInForm(Dom7)
             var formData = $f7.form.convertToData('#form-work')
             createWork(formData, equipements, $f7)
         }

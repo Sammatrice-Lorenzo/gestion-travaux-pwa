@@ -110,6 +110,7 @@
 </template>
 <script>
     import Framework7 from 'framework7/bundle'
+    import Dom7 from 'Dom7'
 
     import { getClientsByUser } from '../../js/client.js'
     import { updateWork } from '../../js/work.js'
@@ -131,7 +132,7 @@
         }
 
         const send = () => {
-            const equipements = getEquipementsInForm()
+            const equipements = getEquipementsInForm(Dom7)
             var formData = $f7.form.convertToData('#form-work')
             updateWork(formData, equipements, props.prestationId, $f7)
         }
