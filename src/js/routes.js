@@ -5,6 +5,7 @@ import WorkIndex from '../pages/work/index-work.f7';
 import FormWork from '../pages/work/form-work.f7';
 import FormUpdateWork from '../pages/work/form-update-work.f7';
 import ShowWork from '../pages/work/show-work.f7';
+import ShowUser from '../pages/user/show-user.f7';
 
 
 import DynamicRoutePage from '../pages/dynamic-route.f7';
@@ -19,6 +20,10 @@ let routes = [
     {
         path: '/prestation/',
         component: WorkIndex,
+    },
+    {
+        path: '/mon-compte/',
+        component: ShowUser,
     },
     {
         path: '/form-work/',

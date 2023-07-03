@@ -2,7 +2,7 @@
     <div class="page">
         <div class="navbar">
             <div class="navbar-inner">
-                <div class="title">Mes prestations</div>
+                <div class="title">Mes Clients</div>
             </div>
         </div>
         <div class="toolbar tabbar tabbar-icons toolbar-bottom">
@@ -28,7 +28,7 @@
         <div class="page-content">
             <div class="block-title">
                 <div class="col-6 display-flex justify-content-center">
-                    <span>Informations sur les prestations</span>
+                    <span>Informations sur les clients</span>
                     <span>
                         <a href="/form-work/">
                             <i class="f7-icons">plus_app_fill</i>
@@ -69,18 +69,12 @@
 
     import { getWorkByUser } from '../../js/work.js'
     import { logout } from '../../js/token.js'
-    import { sendNotificationPushForProgression } from '../../js/notification'
 
     export default async (props, { $, $on, $f7 }) => {
         var $$ = Dom7;
 
         const works = await getWorkByUser()
         let worksByUser = works.reverse()
-
-        setTimeout(() => {
-            sendNotificationPushForProgression($f7)
-        // }, 10000)
-        }, 60000)
 
         return $render;
     }

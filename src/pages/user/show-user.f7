@@ -1,0 +1,52 @@
+<template>
+    <div class="page">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="title">Informations utilisateur</div>
+            </div>
+        </div>
+        <div class="toolbar tabbar tabbar-icons toolbar-bottom">
+            <div class="toolbar-inner">
+                <a href="/mon-compte/" class="tab-link tab-link-active">
+                    <i class="f7-icons">person</i>
+                    <span class="tabbar-label">Mon profil</span>
+                </a>
+                <a href="/prestation/" class="tab-link">
+                    <i class="material-icons">home</i>
+                    <span class="tabbar-label">Prestations</span>
+                </a>
+                <a href="/prestation/" class="tab-link">
+                    <i class="f7-icons">person_2</i>
+                    <span class="tabbar-label">Clients</span>
+                </a>
+                <a href="/" @click="${logout}" class="tab-link">
+                    <i class="f7-icons blue">arrow_right_circle</i>
+                    <span class="tabbar-label">Déconnexion</span>
+                </a>
+            </div>
+        </div>
+        <div class="page-content">
+            <div class="block-title">Mes informations</div>
+            <div class="list list-strong list-outline inset list-dividers-ios simple-list">
+                <ul>
+                    <li>Nom : ${user.lastname}</li>
+                    <li>Prénom : ${user.firstname}</li>
+                    <li>Email : ${user.email}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+    import Framework7 from 'framework7/bundle';
+    import Dom7 from 'Dom7';
+
+    import { showUser } from '../../js/user.js'
+    import { logout } from '../../js/token.js'
+
+    export default async (props, { $, $on, $f7 }) => {
+        const user = await showUser()
+
+        return $render
+    }
+</script>

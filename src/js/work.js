@@ -93,7 +93,7 @@ export async function findWorkById(id, $f7)
 
 export function createWork(form, equipements, $f7)
 {
-    const url = getUrl(URL_WORK)
+    const url = getUrl('/api/works')
     const urlAPiUser = getUrlUser()
 
     if (!customValidation(form, equipements, $f7)) {
