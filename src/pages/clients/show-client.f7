@@ -2,7 +2,7 @@
     <div class="page">
         <div class="navbar">
             <div class="navbar-inner">
-                <div class="title">Prestation</div>
+                <div class="title">Client</div>
             </div>
         </div>
         <div class="toolbar tabbar tabbar-icons toolbar-bottom">
@@ -26,28 +26,27 @@
             </div>
         </div>
         <div class="page-content">
-            <div class="block-title">Informations sur les prestations</div>
+            <div class="block-title">Informations sur le client</div>
             <div class="list list-strong list-outline inset list-dividers-ios simple-list">
                 <ul>
-                    <li>${work.name}</li>
-                    <li>Date de début : ${work.start}</li>
-                    <li>Date de fin: ${work.end}</li>
-                    <li>État : ${work.progression}</li>
-                    <li> Les équipements utilisées : ${work.equipements}</li>
-                    <li> Pour ${work.client.lastname} ${work.client.firstname}</li>
+                    <li>${client.lastname} ${client.firstname}</li>
+                    <li>Rue : ${client.streetAddress}</li>
+                    <li>Ville: ${client.city}</li>
+                    <li>Code Postal : ${client.postalCode}</li>
+                    <li>Numéro de téléphone: ${client.phoneNumber}</li>
                 </ul>
             </div>
 
             <div class="display-flex justify-content-center">
                 <span>
-                    <a href="/form-work/update/"${props.prestationId} class="button button-small button-outline">
+                    <a href="/form-client/update/"${props.clientId} class="button button-small button-outline">
                         <i class="f7-icons">square_pencil</i>
                     </a>
                 </span>
-                <span>
-                    <a id=${props.prestationId} href="#" class="button button-small button-outline delete" @click="${openConfirm}">
+                    <a id=${props.clientId} href="#" class="button button-small button-outline delete" @click="${openConfirm}">
                         <i class="f7-icons">trash_circle_fill</i>
                     </a>
+                <span>
                 </span>
             </div>
 
@@ -58,18 +57,18 @@
     import Framework7 from 'framework7/bundle';
     import Dom7 from 'Dom7';
 
-    import { findWorkById, deleteWork } from '../../js/work.js'
+    import { findClientById, deleteClient } from '../../js/client.js'
     import { logout } from '../../js/token.js'
 
     export default async (props, { $, $on, $f7 }) => {
         var $$ = Dom7
 
-        const work = await findWorkById(props.prestationId, $f7)
+        const client = await findClientById(props.clientId, $f7)
 
         const CONFIRMATION_TO_DELETE = 'Vous êtes sûr de vouloir supprimer ?'
         const openConfirm = () => {
             $f7.dialog.confirm(CONFIRMATION_TO_DELETE, function () {
-                deleteWork($$('.delete')[0].id, $f7)
+                deleteClient($$('.delete')[0].id, $f7)
             })
         }
 

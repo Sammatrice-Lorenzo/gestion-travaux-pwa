@@ -1,0 +1,118 @@
+<template>
+    <div class="page" data-name="form">
+        <div class="navbar">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner sliding">
+                <div class="left">
+                    <a href="#" class="link back">
+                        <i class="icon icon-back"></i>
+                        <span class="if-not-md">Retour</span>
+                    </a>
+                </div>
+                <div class="title">Modification client</div>
+            </div>
+        </div>
+        <div class="page-content">
+            <form id="form-client">
+                <div class="block-title">Modification du client </div>
+                <div class="list list-strong-ios list-dividers-ios list-outline-ios">
+                    <ul>
+                        <li>
+                            <div class="item-content item-input">
+                                <div class="item-inner">
+                                    <div class="item-title item-label">Nom : </div>
+                                    <div class="item-input-wrap">
+                                        <input name='lastname' type="text" placeholder="Nom de famille" />
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content item-input">
+                                <div class="item-inner">
+                                    <div class="item-title item-label">Prénom : </div>
+                                    <div class="item-input-wrap">
+                                        <input name='firstname' type="text" placeholder="Prénom" />
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content item-input">
+                                <div class="item-inner">
+                                    <div class="item-title item-label">Rue : </div>
+                                    <div class="item-input-wrap">
+                                        <input name='streetAddress' type="text" placeholder="Rue" />
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content item-input">
+                                <div class="item-inner">
+                                    <div class="item-title item-label">Ville : </div>
+                                    <div class="item-input-wrap">
+                                        <input name='city' type="text" placeholder="Paris" />
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content item-input">
+                                <div class="item-inner">
+                                    <div class="item-title item-label"> Code Postal : </div>
+                                    <div class="item-input-wrap">
+                                        <input name='postalCode' pattern="[0-9]{5}" type="text" maxlength="5" placeholder="75000" />
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content item-input">
+                                <div class="item-inner">
+                                    <div class="item-title item-label"> Numéro de téléphone : </div>
+                                    <div class="item-input-wrap">
+                                        <input name='phoneNumber' pattern="0[1-9][0-9]{8}" type="tel" placeholder="06 78 54 23 45" />
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+            <button class="button button-small button-round button-fill" @click="${send}">Sauvegarder</button>
+        </div>
+    </div>
+</template>
+<script>
+    import Framework7 from 'framework7/bundle'
+    import Dom7 from 'Dom7'
+
+    import { findClientById, updateClient } from '../../js/client.js'
+
+    export default async (props, {$, $on, $f7, $onBeforeUnmount } ) => {
+
+        const client = await findClientById(props.clientId, $f7)
+
+        const formClient = {
+            firstname: client.firstname,
+            lastname: client.lastname,
+            city: client.city,
+            phoneNumber: client.phoneNumber,
+            postalCode: client.postalCode,
+            streetAddress: client.streetAddress,
+        }
+
+        const send = () => {
+            var formData = $f7.form.convertToData('#form-client')
+            updateClient(formData, props.clientId, $f7)
+        }
+
+        $on('pageBeforeIn', function (page) {
+            $f7.form.fillFromData('#form-client',formClient)
+        })
+
+        return $render
+    }
+
+</script>

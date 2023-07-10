@@ -15,7 +15,7 @@
                     <i class="material-icons">home</i>
                     <span class="tabbar-label">Prestations</span>
                 </a>
-                <a href="/prestation/" class="tab-link">
+                <a href="/clients/" class="tab-link">
                     <i class="f7-icons">person_2</i>
                     <span class="tabbar-label">Clients</span>
                 </a>

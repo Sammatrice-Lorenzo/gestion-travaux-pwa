@@ -30,31 +30,25 @@
                 <div class="col-6 display-flex justify-content-center">
                     <span>Informations sur les clients</span>
                     <span>
-                        <a href="/form-work/">
+                        <a href="/form-client/">
                             <i class="f7-icons">plus_app_fill</i>
                         </a>
                     </span>
                 </div>
             </div>
-            ${worksByUser.map((item) => $h`
+            ${clientsByUser.map((item) => $h`
             <div class="card color-card">
-                <div class="card-header">${item.name}</div>
+                <div class="card-header">${item.firstname} ${item.lastname}</div>
                 <div class="card-content card-content-padding display-flex align-content-center">
                     <div class="col">
-                        <div class="row">Prestation réalisé à ${item.city}</div>
-                        <div class="row">Date de début : ${item.start}</div>
-                        <div class="row">Date de fin: ${item.end}</div>
-                        <div class="row">État : ${item.progression}</div>
-                        <div class="row">
-                            Les équipements utilisées : ${item.equipements}
-                        </div>
-                        <div class="row">
-                            Pour ${item.client.lastname} ${item.client.firstname}
-                        </div>
+                        <div class="row"> Rue : ${item.streetAddress}</div>
+                        <div class="row"> Ville : ${item.city}</div>
+                        <div class="row"> Code Postal : ${item.postalCode}</div>
+                        <div class="row"> Numéro de téléphone : ${item.phoneNumber}</div>
                     </div>
                 </div>
                 <div class="card-footer d-flex justify-content-end">
-                    <a href="/prestation/"${item['@id'].split('/').pop()}>
+                    <a href="/client/"${item['@id'].split('/').pop()}>
                         <i class="f7-icons">eye_fill</i>
                     </a>
                 </div>
@@ -67,14 +61,14 @@
     import Framework7 from 'framework7/bundle';
     import Dom7 from 'Dom7';
 
-    import { getWorkByUser } from '../../js/work.js'
+    import { getClientsByUser } from '../../js/client.js'
     import { logout } from '../../js/token.js'
 
     export default async (props, { $, $on, $f7 }) => {
         var $$ = Dom7;
 
-        const works = await getWorkByUser()
-        let worksByUser = works.reverse()
+        const clients = await getClientsByUser()
+        let clientsByUser = clients.reverse()
 
         return $render;
     }
