@@ -116,7 +116,7 @@
     import { updateWork } from '../../js/work.js'
     import { findWorkById } from '../../js/work.js'
 
-    import { addInputEquipement, getInputEquipementUpdateForm, getEquipementsInForm } from '../../js/work/component/btnComponent.js'
+    import * as btnComponent from '../../js/work/component/btnComponent.js'
     export default async (props, {$, $on, $f7, $onBeforeUnmount } ) => {
 
         const work = await findWorkById(props.prestationId, $f7)
@@ -132,17 +132,17 @@
         }
 
         const send = () => {
-            const equipements = getEquipementsInForm(Dom7)
+            const equipements = btnComponent.getEquipementsInForm(Dom7)
             var formData = $f7.form.convertToData('#form-work')
             updateWork(formData, equipements, props.prestationId, $f7)
         }
 
         $on('pageBeforeIn', function (page) {
             $f7.form.fillFromData('#form-work',formWork)
-            getInputEquipementUpdateForm(work.equipements)
+            btnComponent.getInputEquipementUpdateForm(work.equipements)
         })
 
-        const addEquipement = () => addInputEquipement()
+        const addEquipement = () => btnComponent.addInputEquipement()
 
         return $render
     }

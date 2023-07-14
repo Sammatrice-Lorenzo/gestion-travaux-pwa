@@ -11,11 +11,11 @@
                     <i class="f7-icons">person</i>
                     <span class="tabbar-label">Mon profil</span>
                 </a>
-                <a href="/prestation/" class="tab-link tab-link-active">
+                <a href="/prestation/" class="tab-link">
                     <i class="material-icons">home</i>
                     <span class="tabbar-label">Prestations</span>
                 </a>
-                <a href="/prestation/" class="tab-link">
+                <a href="/prestation/" class="tab-link tab-link-active">
                     <i class="f7-icons">person_2</i>
                     <span class="tabbar-label">Clients</span>
                 </a>
@@ -59,14 +59,11 @@
 </template>
 <script>
     import Framework7 from 'framework7/bundle';
-    import Dom7 from 'Dom7';
 
     import { getClientsByUser } from '../../js/client.js'
     import { logout } from '../../js/token.js'
 
     export default async (props, { $, $on, $f7 }) => {
-        var $$ = Dom7;
-
         const clients = await getClientsByUser()
         let clientsByUser = clients.reverse()
 

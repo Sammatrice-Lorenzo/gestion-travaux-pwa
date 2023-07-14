@@ -14,7 +14,7 @@ import App from '../app.f7'
 import routes from './routes.js'
 
 const app = new Framework7({
-    name: 'gestion-travaux-pwa', // App name
+    name: 'Gestion Travaux', // App name
     theme: 'auto', // Automatic theme detection
     colors: {
         primary: '#0077B6',

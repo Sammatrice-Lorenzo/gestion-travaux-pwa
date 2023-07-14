@@ -109,7 +109,7 @@
         }
 
         $on('pageBeforeIn', function (page) {
-            $f7.form.fillFromData('#form-client',formClient)
+            $f7.form.fillFromData('#form-client', formClient)
         })
 
         return $render

@@ -1,14 +1,18 @@
 /**
- * @param {string} valueInput 
- * @return {void}
+ * @param { string|null } valueInput 
+ * @return { void }
  */
-export function addInputEquipement(valueInput)
+export function addInputEquipement(valueInput = '')
 {
     const [equipement, equipements] = getInputsEquipements()
 
     const clone = equipement.cloneNode(true)
     const input = clone.querySelector('input[name="equipements"]')
-    input.value = valueInput ?? ''
+
+    input.value = ''
+    if (valueInput !== '') {
+        input.value = valueInput
+    }
 
     const deleteButton = document.createElement('a')
     deleteButton.href = '#'
@@ -20,7 +24,7 @@ export function addInputEquipement(valueInput)
     equipements.appendChild(clone)
 
     const addButton = clone.querySelector('.add-equipement')
-    addButton.addEventListener('click', addInputEquipement)
+    addButton.addEventListener('click', () => addInputEquipement(''))
 }
 
 /**

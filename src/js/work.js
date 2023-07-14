@@ -1,10 +1,9 @@
+import { apiRequest } from './api'
 import { getToken } from './token'
+import * as messages from './messages'
 import { getUrlByUser, getUrlUser, getUrl, getUrlById} from './urlGenerator'
 import { clearCache, checkDataToGetOfAResponseCached, responseIsCached, stockResponseInCache } from './cache'
 
-const SUCCESS_INSERTION_FORM = 'L\'insertion a été bien prise en compte!'
-const SUCCESS_DELETE_FORM = 'La suppression a été bien prise en compte!'
-const ERROR_SERVER = 'La requête n\'as pa pu aboutir'
 const URL_WORK = '/api/works/'
 const URL_WORK_BY_USER = '/api/worksByUser/'
 
@@ -53,7 +52,6 @@ async function callApi(workByUser) {
     return workByUser
 }
 
-
 export async function findWorkById(id, $f7)
 {
     const url = getUrlById(URL_WORK, id)
@@ -85,7 +83,7 @@ export async function findWorkById(id, $f7)
     )
         .catch(error => {
             console.log(error)
-            $f7.dialog.alert(ERROR_SERVER)
+            $f7.dialog.alert(messages.ERROR_SERVER)
         })
 
     return work
@@ -121,13 +119,13 @@ export function createWork(form, equipements, $f7)
             .json()
             .then(function (data) {
                 clearCache()
-                $f7.dialog.alert(SUCCESS_INSERTION_FORM)
+                $f7.dialog.alert(messages.SUCCESS_INSERTION_FORM)
                 $f7.views.main.router.navigate('/prestation/')
             })
     )
         .catch(error => {
             console.log(error)
-            $f7.dialog.alert(ERROR_SERVER)
+            $f7.dialog.alert(messages.ERROR_SERVER)
         })
 }
 
@@ -144,39 +142,15 @@ export function deleteWork(idWork, $f7)
     }).then(function (response) {
         clearCache()
         if (response.status === 204) {
-            $f7.dialog.alert(SUCCESS_DELETE_FORM)
+            $f7.dialog.alert(messages.SUCCESS_DELETE_FORM)
             $f7.views.main.router.navigate('/prestation/')
         } else {
-            $f7.dialog.alert(ERROR_SERVER)
+            $f7.dialog.alert(messages.ERROR_SERVER)
         }
     })
         .catch(error => {
             console.log(error)
-            $f7.dialog.alert(ERROR_SERVER)
-        })
-}
-
-function apiPost(url, method, body, $f7)
-{
-    fetch(url, {
-        method: method,
-        headers: {
-            'Content-Type': 'application/json',
-            // 'Authorization': `Bearer ${token}`
-        },
-        body: body
-    }).then(response =>
-        response
-            .json()
-            .then(function (data) {
-                clearCache()
-                $f7.dialog.alert(SUCCESS_INSERTION_FORM)
-                $f7.views.main.router.navigate('/prestation/')
-            })
-    )
-        .catch(error => {
-            console.log(error)
-            $f7.dialog.alert(ERROR_SERVER)
+            $f7.dialog.alert(messages.ERROR_SERVER)
         })
 }
 
@@ -200,7 +174,7 @@ export function updateWork(form, equipements, idWork, $f7)
         return
     }
 
-    apiPost(url, 'PUT', body, $f7)
+    apiRequest(url, 'PUT', [body, '/prestation/'], $f7)
 }
 
 function customValidation(form, equipements, $f7)
@@ -208,16 +182,16 @@ function customValidation(form, equipements, $f7)
     let valueReturned = true
 
     if (form.name === '') {
-        $f7.dialog.alert('Veillez saisir un nom')
+        $f7.dialog.alert('Veuillez saisir un nom')
         valueReturned = false
     } else if (form.city === '') {
-        $f7.dialog.alert('Veillez saisir le nom de la ville')
+        $f7.dialog.alert('Veuillez saisir le nom de la ville')
         valueReturned = false
     }
 
     for (const equipement of equipements) {
         if (equipement === '') {
-            $f7.dialog.alert('Veillez saisir un équipement')
+            $f7.dialog.alert('Veuillez saisir un équipement')
             valueReturned = false
         }
     }

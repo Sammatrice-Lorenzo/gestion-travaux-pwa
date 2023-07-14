@@ -1,13 +1,16 @@
-const ERROR_SERVER = 'La requête n\'as pa pu aboutir'
+import * as messages from './messages'
+import * as cache from './cache'
+
 
 export function login(username, password, $f7) {
+    $f7.preloader.show()
     const url = new URL('/api/login', API_URL);
 
     if (!checkInputFormLogin(username, password, $f7)) return
 
     // Récupération de la réponse depuis le cache
     getCacheLogin(url)
-        .then(function (response) {
+        .then(async function (response) {
             if (response) {
                 // Utilisation de la réponse en cache
                 return response.json().then(function (token) {
@@ -31,9 +34,11 @@ export function login(username, password, $f7) {
                         $f7.dialog.alert('Vos identifiants sont incorrects!')
                     } else {
                         if (process.env.NODE_ENV === 'production') {
-                            cloneLoginCache(response, url)
+                            cache.stockResponseInCache(url, response.clone())
+                            // cloneLoginCache(response, url)
                         }
                         localStorage.setItem('token', token.token)
+                        $f7.preloader.hide()
                         $f7.views.main.router.navigate('/prestation/')
 
                     }
@@ -41,20 +46,12 @@ export function login(username, password, $f7) {
             )
         })
         .catch(function (error) {
-            $f7.dialog.alert(ERROR_SERVER)
+            $f7.dialog.alert(messages.ERROR_SERVER)
             console.error('Error in fetch handler:', error);
         });
 }
 
-function cloneLoginCache(response, url) {
-    let responseToCache = response.clone();
-    // Stockage de la réponse en cache
-    caches.open('v1').then(function (cache) {
-        cache.put(url, responseToCache);
-    });
-}
-
-function getCacheLogin(url) {
+async function getCacheLogin(url) {
     return caches.open('v1').then(function (cache) {
         // Récupération de la requête depuis le cache
         return cache.match(url).then(function (response) {
@@ -78,8 +75,10 @@ function checkInputFormLogin(username, password, $f7) {
     } else if (!password) {
         $f7.dialog.alert('Veuillez renseigner votre mot de passe!')
         return returnedValue
-    } else {
-        returnedValue = true
-        return returnedValue
     }
+
+    returnedValue = true
+
+    return returnedValue
+
 }

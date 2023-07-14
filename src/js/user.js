@@ -1,5 +1,6 @@
-import  { getUrlUser } from './urlGenerator.js'
-import  { getToken } from './token.js'
+import * as messages from './messages'
+import { getUrlUser } from './urlGenerator.js'
+import { getToken } from './token.js'
 
 export async function showUser()
 {
@@ -28,7 +29,7 @@ export async function showUser()
     )
         .catch(error => {
             console.log(error)
-            $f7.dialog.alert(ERROR_SERVER)
+            $f7.dialog.alert(messages.ERROR_SERVER)
         })
 
     return user

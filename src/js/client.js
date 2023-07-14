@@ -1,11 +1,10 @@
-import { getToken, getDecodedToken } from './token'
+import { getToken } from './token'
 import { stockResponseInCache, responseIsCached, checkDataToGetOfAResponseCached, clearCache } from './cache'
-import { getUrlByUser, getUrlUser, getUrl, getUrlById } from './urlGenerator' 
+import { getUrlByUser, getUrlUser, getUrl, getUrlById } from './urlGenerator'
+import * as messages from './messages'
+import { apiRequest } from './api'
 
 const URL_CLIENTS_BY_USER = '/api/clientsByUser/' 
-const SUCCESS_INSERTION_FORM = 'L\'insertion a été bien prise en compte!'
-const SUCCESS_DELETE_FORM = 'La suppression a été bien prise en compte!'
-const ERROR_SERVER = 'La requête n\'as pa pu aboutir'
 const URL_CLIENTS = '/api/clients/'
 
 export async function getClientsByUser() {
@@ -82,37 +81,13 @@ export function createClient(form, $f7)
             .json()
             .then(function (data) {
                 clearCache()
-                $f7.dialog.alert(SUCCESS_INSERTION_FORM)
+                $f7.dialog.alert(messages.SUCCESS_INSERTION_FORM)
                 $f7.views.main.router.navigate('/clients/')
             })
     )
         .catch(error => {
             console.log(error)
-            $f7.dialog.alert(ERROR_SERVER)
-        })
-}
-
-function apiPost(url, method, body, $f7)
-{
-    fetch(url, {
-        method: method,
-        headers: {
-            'Content-Type': 'application/json',
-            // 'Authorization': `Bearer ${token}`
-        },
-        body: body
-    }).then(response =>
-        response
-            .json()
-            .then(function (data) {
-                clearCache()
-                $f7.dialog.alert(SUCCESS_INSERTION_FORM)
-                $f7.views.main.router.navigate('/clients/')
-            })
-    )
-        .catch(error => {
-            console.log(error)
-            $f7.dialog.alert(ERROR_SERVER)
+            $f7.dialog.alert(messages.ERROR_SERVER)
         })
 }
 
@@ -135,7 +110,7 @@ export function updateClient(form, idClient, $f7)
         return
     }
 
-    apiPost(url, 'PUT', body, $f7)
+    apiRequest(url, 'PUT', [body, '/clients/'], $f7)
 }
 
 export function deleteClient(idClient, $f7)
@@ -151,15 +126,15 @@ export function deleteClient(idClient, $f7)
     }).then(function (response) {
         clearCache()
         if (response.status === 204) {
-            $f7.dialog.alert(SUCCESS_DELETE_FORM)
+            $f7.dialog.alert(messages.SUCCESS_DELETE_FORM)
             $f7.views.main.router.navigate('/clients/')
         } else {
-            $f7.dialog.alert(ERROR_SERVER)
+            $f7.dialog.alert(messages.ERROR_SERVER)
         }
     })
         .catch(error => {
             console.log(error)
-            $f7.dialog.alert(ERROR_SERVER)
+            $f7.dialog.alert(messages.ERROR_SERVER)
         })
 }
 
@@ -192,43 +167,42 @@ export async function findClientById(id, $f7){
     )
         .catch(error => {
             console.log(error)
-            $f7.dialog.alert(ERROR_SERVER)
+            $f7.dialog.alert(messages.ERROR_SERVER)
         })
 
     return client
 }
 
-function customValidation(form, $f7)
-{
-    let valueReturned = true
+function customValidation(form, $f7) {
     const regexCodePostal = /^\d{5}$/
     const regexNumeroTelephone = /^(0|\+33|0033)[1-9](\d{2}){4}$/
 
-    if (form.firstname === '') {
-        $f7.dialog.alert('Veillez saisir un prénom')
-        valueReturned = false
-    } else if (form.lastname === '') {
-        $f7.dialog.alert('Veillez saisir un nom')
-        valueReturned = false
-    } else if (form.city === '') {
-        $f7.dialog.alert('Veillez saisir le nom de la ville')
-        valueReturned = false
-    } else if (form.streetAddress === '') {
-        $f7.dialog.alert('Veillez saisir le nom de la rue')
-        valueReturned = false
-    } else if (form.postalCode === '') {
-        $f7.dialog.alert('Veillez saisir le code postal ')
-        valueReturned = false
-    } else if (!regexCodePostal.test(form.postalCode)) {
-        $f7.dialog.alert('Veillez saisir un code postal valide')
-        valueReturned = false
-    } else if (form.phoneNumber === '') {
-        $f7.dialog.alert('Veillez saisir le numéro de téléphone ')
-        valueReturned = false
-    } else if (!regexNumeroTelephone.test(form.phoneNumber)) {
-        $f7.dialog.alert('Veillez saisir un numéro de téléphone valide ')
-        valueReturned = false
+    const fields = [
+        { field: form.firstname, message: 'Veuillez saisir un prénom' },
+        { field: form.lastname, message: 'Veuillez saisir un nom' },
+        { field: form.streetAddress, message: 'Veuillez saisir le nom de la rue' },
+        { field: form.city, message: 'Veuillez saisir le nom de la ville' },
+        { field: form.postalCode, message: 'Veuillez saisir le code postal' },
+        { field: form.phoneNumber, message: 'Veuillez saisir le numéro de téléphone' },
+    ]
+  
+    for (const field of fields) {
+        if (field.field === '') {
+            $f7.dialog.alert(field.message)
+            return false
+        }
     }
-
-    return valueReturned
+  
+    if (!regexCodePostal.test(form.postalCode)) {
+        $f7.dialog.alert('Veuillez saisir un code postal valide')
+        return false
+    }
+  
+    if (!regexNumeroTelephone.test(form.phoneNumber)) {
+        $f7.dialog.alert('Veuillez saisir un numéro de téléphone valide')
+        return false
+    }
+  
+    return true
 }
+  

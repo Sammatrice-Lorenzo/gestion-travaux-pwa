@@ -117,8 +117,7 @@
     import { addInputEquipement, getEquipementsInForm } from '../../js/work/component/btnComponent.js'
 
     export default async (props, {$, $on, $f7, $onBeforeUnmount } ) => {
-        var $$ = Dom7
-        
+
         const clients = await getClientsByUser()
         const send = () => {
             const equipements = getEquipementsInForm(Dom7)

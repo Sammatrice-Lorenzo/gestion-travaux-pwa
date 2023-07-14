@@ -31,7 +31,7 @@
                     <span>Informations sur les prestations</span>
                     <span>
                         <a href="/form-work/">
-                            <i class="f7-icons">plus_app_fill</i>
+                            <i class="f7-icons">new plus_app_fill</i>
                         </a>
                     </span>
                 </div>
@@ -42,8 +42,8 @@
                 <div class="card-content card-content-padding display-flex align-content-center">
                     <div class="col">
                         <div class="row">Prestation réalisé à ${item.city}</div>
-                        <div class="row">Date de début : ${item.start}</div>
-                        <div class="row">Date de fin: ${item.end}</div>
+                        <div class="row">Date de début :  ${formatDate(item.start)}</div>
+                        <div class="row">Date de fin:  ${formatDate(item.end)}</div>
                         <div class="row">État : ${item.progression}</div>
                         <div class="row">
                             Les équipements utilisées : ${item.equipements}
@@ -64,16 +64,14 @@
     </div>
 </template>
 <script>
-    import Framework7 from 'framework7/bundle';
-    import Dom7 from 'Dom7';
+    import Framework7 from 'framework7/bundle'
 
-    import { getWorkByUser } from '../../js/work.js'
+    import { formatDate } from '../../js/date.js'
     import { logout } from '../../js/token.js'
+    import { getWorkByUser } from '../../js/work.js'
     import { sendNotificationPushForProgression } from '../../js/notification'
 
     export default async (props, { $, $on, $f7 }) => {
-        var $$ = Dom7;
-
         const works = await getWorkByUser()
         let worksByUser = works.reverse()
 
@@ -82,6 +80,6 @@
         // }, 10000)
         }, 60000)
 
-        return $render;
+        return $render
     }
 </script>

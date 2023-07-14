@@ -59,13 +59,13 @@
 
     import { findClientById, deleteClient } from '../../js/client.js'
     import { logout } from '../../js/token.js'
+    import { CONFIRMATION_TO_DELETE } from '../../js/messages.js'
 
     export default async (props, { $, $on, $f7 }) => {
         var $$ = Dom7
 
         const client = await findClientById(props.clientId, $f7)
 
-        const CONFIRMATION_TO_DELETE = 'Vous êtes sûr de vouloir supprimer ?'
         const openConfirm = () => {
             $f7.dialog.confirm(CONFIRMATION_TO_DELETE, function () {
                 deleteClient($$('.delete')[0].id, $f7)

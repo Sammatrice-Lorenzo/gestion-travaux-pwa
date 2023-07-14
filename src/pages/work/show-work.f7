@@ -30,8 +30,8 @@
             <div class="list list-strong list-outline inset list-dividers-ios simple-list">
                 <ul>
                     <li>${work.name}</li>
-                    <li>Date de début : ${work.start}</li>
-                    <li>Date de fin: ${work.end}</li>
+                    <li>Date de début : ${formatDate(work.start)}</li>
+                    <li>Date de fin: ${formatDate(work.end)}</li>
                     <li>État : ${work.progression}</li>
                     <li> Les équipements utilisées : ${work.equipements}</li>
                     <li> Pour ${work.client.lastname} ${work.client.firstname}</li>
@@ -58,15 +58,16 @@
     import Framework7 from 'framework7/bundle';
     import Dom7 from 'Dom7';
 
-    import { findWorkById, deleteWork } from '../../js/work.js'
     import { logout } from '../../js/token.js'
+    import { formatDate } from '../../js/date.js'
+    import { findWorkById, deleteWork } from '../../js/work.js'
+    import { CONFIRMATION_TO_DELETE } from '../../js/messages.js'
 
     export default async (props, { $, $on, $f7 }) => {
         var $$ = Dom7
 
         const work = await findWorkById(props.prestationId, $f7)
 
-        const CONFIRMATION_TO_DELETE = 'Vous êtes sûr de vouloir supprimer ?'
         const openConfirm = () => {
             $f7.dialog.confirm(CONFIRMATION_TO_DELETE, function () {
                 deleteWork($$('.delete')[0].id, $f7)
