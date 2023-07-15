@@ -34,6 +34,14 @@
                     <li>Email : ${user.email}</li>
                 </ul>
             </div>
+
+            <div class="display-flex justify-content-center">
+                <span>
+                    <a href="/mon-compte/update/"${idUser} class="button button-small button-outline">
+                        <i class="f7-icons">square_pencil</i>
+                    </a>
+                </span>
+            </div>
         </div>
     </div>
 </template>
@@ -42,10 +50,12 @@
     import Dom7 from 'Dom7';
 
     import { showUser } from '../../js/user.js'
+    import { getDecodedToken } from '../../js/token.js'
     import { logout } from '../../js/token.js'
 
     export default async (props, { $, $on, $f7 }) => {
         const user = await showUser()
+        const idUser = getDecodedToken().id
 
         return $render
     }

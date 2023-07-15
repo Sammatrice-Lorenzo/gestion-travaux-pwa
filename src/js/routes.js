@@ -6,6 +6,7 @@ import FormWork from '../pages/work/form-work.f7';
 import FormUpdateWork from '../pages/work/form-update-work.f7';
 import ShowWork from '../pages/work/show-work.f7';
 import ShowUser from '../pages/user/show-user.f7';
+import FormUpdateUser from '../pages/user/form-update-user.f7';
 import ClientsIndex from '../pages/clients/index-clients.f7'; 
 import FormClient from '../pages/clients/form-client.f7';
 import ShowClient from '../pages/clients/show-client.f7';
@@ -27,6 +28,10 @@ let routes = [
     {
         path: '/mon-compte/',
         component: ShowUser,
+    },
+    {
+        path: '/mon-compte/update/:userId',
+        component: FormUpdateUser,
     },
     {
         path: '/form-work/',

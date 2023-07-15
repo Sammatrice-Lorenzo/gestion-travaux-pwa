@@ -2,8 +2,8 @@ import { firebase } from './firebase'
 import { getMessaging, getToken, onMessage  } from "firebase/messaging"
 
 export const messaging = getMessaging(firebase)
-
 export function askUserPermissionForSendANotificationPush() {
+    let token
 
     Notification.requestPermission().then((permission) => {
         if (permission === 'granted') {
