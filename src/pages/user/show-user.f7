@@ -2,7 +2,7 @@
     <div class="page">
         <div class="navbar">
             <div class="navbar-inner">
-                <div class="title">Informations utilisateur</div>
+                <div class="title">Mon profil</div>
             </div>
         </div>
         <div class="toolbar tabbar tabbar-icons toolbar-bottom">
@@ -19,7 +19,7 @@
                     <i class="f7-icons">person_2</i>
                     <span class="tabbar-label">Clients</span>
                 </a>
-                <a href="/" @click="${logout}" class="tab-link">
+                <a href="" @click="${logoutConst}" class="tab-link">
                     <i class="f7-icons blue">arrow_right_circle</i>
                     <span class="tabbar-label">Déconnexion</span>
                 </a>
@@ -56,6 +56,10 @@
     export default async (props, { $, $on, $f7 }) => {
         const user = await showUser()
         const idUser = getDecodedToken().id
+
+        const logoutConst = () => {
+            logout($f7)
+        }
 
         return $render
     }

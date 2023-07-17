@@ -1,5 +1,5 @@
 import * as messages from './messages'
-import { getUrlUser, getUrlById } from './urlGenerator.js'
+import { getUrlUser, getUrlById, getUrl } from './urlGenerator.js'
 import { getToken } from './token.js'
 import { clearCache } from './cache'
 
@@ -34,6 +34,45 @@ export async function showUser()
         })
 
     return user
+}
+
+export function createUser(form, $f7)
+{
+    const url = getUrl('/api/register')
+
+    if (!customValidation(form, $f7)) {
+        return
+    }
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            firstname: form.firstname,
+            lastname: form.lastname,
+            email: form.email,
+            password: form.password,
+            confirmPassword: form.confirmPassword,
+        })
+    }).then(response =>
+        response
+            .json()
+            .then(function (data) {
+                if (data.code === '422') {
+                    $f7.dialog.alert('Cette email existe déjà au sein de l\'application veuillez ressayer avec une autre')
+                    $f7.views.main.router.navigate('/')
+                } else {
+                    $f7.dialog.alert(messages.SUCCESS_INSERTION_FORM)
+                    $f7.dialog.alert('Un email de confirmation vous a été envoyée veuillez confirmer votre email avant de vous connecté')
+                }
+            })
+    )
+        .catch(error => {
+            console.log(error)
+            $f7.dialog.alert(messages.ERROR_SERVER)
+        })
 }
 
 export function updateUser(form, idUser, $f7)
@@ -93,7 +132,7 @@ function customValidation(form, $f7)
         $f7.dialog.alert('Veuillez saisir un email')
         return valueReturned
     }
-    
+
     if (!emailRegex.test(form.email)) {
         $f7.dialog.alert('Veuillez saisir un email valide')
         return valueReturned

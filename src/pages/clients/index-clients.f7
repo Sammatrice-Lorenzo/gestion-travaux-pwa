@@ -19,7 +19,7 @@
                     <i class="f7-icons">person_2</i>
                     <span class="tabbar-label">Clients</span>
                 </a>
-                <a href="/" @click="${logout}" class="tab-link">
+                <a href="" @click="${logoutConst}" class="tab-link">
                     <i class="f7-icons blue">arrow_right_circle</i>
                     <span class="tabbar-label">Déconnexion</span>
                 </a>
@@ -66,6 +66,10 @@
     export default async (props, { $, $on, $f7 }) => {
         const clients = await getClientsByUser()
         let clientsByUser = clients.reverse()
+
+        const logoutConst = () => {
+            logout($f7)
+        }
 
         return $render;
     }

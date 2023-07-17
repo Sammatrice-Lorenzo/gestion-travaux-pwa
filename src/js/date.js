@@ -7,7 +7,7 @@ export const formatDate = (date) => {
     adjustedDate.setHours(adjustedDate.getHours() - 2)
 
     const day = adjustedDate.getDate()
-    const month = adjustedDate.getMonth() + 1
+    const month = (adjustedDate.getMonth() + 1).toString().padStart(2, '0')
     const year = adjustedDate.getFullYear()
     const hours = adjustedDate.getHours()
     const minutes = adjustedDate.getMinutes().toString().padStart(2, '0')

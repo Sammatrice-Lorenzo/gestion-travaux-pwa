@@ -9,12 +9,12 @@
                         <span class="if-not-md">Retour</span>
                     </a>
                 </div>
-                <div class="title">Modification profil</div>
+                <div class="title">Inscription</div>
             </div>
         </div>
         <div class="page-content">
             <form id="form-user">
-                <div class="block-title">Modifier votre profil </div>
+                <div class="block-title">Inscription à Gestion Travaux</div>
                 <div class="list list-strong-ios list-dividers-ios list-outline-ios">
                     <ul>
                         <li>
@@ -42,15 +42,31 @@
                                 <div class="item-inner">
                                     <div class="item-title item-label">Email : </div>
                                     <div class="item-input-wrap">
-                                        <input name='email' type="email" placeholder="email" />
+                                        <input name='email' type="email" placeholder="Email" />
                                     </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="item-content item-input">
+                            <div class="item-inner">
+                                <div class="item-title item-label">Mot de passe :</div>
+                                <div class="item-input-wrap">
+                                    <input type="password" name="password" placeholder="Votre mot de passe" />
+                                </div>
+                            </div>
+                        </li>
+                        <li class="item-content item-input">
+                            <div class="item-inner">
+                                <div class="item-title item-label">Confirmer votre mot de passe :</div>
+                                <div class="item-input-wrap">
+                                    <input type="password" name="confirmPassword" placeholder="Confirmation mot de passe" />
                                 </div>
                             </div>
                         </li>
                     </ul>
                 </div>
             </form>
-            <button class="button button-small button-round button-fill" @click="${send}">Sauvegarder</button>
+            <button class="button button-small button-round button-fill" @click="${send}">S'inscrire</button>
         </div>
     </div>
 </template>
@@ -58,25 +74,13 @@
     import Framework7 from 'framework7/bundle'
     import Dom7 from 'Dom7'
 
-    import { showUser, updateUser } from '../../js/user.js'
+    import { createUser } from '../../js/user.js'
 
     export default async (props, {$, $on, $f7, $onBeforeUnmount } ) => {
-        const user = await showUser()
-
-        const formUser = {
-            firstname: user.firstname,
-            lastname: user.lastname,
-            email: user.email,
-        }
-
         const send = () => {
             var formData = $f7.form.convertToData('#form-user')
-            updateUser(formData, props.userId, $f7)
+            createUser(formData, $f7)
         }
-
-        $on('pageBeforeIn', function (page) {
-            $f7.form.fillFromData('#form-user', formUser)
-        })
 
         return $render
     }

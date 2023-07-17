@@ -1,7 +1,6 @@
 import * as messages from './messages'
 import * as cache from './cache'
 
-
 export function login(username, password, $f7) {
     $f7.preloader.show()
     const url = new URL('/api/login', API_URL);
@@ -32,6 +31,7 @@ export function login(username, password, $f7) {
                 response.clone().json().then(function (token) {
                     if ('code' in token && token.code === 401) {
                         $f7.dialog.alert('Vos identifiants sont incorrects!')
+                        $f7.preloader.hide()
                     } else {
                         if (process.env.NODE_ENV === 'production') {
                             cache.stockResponseInCache(url, response.clone())

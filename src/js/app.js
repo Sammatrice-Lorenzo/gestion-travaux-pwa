@@ -1,5 +1,4 @@
 import Framework7 from 'framework7/bundle'
-import { getToken, isExpired } from './token'
 
 import { askUserPermissionForSendANotificationPush, messaging } from './notification.js'
 
@@ -12,6 +11,8 @@ import '../css/app.scss'
 
 import App from '../app.f7'
 import routes from './routes.js'
+import { reloadPage } from './helper/routerHelper.js'
+import { setupServicesWorkers } from './serviceWorker.js'
 
 const app = new Framework7({
     name: 'Gestion Travaux', // App name
@@ -24,7 +25,7 @@ const app = new Framework7({
     component: App, // App main component
 
     // App routes
-    routes: routes,
+    routes: routes
     // Register service worker (only on production build)
     // serviceWorker: process.env.NODE_ENV === 'production' ? {
     //     path: 'service-worker.js',
@@ -32,64 +33,8 @@ const app = new Framework7({
 })
 
 askUserPermissionForSendANotificationPush()
+setupServicesWorkers()
 
-if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
-    window.addEventListener('load', function () {
-        navigator.serviceWorker.register('../www/service-worker.js').then(function (registration) {
-            // Service worker enregistré avec succès
-            console.log('ServiceWorker registration successful with scope: ', registration.scope)
-
-            self.addEventListener('fetch', (event) => {
-                event.respondWith(
-                    caches.match(event.request)
-                        .then((response) => {
-                            if (response) {
-                                // renvoie la réponse en cache si elle existe
-                                return response
-                            }
-                            // sinon, effectue une requête réseau
-                            return fetch(event.request)
-                        })
-                )
-            })
-        }, function (err) {
-            // L'enregistrement du service worker a échoué
-            console.log('ServiceWorker registration failed: ', err)
-        })
-    })
-
-    clearCache()
-}
-
-/**
- * Le cache va se supprimer toute les heures
- */
-function clearCache() {
-    setInterval(function () {
-        caches.delete('v1').then(function (result) {
-        }).catch(function (error) {
-            console.error('Erreur lors de la suppression du cache "v1":', error)
-        })
-    }, 3600000) // 36000
-    // }, 	60000) // 60 sec
-}
-
-function checkAuthentication() {
-    const isAuthenticated = getToken()
-    const tokenIsExpired = isExpired()
-
-    return Boolean(isAuthenticated && !tokenIsExpired)
-}
-
-// Écouter l'événement 'pageInit' de Framework7
-app.on('pageBeforeIn', function (page) {
-    const isAuthenticated = checkAuthentication()
-
-    if (page.route.path === '/' && isAuthenticated) {
-        app.views.main.router.navigate('/prestation/', {
-            animate: false
-        })
-    }
-})
+reloadPage(app, '/prestation/')
 
 export default app
