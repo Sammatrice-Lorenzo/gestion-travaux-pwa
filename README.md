@@ -1,6 +1,6 @@
 # Gestion Travaux PWA
 
-Ce projet est une application PWA qui permet de la gestion des travaux plus précisément des prestations d'un utilisateur.
+Ce projet est une application PWA qui permet de gérer la gestion des travaux plus précisément des prestations d'un utilisateur.
 
 Pour utiliser cette application il faut d'abord avoir installé la partie back-end, le projet d'API.
 

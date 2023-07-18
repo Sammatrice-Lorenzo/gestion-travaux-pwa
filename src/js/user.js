@@ -62,7 +62,6 @@ export function createUser(form, $f7)
             .then(function (data) {
                 if (data.code === '422') {
                     $f7.dialog.alert('Cette email existe déjà au sein de l\'application veuillez ressayer avec une autre')
-                    $f7.views.main.router.navigate('/')
                 } else {
                     $f7.dialog.alert(messages.SUCCESS_INSERTION_FORM)
                     $f7.dialog.alert('Un email de confirmation vous a été envoyée veuillez confirmer votre email avant de vous connecté')
@@ -73,6 +72,9 @@ export function createUser(form, $f7)
             console.log(error)
             $f7.dialog.alert(messages.ERROR_SERVER)
         })
+
+    $f7.views.main.router.navigate('/')
+    
 }
 
 export function updateUser(form, idUser, $f7)
@@ -131,6 +133,10 @@ function customValidation(form, $f7)
     } else if (form.email === '') {
         $f7.dialog.alert('Veuillez saisir un email')
         return valueReturned
+    }
+
+    if (form.password !== form.confirmPassword) {
+        $f7.dialog.alert('Les deux mots passe ne correspond pas')
     }
 
     if (!emailRegex.test(form.email)) {
