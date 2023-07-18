@@ -118,9 +118,13 @@ export function createWork(form, equipements, $f7)
         response
             .json()
             .then(function (data) {
-                clearCache()
-                $f7.dialog.alert(messages.SUCCESS_INSERTION_FORM)
-                $f7.views.main.router.navigate('/prestation/')
+                if (data.code === '400') {
+                    $f7.dialog.alert(messages.ERROR_SERVER)
+                } else {
+                    clearCache()
+                    $f7.dialog.alert(messages.SUCCESS_INSERTION_FORM)
+                    $f7.views.main.router.navigate('/prestation/')
+                }
             })
     )
         .catch(error => {
@@ -186,6 +190,11 @@ function customValidation(form, equipements, $f7)
         valueReturned = false
     } else if (form.city === '') {
         $f7.dialog.alert('Veuillez saisir le nom de la ville')
+        valueReturned = false
+    }
+
+    if (!form.client) {
+        $f7.dialog.alert('Veuillez rajouter des clients pour pouvoir créer des prestations')
         valueReturned = false
     }
 

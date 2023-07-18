@@ -80,9 +80,13 @@ export function createClient(form, $f7)
         response
             .json()
             .then(function (data) {
-                clearCache()
-                $f7.dialog.alert(messages.SUCCESS_INSERTION_FORM)
-                $f7.views.main.router.navigate('/clients/')
+                if (response.status === 422) {
+                    $f7.dialog.alert(data['hydra:description'])
+                } else {
+                    clearCache()
+                    $f7.dialog.alert(messages.SUCCESS_INSERTION_FORM)
+                    $f7.views.main.router.navigate('/clients/')
+                }
             })
     )
         .catch(error => {
