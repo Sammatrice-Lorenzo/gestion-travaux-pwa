@@ -1,0 +1,83 @@
+<template>
+    <div class="page">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="title">Prestation</div>
+            </div>
+        </div>
+        <div class="toolbar tabbar tabbar-icons toolbar-bottom">
+            <div class="toolbar-inner">
+                <a href="/mon-compte/" class="tab-link">
+                    <i class="f7-icons">person</i>
+                    <span class="tabbar-label">Mon profil</span>
+                </a>
+                <a href="/prestation/" class="tab-link">
+                    <i class="material-icons">home</i>
+                    <span class="tabbar-label">Prestations</span>
+                </a>
+                <a href="/clients/" class="tab-link">
+                    <i class="f7-icons">person_2</i>
+                    <span class="tabbar-label">Clients</span>
+                </a>
+                <a href="/" @click="${logout}" class="tab-link">
+                    <i class="f7-icons blue">arrow_right_circle</i>
+                    <span class="tabbar-label">Déconnexion</span>
+                </a>
+            </div>
+        </div>
+        <div class="page-content">
+            <div class="block-title">Informations sur les prestations</div>
+            <div class="list list-strong list-outline inset list-dividers-ios simple-list">
+                <ul>
+                    <li>${work.name}</li>
+                    <li>Date de début : ${formatDate(work.start)}</li>
+                    <li>Date de fin: ${formatDate(work.end)}</li>
+                    <li>État : ${work.progression}</li>
+                    <li>Les équipements utilisées :</li>
+                    <li>
+                        <div class="equipements-wrapper">
+                            <div class="equipements-container">${getEquipemntsInLine(work.equipements)}</div>
+                        </div>
+                    </li>
+                    <li> Pour ${work.client.lastname} ${work.client.firstname}</li>
+                </ul>
+            </div>
+
+            <div class="display-flex justify-content-center">
+                <span>
+                    <a href="/form-work/update/"${props.prestationId} class="button button-small button-outline">
+                        <i class="f7-icons">square_pencil</i>
+                    </a>
+                </span>
+                <span>
+                    <a id=${props.prestationId} href="#" class="button button-small button-outline delete" @click="${openConfirm}">
+                        <i class="f7-icons">trash_circle_fill</i>
+                    </a>
+                </span>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+    import Framework7 from 'framework7/bundle';
+    import Dom7 from 'Dom7';
+
+    import { logout } from '../../js/token.js'
+    import { formatDate } from '../../js/date.js'
+    import { findWorkById, deleteWork, getEquipemntsInLine } from '../../js/work.js'
+    import { CONFIRMATION_TO_DELETE } from '../../js/messages.js'
+
+    export default async (props, { $, $on, $f7 }) => {
+        var $$ = Dom7
+
+        const work = await findWorkById(props.prestationId, $f7)
+
+        const openConfirm = () => {
+            $f7.dialog.confirm(CONFIRMATION_TO_DELETE, function () {
+                deleteWork($$('.delete')[0].id, $f7)
+            })
+        }
+
+        return $render
+    }
+</script>

@@ -1,0 +1,89 @@
+<template>
+    <div class="page">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="title">Mes prestations</div>
+            </div>
+        </div>
+        <div class="toolbar tabbar tabbar-icons toolbar-bottom">
+            <div class="toolbar-inner">
+                <a href="/mon-compte/" class="tab-link">
+                    <i class="f7-icons">person</i>
+                    <span class="tabbar-label">Mon profil</span>
+                </a>
+                <a href="/prestation/" class="tab-link tab-link-active">
+                    <i class="material-icons">home</i>
+                    <span class="tabbar-label">Prestations</span>
+                </a>
+                <a href="/clients/" class="tab-link">
+                    <i class="f7-icons">person_2</i>
+                    <span class="tabbar-label">Clients</span>
+                </a>
+                <a href="" @click="${logoutConst}" class="tab-link">
+                    <i class="f7-icons blue">arrow_right_circle</i>
+                    <span class="tabbar-label">Déconnexion</span>
+                </a>
+            </div>
+        </div>
+        <div class="page-content">
+            <div class="block-title">
+                <div class="col-6 display-flex justify-content-center">
+                    <span>Informations sur les prestations</span>
+                    <span>
+                        <a href="/form-work/">
+                            <i class="f7-icons">new plus_app_fill</i>
+                        </a>
+                    </span>
+                </div>
+            </div>
+            ${worksByUser.map((item) => $h`
+            <div class="card color-card">
+                <div class="card-header">${item.name}</div>
+                <div class="card-content card-content-padding display-flex align-content-center">
+                    <div class="col">
+                        <div class="row">Prestation réalisé à ${item.city}</div>
+                        <div class="row">Date de début :  ${formatDate(item.start)}</div>
+                        <div class="row">Date de fin:  ${formatDate(item.end)}</div>
+                        <div class="row">État : ${item.progression}</div>
+                        <div class="row">
+                            Les équipements utilisées : ${getEquipemntsInLine(item.equipements)}
+                        </div>
+                        <div class="row">
+                            Pour ${item.client.lastname} ${item.client.firstname}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer d-flex justify-content-end">
+                    <a href="/prestation/"${item['@id'].split('/').pop()}>
+                        <i class="f7-icons">eye_fill</i>
+                    </a>
+                </div>
+            </div>
+            `)}
+        </div>
+    </div>
+</template>
+<script>
+    import Framework7 from 'framework7/bundle'
+
+    import { formatDate } from '../../js/date.js'
+    import { logout } from '../../js/token.js'
+    import { getWorkByUser, getEquipemntsInLine } from '../../js/work.js'
+    import { sendNotificationPushForProgression } from '../../js/notification'
+
+    export default async (props, { $, $on, $f7 }) => {
+        const works = await getWorkByUser()
+        let worksByUser = works.reverse()
+
+        const logoutConst = () => {
+            logout($f7)
+        }
+
+        setTimeout(() => {
+            sendNotificationPushForProgression($f7)
+        // }, 10000)
+        }, 60000)
+
+        return $render
+    }
+</script>

@@ -1,0 +1,77 @@
+<template>
+    <div class="page">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="title">Client</div>
+            </div>
+        </div>
+        <div class="toolbar tabbar tabbar-icons toolbar-bottom">
+            <div class="toolbar-inner">
+                <a href="/mon-compte/" class="tab-link">
+                    <i class="f7-icons">person</i>
+                    <span class="tabbar-label">Mon profil</span>
+                </a>
+                <a href="/prestation/" class="tab-link">
+                    <i class="material-icons">home</i>
+                    <span class="tabbar-label">Prestations</span>
+                </a>
+                <a href="/clients/" class="tab-link">
+                    <i class="f7-icons">person_2</i>
+                    <span class="tabbar-label">Clients</span>
+                </a>
+                <a href="/" @click="${logout}" class="tab-link">
+                    <i class="f7-icons blue">arrow_right_circle</i>
+                    <span class="tabbar-label">Déconnexion</span>
+                </a>
+            </div>
+        </div>
+        <div class="page-content">
+            <div class="block-title">Informations sur le client</div>
+            <div class="list list-strong list-outline inset list-dividers-ios simple-list">
+                <ul>
+                    <li>${client.lastname} ${client.firstname}</li>
+                    <li>Rue : ${client.streetAddress}</li>
+                    <li>Ville: ${client.city}</li>
+                    <li>Code Postal : ${client.postalCode}</li>
+                    <li>Numéro de téléphone: ${getNumberPhoneInString(client.phoneNumber)}</li>
+                </ul>
+            </div>
+
+            <div class="display-flex justify-content-center">
+                <span>
+                    <a href="/form-client/update/"${props.clientId} class="button button-small button-outline">
+                        <i class="f7-icons">square_pencil</i>
+                    </a>
+                </span>
+                    <a id=${props.clientId} href="#" class="button button-small button-outline delete" @click="${openConfirm}">
+                        <i class="f7-icons">trash_circle_fill</i>
+                    </a>
+                <span>
+                </span>
+            </div>
+
+        </div>
+    </div>
+</template>
+<script>
+    import Framework7 from 'framework7/bundle';
+    import Dom7 from 'Dom7';
+
+    import { findClientById, deleteClient, getNumberPhoneInString } from '../../js/client.js'
+    import { logout } from '../../js/token.js'
+    import { CONFIRMATION_TO_DELETE } from '../../js/messages.js'
+
+    export default async (props, { $, $on, $f7 }) => {
+        var $$ = Dom7
+
+        const client = await findClientById(props.clientId, $f7)
+
+        const openConfirm = () => {
+            $f7.dialog.confirm(CONFIRMATION_TO_DELETE, function () {
+                deleteClient($$('.delete')[0].id, $f7)
+            })
+        }
+
+        return $render
+    }
+</script>

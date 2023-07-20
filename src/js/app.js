@@ -1,19 +1,21 @@
-import Framework7 from 'framework7/bundle';
+import Framework7 from 'framework7/bundle'
+
+import { askUserPermissionForSendANotificationPush, messaging } from './notification.js'
 
 // Import F7 Styles
-import 'framework7/css/bundle';
+import 'framework7/css/bundle'
 
 // Import Icons and App Custom Styles
-import '../css/icons.css';
-import '../css/app.scss';
+import '../css/icons.css'
+import '../css/app.scss'
 
-import store from './store.js';
-
-import App from '../app.f7';
-import routes from './routes.js';
+import App from '../app.f7'
+import routes from './routes.js'
+import { reloadPage } from './helper/routerHelper.js'
+import { setupServicesWorkers } from './serviceWorker.js'
 
 const app = new Framework7({
-    name: 'gestion-travaux-pwa', // App name
+    name: 'Gestion Travaux', // App name
     theme: 'auto', // Automatic theme detection
     colors: {
         primary: '#0077B6',
@@ -22,42 +24,17 @@ const app = new Framework7({
     el: '#app', // App root element
     component: App, // App main component
 
-    // App store
-    store: store,
     // App routes
-    routes: routes,
+    routes: routes
     // Register service worker (only on production build)
     // serviceWorker: process.env.NODE_ENV === 'production' ? {
     //     path: 'service-worker.js',
     // } : {},
-});
+})
 
+askUserPermissionForSendANotificationPush()
+setupServicesWorkers()
 
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function () {
-        navigator.serviceWorker.register('../www/service-worker.js').then(function (registration) {
-            // Service worker enregistré avec succès
-            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+reloadPage(app, '/prestation/')
 
-            self.addEventListener('fetch', (event) => {
-                event.respondWith(
-                    caches.match(event.request)
-                        .then((response) => {
-                            if (response) {
-                                // renvoie la réponse en cache si elle existe
-                                return response;
-                            }
-                            // sinon, effectue une requête réseau
-                            return fetch(event.request);
-                        })
-                );
-            });
-        }, function (err) {
-            // L'enregistrement du service worker a échoué
-            console.log('ServiceWorker registration failed: ', err);
-        });
-    });
-}
-
-
-export default app;
+export default app

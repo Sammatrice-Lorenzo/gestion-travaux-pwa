@@ -11,3 +11,25 @@
 .card-footer {
     background-color: white;
 }
+
+li.btn-register {
+    margin-top: 5%
+}
+
+.equipements-container {
+    display: inline-block;
+    white-space: pre;
+    word-break: break-word;
+    max-width: 100%;
+}
+
+.equipements-wrapper {
+    overflow: hidden;
+    word-break: break-word;
+}
+
+.equipements-container {
+    white-space: pre;
+    overflow: auto;
+}
+

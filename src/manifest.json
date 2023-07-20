@@ -1,9 +1,9 @@
 {
   "prefer_related_applications": false,
   "name": "Gestion Travaux",
-  "short_name": "gestion-travaux-pwa",
+  "short_name": "gestion travaux",
   "description": "gestion-travaux-pwa",
-  "lang": "en-US",
+  "lang": "fr-FR",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0077B6",

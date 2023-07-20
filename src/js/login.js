@@ -1,9 +1,15 @@
+import * as messages from './messages'
+import * as cache from './cache'
+
 export function login(username, password, $f7) {
+    $f7.preloader.show()
     const url = new URL('/api/login', API_URL);
+
+    if (!checkInputFormLogin(username, password, $f7)) return
 
     // Récupération de la réponse depuis le cache
     getCacheLogin(url)
-        .then(function (response) {
+        .then(async function (response) {
             if (response) {
                 // Utilisation de la réponse en cache
                 return response.json().then(function (token) {
@@ -11,7 +17,7 @@ export function login(username, password, $f7) {
                     $f7.views.main.router.navigate('/prestation/');
                 });
             }
-    //         // Si la réponse n'est pas dans le cache, on fait une requête réseau
+            // Si la réponse n'est pas dans le cache, on fait une requête réseau
             return fetch(url, {
                 method: 'POST',
                 headers: {
@@ -24,32 +30,29 @@ export function login(username, password, $f7) {
             }).then(response =>
                 response.clone().json().then(function (token) {
                     if ('code' in token && token.code === 401) {
-                        $f7.dialog.alert('Vos indentifants sont incorect!')
+                        $f7.dialog.alert('Vos identifiants sont incorrects!')
+                        $f7.preloader.hide()
                     } else {
-                        // Cloner la réponse pour pouvoir la stocker en cache
-                        let responseToCache = response.clone();
-                        // Stockage de la réponse en cache
-                        caches.open('v1').then(function (cache) {
-                            cache.put(url, responseToCache);
-                        });
+                        if (process.env.NODE_ENV === 'production') {
+                            cache.stockResponseInCache(url, response.clone())
+                        }
                         localStorage.setItem('token', token.token)
+                        $f7.preloader.hide()
                         $f7.views.main.router.navigate('/prestation/')
-
                     }
-                }
-                    // Pour utliser le token dans l'appli
-                    // const token = localStorage.getItem('token')
-                )
+                })
             )
         })
         .catch(function (error) {
+            $f7.dialog.alert(messages.ERROR_SERVER)
+            $f7.preloader.hide()
+
             console.error('Error in fetch handler:', error);
         });
 }
 
-
-function getCacheLogin(url) {
-    return caches.open('v1').then(function (cache) {
+async function getCacheLogin(url) {
+    return caches.open('v1').then(async function (cache) {
         // Récupération de la requête depuis le cache
         return cache.match(url).then(function (response) {
             if (response) {
@@ -61,4 +64,21 @@ function getCacheLogin(url) {
         // Gestion des erreurs
         console.error('Error in fetch handler:', error);
     });
+}
+
+function checkInputFormLogin(username, password, $f7) {
+    let returnedValue = false
+
+    if (!username) {
+        $f7.dialog.alert('Veuillez renseigner votre nom d\'utilisateur!')
+        return returnedValue
+    } else if (!password) {
+        $f7.dialog.alert('Veuillez renseigner votre mot de passe!')
+        return returnedValue
+    }
+
+    returnedValue = true
+
+    return returnedValue
+
 }

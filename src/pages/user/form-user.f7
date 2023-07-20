@@ -1,0 +1,88 @@
+<template>
+    <div class="page" data-name="form">
+        <div class="navbar">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner sliding">
+                <div class="left">
+                    <a href="#" class="link back">
+                        <i class="icon icon-back"></i>
+                        <span class="if-not-md">Retour</span>
+                    </a>
+                </div>
+                <div class="title">Inscription</div>
+            </div>
+        </div>
+        <div class="page-content">
+            <form id="form-user">
+                <div class="block-title">Inscription à Gestion Travaux</div>
+                <div class="list list-strong-ios list-dividers-ios list-outline-ios">
+                    <ul>
+                        <li>
+                            <div class="item-content item-input">
+                                <div class="item-inner">
+                                    <div class="item-title item-label">Nom : </div>
+                                    <div class="item-input-wrap">
+                                        <input name='lastname' type="text" placeholder="Nom de famille" />
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content item-input">
+                                <div class="item-inner">
+                                    <div class="item-title item-label">Prénom : </div>
+                                    <div class="item-input-wrap">
+                                        <input name='firstname' type="text" placeholder="Prénom" />
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content item-input">
+                                <div class="item-inner">
+                                    <div class="item-title item-label">Email : </div>
+                                    <div class="item-input-wrap">
+                                        <input name='email' type="email" placeholder="Email" />
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="item-content item-input">
+                            <div class="item-inner">
+                                <div class="item-title item-label">Mot de passe :</div>
+                                <div class="item-input-wrap">
+                                    <input type="password" name="password" placeholder="Votre mot de passe" />
+                                </div>
+                            </div>
+                        </li>
+                        <li class="item-content item-input">
+                            <div class="item-inner">
+                                <div class="item-title item-label">Confirmer votre mot de passe :</div>
+                                <div class="item-input-wrap">
+                                    <input type="password" name="confirmPassword" placeholder="Confirmation mot de passe" />
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+            <button class="button button-small button-round button-fill" @click="${send}">S'inscrire</button>
+        </div>
+    </div>
+</template>
+<script>
+    import Framework7 from 'framework7/bundle'
+    import Dom7 from 'Dom7'
+
+    import { createUser } from '../../js/user.js'
+
+    export default async (props, {$, $on, $f7, $onBeforeUnmount } ) => {
+        const send = () => {
+            var formData = $f7.form.convertToData('#form-user')
+            createUser(formData, $f7)
+        }
+
+        return $render
+    }
+
+</script>

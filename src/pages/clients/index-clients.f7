@@ -1,0 +1,76 @@
+<template>
+    <div class="page">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="title">Mes Clients</div>
+            </div>
+        </div>
+        <div class="toolbar tabbar tabbar-icons toolbar-bottom">
+            <div class="toolbar-inner">
+                <a href="/mon-compte/" class="tab-link">
+                    <i class="f7-icons">person</i>
+                    <span class="tabbar-label">Mon profil</span>
+                </a>
+                <a href="/prestation/" class="tab-link">
+                    <i class="material-icons">home</i>
+                    <span class="tabbar-label">Prestations</span>
+                </a>
+                <a href="/prestation/" class="tab-link tab-link-active">
+                    <i class="f7-icons">person_2</i>
+                    <span class="tabbar-label">Clients</span>
+                </a>
+                <a href="" @click="${logoutConst}" class="tab-link">
+                    <i class="f7-icons blue">arrow_right_circle</i>
+                    <span class="tabbar-label">Déconnexion</span>
+                </a>
+            </div>
+        </div>
+        <div class="page-content">
+            <div class="block-title">
+                <div class="col-6 display-flex justify-content-center">
+                    <span>Informations sur les clients</span>
+                    <span>
+                        <a href="/form-client/">
+                            <i class="f7-icons">plus_app_fill</i>
+                        </a>
+                    </span>
+                </div>
+            </div>
+            ${clientsByUser.map((item) => $h`
+            <div class="card color-card">
+                <div class="card-header">${item.firstname} ${item.lastname}</div>
+                <div class="card-content card-content-padding display-flex align-content-center">
+                    <div class="col">
+                        <div class="row"> Rue : ${item.streetAddress}</div>
+                        <div class="row"> Ville : ${item.city}</div>
+                        <div class="row"> Code Postal : ${item.postalCode}</div>
+                        <div class="row"> Numéro de téléphone : ${getNumberPhoneInString(item.phoneNumber)}</div>
+                    </div>
+                </div>
+                <div class="card-footer d-flex justify-content-end">
+                    <a href="/client/"${item['@id'].split('/').pop()}>
+                        <i class="f7-icons">eye_fill</i>
+                    </a>
+                </div>
+            </div>
+            `)}
+        </div>
+    </div>
+</template>
+<script>
+    import Framework7 from 'framework7/bundle';
+
+    import { getClientsByUser, getNumberPhoneInString } from '../../js/client.js'
+    import { logout } from '../../js/token.js'
+
+    export default async (props, { $, $on, $f7 }) => {
+        const clients = await getClientsByUser()
+        let clientsByUser = clients.reverse()
+
+        const logoutConst = () => {
+            logout($f7)
+        }
+
+        return $render;
+    }
+</script>

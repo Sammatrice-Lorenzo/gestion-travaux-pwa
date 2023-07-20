@@ -4,7 +4,7 @@
     "pwa",
     "web"
   ],
-  "name": "gestion-travaux-pwa",
+  "name": "Gestion Travaux",
   "framework": "core",
   "template": "single-view",
   "bundler": "vite",

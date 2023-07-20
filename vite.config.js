@@ -21,7 +21,7 @@ const publicKey = fs.readFileSync(JWT_DIR, 'utf8');
 const options = {
     key: fs.readFileSync(KEY_SSL, 'utf8'),
     cert: fs.readFileSync(CERT_SSL, 'utf8')
-  };
+};
 
 const env = dotenv.config({ path: ENV_LOCAL }).parsed || dotenv.config().parsed;
 export default async () => {
@@ -31,18 +31,25 @@ export default async () => {
             replace({
                 preventAssignment: true,
                 values: {
-                    'API_URL': JSON.stringify(env.API_URL)
+                    'API_URL': JSON.stringify(env.API_URL),
+                    'FIREBASE_API_KEY': JSON.stringify(env.FIREBASE_API_KEY),
+                    'AUTH_DOMAIN_FIREBASE': JSON.stringify(env.AUTH_DOMAIN_FIREBASE),
+                    'FIREBASE_DATABASE_URL': JSON.stringify(env.FIREBASE_DATABASE_URL),
+                    'PROJECT_ID': JSON.stringify(env.PROJECT_ID),
+                    'STORAGE_BUCKET_FIREBASE': JSON.stringify(env.STORAGE_BUCKET_FIREBASE),
+                    'MESSAGING_SENDER_ID': JSON.stringify(env.MESSAGING_SENDER_ID),
+                    'APP_ID': JSON.stringify(env.APP_ID),
                 }
             })
         ],
         middleware: [
             (req, res, next) => {
-              if (req.url.startsWith('/www/')) {
-                const filePath = path.join(__dirname, 'www', req.url.replace('/www/', ''))
-                res.sendFile(filePath)
-              } else {
-                next()
-              }
+                if (req.url.startsWith('/www/')) {
+                    const filePath = path.join(__dirname, 'www', req.url.replace('/www/', ''))
+                    res.sendFile(filePath)
+                } else {
+                    next()
+                }
             }
         ],
         root: SRC_DIR,
@@ -82,16 +89,17 @@ export default async () => {
         },
         define: {
             'process.env': {
-                JWT_PUBLIC_KEY: publicKey
+                JWT_PUBLIC_KEY: publicKey,
+                VAPID_KEY: env.VAPID_KEY,
             }
         },
         copy: {
             targets: [
-              {
-                src: 'src/service-worker.js',
-                dest: './www',
-              },
+                {
+                    src: 'src/service-worker.js',
+                    dest: './www',
+                },
             ],
-          },
+        },
     };
 };
