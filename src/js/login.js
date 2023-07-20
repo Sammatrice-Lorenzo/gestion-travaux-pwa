@@ -35,12 +35,10 @@ export function login(username, password, $f7) {
                     } else {
                         if (process.env.NODE_ENV === 'production') {
                             cache.stockResponseInCache(url, response.clone())
-                            // cloneLoginCache(response, url)
                         }
                         localStorage.setItem('token', token.token)
                         $f7.preloader.hide()
                         $f7.views.main.router.navigate('/prestation/')
-
                     }
                 })
             )
@@ -54,7 +52,7 @@ export function login(username, password, $f7) {
 }
 
 async function getCacheLogin(url) {
-    return caches.open('v1').then(function (cache) {
+    return caches.open('v1').then(async function (cache) {
         // Récupération de la requête depuis le cache
         return cache.match(url).then(function (response) {
             if (response) {

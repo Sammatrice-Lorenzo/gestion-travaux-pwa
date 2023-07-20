@@ -89,12 +89,11 @@ export async function findWorkById(id, $f7)
     return work
 }
 
-export function createWork(form, equipements, $f7)
+export function createWork(form, $f7)
 {
     const url = getUrl('/api/works')
-    const urlAPiUser = getUrlUser()
-
-    if (!customValidation(form, equipements, $f7)) {
+    const body = getBodyWork(form)
+    if (!customValidation(form, $f7)) {
         return
     }
 
@@ -104,16 +103,7 @@ export function createWork(form, equipements, $f7)
             'Content-Type': 'application/json',
             // 'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({
-            name: form.name,
-            city: form.city,
-            start: form.start,
-            end: form.end,
-            progression: form.progression,
-            equipements: equipements,
-            user: urlAPiUser,
-            client: form.client
-        })
+        body: body
     }).then(response =>
         response
             .json()
@@ -158,30 +148,19 @@ export function deleteWork(idWork, $f7)
         })
 }
 
-export function updateWork(form, equipements, idWork, $f7)
+export function updateWork(form, idWork, $f7)
 {
     const url = getUrlById(URL_WORK, idWork)
-    const urlAPiUser = getUrlUser()
+    const body = getBodyWork(form)
 
-    const body = JSON.stringify({
-        name: form.name,
-        city: form.city,
-        start: form.start,
-        end: form.end,
-        progression: form.progression,
-        equipements: equipements,
-        user: urlAPiUser,
-        client: form.client
-    })
-
-    if (!customValidation(form, equipements, $f7)) {
+    if (!customValidation(form, $f7)) {
         return
     }
 
     apiRequest(url, 'PUT', [body, '/prestation/'], $f7)
 }
 
-function customValidation(form, equipements, $f7)
+function customValidation(form, $f7)
 {
     let valueReturned = true
 
@@ -198,7 +177,7 @@ function customValidation(form, equipements, $f7)
         valueReturned = false
     }
 
-    for (const equipement of equipements) {
+    for (const equipement of form.equipements) {
         if (equipement === '') {
             $f7.dialog.alert('Veuillez saisir un équipement')
             valueReturned = false
@@ -215,4 +194,20 @@ function customValidation(form, equipements, $f7)
 export function getEquipemntsInLine(equipements)
 {
     return equipements.join(', ')
+}
+
+function getBodyWork(form)
+{
+    const urlAPiUser = getUrlUser()
+
+    return JSON.stringify({
+        name: form.name,
+        city: form.city,
+        start: form.start,
+        end: form.end,
+        progression: form.progression,
+        equipements: form.equipements,
+        user: urlAPiUser,
+        client: form.client
+    })
 }

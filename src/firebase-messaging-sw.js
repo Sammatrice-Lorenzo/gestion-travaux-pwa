@@ -1,17 +1,19 @@
-importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js');
-importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js');
+importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js')
+importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js')
 
-firebase.initializeApp({
-    apiKey: 'AIzaSyA2-w6ZhUPfM5b8kKmi_8g5NbCFZYil-3U',
-    authDomain: 'gestion-travaux-pwa-84639.firebaseapp.com',
-    databaseURL: 'https://project-id.firebaseio.com',
-    projectId: '"gestion-travaux-pwa-84639',
-    storageBucket: 'project-id.appspot.com',
-    messagingSenderId: '145265878474',
-    appId: '1:145265878474:web:1c58ffc43958478d33db33',
-});
+const configFirebase = {
+    apiKey: FIREBASE_API_KEY,
+    authDomain: AUTH_DOMAIN_FIREBASE,
+    databaseURL: FIREBASE_DATABASE_URL,
+    projectId: PROJECT_ID,
+    storageBucket: STORAGE_BUCKET_FIREBASE,
+    messagingSenderId: MESSAGING_SENDER_ID,
+    appId: APP_ID,
+}
 
-const messaging = firebase.messaging();
+firebase.initializeApp(configFirebase)
+
+const messaging = firebase.messaging()
 
 messaging.onBackgroundMessage((payload) => {
     const notificationTitle = payload.notification.title;
@@ -22,4 +24,4 @@ messaging.onBackgroundMessage((payload) => {
     };
 
     self.registration.showNotification(notificationTitle, notificationOptions);
-});
+})

@@ -55,7 +55,7 @@ async function callApi(clientsByUser) {
 export function createClient(form, $f7)
 {
     const url = getUrl('/api/clients')
-    const urlAPiUser = getUrlUser()
+    const body = getBodyClient(form)
 
     if (!customValidation(form, $f7)) {
         return
@@ -67,15 +67,7 @@ export function createClient(form, $f7)
             'Content-Type': 'application/json',
             // 'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({
-            firstname: form.firstname,
-            lastname: form.lastname,
-            city: form.city,
-            phoneNumber: getNumberPhoneInString(form.phoneNumber),
-            postalCode: form.postalCode,
-            streetAddress: form.streetAddress,
-            user: urlAPiUser,
-        })
+        body: body
     }).then(response =>
         response
             .json()
@@ -98,17 +90,7 @@ export function createClient(form, $f7)
 export function updateClient(form, idClient, $f7)
 {
     const url = getUrlById(URL_CLIENTS, idClient)
-    const urlAPiUser = getUrlUser()
-
-    const body = JSON.stringify({
-        firstname: form.firstname,
-        lastname: form.lastname,
-        city: form.city,
-        phoneNumber: getNumberPhoneInString(form.phoneNumber),
-        postalCode: form.postalCode,
-        streetAddress: form.streetAddress,
-        user: urlAPiUser,
-    })
+    const body = getBodyClient(form)
 
     if (!customValidation(form, $f7)) {
         return
@@ -175,6 +157,20 @@ export async function findClientById(id, $f7){
         })
 
     return client
+}
+
+function getBodyClient(form) {
+    const urlAPiUser = getUrlUser()
+
+    return JSON.stringify({
+        firstname: form.firstname,
+        lastname: form.lastname,
+        city: form.city,
+        phoneNumber: getNumberPhoneInString(form.phoneNumber),
+        postalCode: form.postalCode,
+        streetAddress: form.streetAddress,
+        user: urlAPiUser,
+    })
 }
 
 function customValidation(form, $f7) {

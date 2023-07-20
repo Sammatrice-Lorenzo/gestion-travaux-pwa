@@ -134,7 +134,9 @@
         const send = () => {
             const equipements = btnComponent.getEquipementsInForm(Dom7)
             var formData = $f7.form.convertToData('#form-work')
-            updateWork(formData, equipements, props.prestationId, $f7)
+            formData.equipements = equipements
+
+            updateWork(formData, props.prestationId, $f7)
         }
 
         $on('pageBeforeIn', function (page) {

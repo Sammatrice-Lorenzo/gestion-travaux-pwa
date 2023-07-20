@@ -31,7 +31,14 @@ export default async () => {
             replace({
                 preventAssignment: true,
                 values: {
-                    'API_URL': JSON.stringify(env.API_URL)
+                    'API_URL': JSON.stringify(env.API_URL),
+                    'FIREBASE_API_KEY': JSON.stringify(env.FIREBASE_API_KEY),
+                    'AUTH_DOMAIN_FIREBASE': JSON.stringify(env.AUTH_DOMAIN_FIREBASE),
+                    'FIREBASE_DATABASE_URL': JSON.stringify(env.FIREBASE_DATABASE_URL),
+                    'PROJECT_ID': JSON.stringify(env.PROJECT_ID),
+                    'STORAGE_BUCKET_FIREBASE': JSON.stringify(env.STORAGE_BUCKET_FIREBASE),
+                    'MESSAGING_SENDER_ID': JSON.stringify(env.MESSAGING_SENDER_ID),
+                    'APP_ID': JSON.stringify(env.APP_ID),
                 }
             })
         ],
@@ -83,12 +90,6 @@ export default async () => {
         define: {
             'process.env': {
                 JWT_PUBLIC_KEY: publicKey,
-                FIREBASE_API_KEY: env.FIREBASE_API_KEY,
-                AUTH_DOMAIN_FIREBASE: env.AUTH_DOMAIN_FIREBASE,
-                PROJECT_ID: env.PROJECT_ID,
-                STORAGE_BUCKET_FIREBASE: env.STORAGE_BUCKET_FIREBASE,
-                MESSAGING_SENDER_ID: env.MESSAGING_SENDER_ID,
-                APP_ID: env.APP_ID,
                 VAPID_KEY: env.VAPID_KEY,
             }
         },

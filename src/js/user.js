@@ -39,7 +39,7 @@ export async function showUser()
 export function createUser(form, $f7)
 {
     const url = getUrl('/api/register')
-
+    const body = getBodyUser(form, true)
     if (!customValidation(form, $f7)) {
         return
     }
@@ -49,13 +49,7 @@ export function createUser(form, $f7)
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-            firstname: form.firstname,
-            lastname: form.lastname,
-            email: form.email,
-            password: form.password,
-            confirmPassword: form.confirmPassword,
-        })
+        body: body
     }).then(response =>
         response
             .json()
@@ -73,8 +67,10 @@ export function createUser(form, $f7)
             $f7.dialog.alert(messages.ERROR_SERVER)
         })
 
-    $f7.views.main.router.navigate('/')
-    
+    $f7.views.main.router.navigate('/', {
+        clearPreviousHistory: true,
+        animate: false
+    })
 }
 
 export function updateUser(form, idUser, $f7)
@@ -83,12 +79,7 @@ export function updateUser(form, idUser, $f7)
     const url = getUrlById('/api/user/edit/', idUser)
     const message = messages.getTypeMessageByMethodAPI('PUT')
 
-    const body = JSON.stringify({
-        firstname: form.firstname,
-        lastname: form.lastname,
-        email: form.email
-    })
-
+    const body = getBodyUser(form, false)
     if (!customValidation(form, $f7)) {
         return
     }
@@ -145,4 +136,29 @@ function customValidation(form, $f7)
     }
 
     return true
+}
+
+/**
+ * 
+ * @param {*} form 
+ * @param { boolean } isCreation 
+ * @returns 
+ */
+function getBodyUser(form, isCreation)
+{
+    if (isCreation) {
+        return JSON.stringify({
+            firstname: form.firstname,
+            lastname: form.lastname,
+            email: form.email,
+            password: form.password,
+            confirmPassword: form.confirmPassword,
+        })
+    }
+
+    return JSON.stringify({
+        firstname: form.firstname,
+        lastname: form.lastname,
+        email: form.email
+    })
 }
