@@ -207,3 +207,12 @@ function customValidation(form, equipements, $f7)
 
     return valueReturned
 }
+
+/**
+ * @param { Array } equipements 
+ * @returns { string }
+ */
+export function getEquipemntsInLine(equipements)
+{
+    return equipements.join(', ')
+}

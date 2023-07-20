@@ -33,7 +33,12 @@
                     <li>Date de début : ${formatDate(work.start)}</li>
                     <li>Date de fin: ${formatDate(work.end)}</li>
                     <li>État : ${work.progression}</li>
-                    <li> Les équipements utilisées : ${work.equipements}</li>
+                    <li>Les équipements utilisées :</li>
+                    <li>
+                        <div class="equipements-wrapper">
+                            <div class="equipements-container">${getEquipemntsInLine(work.equipements)}</div>
+                        </div>
+                    </li>
                     <li> Pour ${work.client.lastname} ${work.client.firstname}</li>
                 </ul>
             </div>
@@ -59,7 +64,7 @@
 
     import { logout } from '../../js/token.js'
     import { formatDate } from '../../js/date.js'
-    import { findWorkById, deleteWork } from '../../js/work.js'
+    import { findWorkById, deleteWork, getEquipemntsInLine } from '../../js/work.js'
     import { CONFIRMATION_TO_DELETE } from '../../js/messages.js'
 
     export default async (props, { $, $on, $f7 }) => {

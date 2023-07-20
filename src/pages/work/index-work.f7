@@ -46,7 +46,7 @@
                         <div class="row">Date de fin:  ${formatDate(item.end)}</div>
                         <div class="row">État : ${item.progression}</div>
                         <div class="row">
-                            Les équipements utilisées : ${item.equipements}
+                            Les équipements utilisées : ${getEquipemntsInLine(item.equipements)}
                         </div>
                         <div class="row">
                             Pour ${item.client.lastname} ${item.client.firstname}
@@ -68,7 +68,7 @@
 
     import { formatDate } from '../../js/date.js'
     import { logout } from '../../js/token.js'
-    import { getWorkByUser } from '../../js/work.js'
+    import { getWorkByUser, getEquipemntsInLine } from '../../js/work.js'
     import { sendNotificationPushForProgression } from '../../js/notification'
 
     export default async (props, { $, $on, $f7 }) => {

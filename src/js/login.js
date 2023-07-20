@@ -47,6 +47,8 @@ export function login(username, password, $f7) {
         })
         .catch(function (error) {
             $f7.dialog.alert(messages.ERROR_SERVER)
+            $f7.preloader.hide()
+
             console.error('Error in fetch handler:', error);
         });
 }

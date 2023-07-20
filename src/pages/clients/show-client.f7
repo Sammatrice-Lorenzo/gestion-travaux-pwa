@@ -33,7 +33,7 @@
                     <li>Rue : ${client.streetAddress}</li>
                     <li>Ville: ${client.city}</li>
                     <li>Code Postal : ${client.postalCode}</li>
-                    <li>Numéro de téléphone: ${client.phoneNumber}</li>
+                    <li>Numéro de téléphone: ${getNumberPhoneInString(client.phoneNumber)}</li>
                 </ul>
             </div>
 
@@ -57,7 +57,7 @@
     import Framework7 from 'framework7/bundle';
     import Dom7 from 'Dom7';
 
-    import { findClientById, deleteClient } from '../../js/client.js'
+    import { findClientById, deleteClient, getNumberPhoneInString } from '../../js/client.js'
     import { logout } from '../../js/token.js'
     import { CONFIRMATION_TO_DELETE } from '../../js/messages.js'
 

@@ -71,7 +71,7 @@ export function createClient(form, $f7)
             firstname: form.firstname,
             lastname: form.lastname,
             city: form.city,
-            phoneNumber: form.phoneNumber,
+            phoneNumber: getNumberPhoneInString(form.phoneNumber),
             postalCode: form.postalCode,
             streetAddress: form.streetAddress,
             user: urlAPiUser,
@@ -104,7 +104,7 @@ export function updateClient(form, idClient, $f7)
         firstname: form.firstname,
         lastname: form.lastname,
         city: form.city,
-        phoneNumber: form.phoneNumber,
+        phoneNumber: getNumberPhoneInString(form.phoneNumber),
         postalCode: form.postalCode,
         streetAddress: form.streetAddress,
         user: urlAPiUser,
@@ -209,4 +209,12 @@ function customValidation(form, $f7) {
   
     return true
 }
-  
+
+/**
+ * En format 06.01.02.03.04
+ * @param { string } numberPhone
+ */
+export function getNumberPhoneInString(numberPhone)
+{
+    return numberPhone.length <= 10 ? numberPhone.match(/.{1,2}/g).join('.') : numberPhone
+}

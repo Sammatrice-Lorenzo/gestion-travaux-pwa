@@ -44,7 +44,7 @@
                         <div class="row"> Rue : ${item.streetAddress}</div>
                         <div class="row"> Ville : ${item.city}</div>
                         <div class="row"> Code Postal : ${item.postalCode}</div>
-                        <div class="row"> Numéro de téléphone : ${item.phoneNumber}</div>
+                        <div class="row"> Numéro de téléphone : ${getNumberPhoneInString(item.phoneNumber)}</div>
                     </div>
                 </div>
                 <div class="card-footer d-flex justify-content-end">
@@ -60,7 +60,7 @@
 <script>
     import Framework7 from 'framework7/bundle';
 
-    import { getClientsByUser } from '../../js/client.js'
+    import { getClientsByUser, getNumberPhoneInString } from '../../js/client.js'
     import { logout } from '../../js/token.js'
 
     export default async (props, { $, $on, $f7 }) => {
