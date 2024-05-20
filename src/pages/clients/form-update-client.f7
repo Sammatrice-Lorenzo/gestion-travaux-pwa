@@ -80,7 +80,9 @@
                     </ul>
                 </div>
             </form>
-            <button class="button button-small button-round button-fill" @click="${send}">Sauvegarder</button>
+            <div class="block">
+                <button class="button button-small button-round button-fill" @click="${send}">Sauvegarder</button>
+            </div>
         </div>
     </div>
 </template>
@@ -104,7 +106,7 @@
         }
 
         const send = () => {
-            var formData = $f7.form.convertToData('#form-client')
+            const formData = $f7.form.convertToData('#form-client')
             updateClient(formData, props.clientId, $f7)
         }
 

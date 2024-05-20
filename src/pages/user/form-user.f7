@@ -66,7 +66,9 @@
                     </ul>
                 </div>
             </form>
-            <button class="button button-small button-round button-fill" @click="${send}">S'inscrire</button>
+            <div class="block">
+                <button class="button button-small button-round button-fill" @click="${send}">S'inscrire</button>
+            </div>
         </div>
     </div>
 </template>
@@ -78,7 +80,7 @@
 
     export default async (props, {$, $on, $f7, $onBeforeUnmount } ) => {
         const send = () => {
-            var formData = $f7.form.convertToData('#form-user')
+            const formData = $f7.form.convertToData('#form-user')
             createUser(formData, $f7)
         }
 

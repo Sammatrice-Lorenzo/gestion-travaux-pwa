@@ -1,15 +1,8 @@
-/* Your app custom styles here */
+@import "work";
+@import "invoice_file";
+
 .center-login {
     margin-top: 10%;
-}
-
-.card.color-card {
-    background-color: #0077B6;
-    color: white;
-}
-
-.card-footer {
-    background-color: white;
 }
 
 li.btn-register {
@@ -33,3 +26,8 @@ li.btn-register {
     overflow: auto;
 }
 
+.input-error {
+    border: 2px solid #ff3860;
+    border-radius: 4px;
+    box-shadow: 0 0 5px #ff3860;
+}

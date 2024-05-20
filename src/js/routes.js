@@ -2,6 +2,7 @@ import HomePage from '../pages/home.f7'
 import WorkIndex from '../pages/work/index-work.f7'
 import FormWork from '../pages/work/form-work.f7'
 import FormUpdateWork from '../pages/work/form-update-work.f7'
+import FormInvoiceWork from '../pages/work/form-invoice-work.f7'
 import ShowWork from '../pages/work/show-work.f7'
 import ShowUser from '../pages/user/show-user.f7'
 import FormUpdateUser from '../pages/user/form-update-user.f7'
@@ -12,7 +13,7 @@ import FormUpdateClient from '../pages/clients/form-update-client.f7'
 import FormRegister from '../pages/user/form-user.f7'
 import NotFoundPage from '../pages/404.f7'
 
-let routes = [
+const routes = [
     {
         path: '/',
         component: HomePage,
@@ -40,6 +41,10 @@ let routes = [
     {
         path: '/form-work/update/:prestationId',
         component: FormUpdateWork,
+    },
+    {
+        path: '/form-work/invoice/:prestationId/:clientId',
+        component: FormInvoiceWork,
     },
     {
         path: '/prestation/:prestationId',

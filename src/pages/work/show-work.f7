@@ -26,34 +26,39 @@
             </div>
         </div>
         <div class="page-content">
-            <div class="block-title">Informations sur les prestations</div>
-            <div class="list list-strong list-outline inset list-dividers-ios simple-list">
-                <ul>
-                    <li>${work.name}</li>
-                    <li>Date de début : ${formatDate(work.start)}</li>
-                    <li>Date de fin: ${formatDate(work.end)}</li>
-                    <li>État : ${work.progression}</li>
-                    <li>Les équipements utilisées :</li>
-                    <li>
-                        <div class="equipements-wrapper">
-                            <div class="equipements-container">${getEquipemntsInLine(work.equipements)}</div>
-                        </div>
-                    </li>
-                    <li> Pour ${work.client.lastname} ${work.client.firstname}</li>
-                </ul>
-            </div>
-
-            <div class="display-flex justify-content-center">
-                <span>
-                    <a href="/form-work/update/"${props.prestationId} class="button button-small button-outline">
-                        <i class="f7-icons">square_pencil</i>
+            <div class="card card-outline">
+                <div class="card-header display-flex justify-content-space-between">
+                    <div class="card-title">Informations sur la prestation</div>
+                </div>
+                <div class="card-content card-content-padding">
+                    <div class="list simple-list no-hairlines-between">
+                        <ul>
+                            <li>${work.name}</li>
+                            <li>Date de début : ${formatDate(work.start)}</li>
+                            <li>Date de fin : ${formatDate(work.end)}</li>
+                            <li>État : ${work.progression}</li>
+                            <li>Équipements utilisés :</li>
+                            <li class="equipements-wrapper">
+                                <div class="equipements-container">${getEquipemntsInLine(work.equipements)}</div>
+                            </li>
+                            <li>Pour ${work.client.lastname} ${work.client.firstname}</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-footer display-flex justify-content-center">
+                    <a href="/form-work/update/${props.prestationId}" class="link link-fill link-fill-primary link-fill-raised">
+                        <i class="f7-icons">square_pencil_fill</i>
                     </a>
-                </span>
-                <span>
-                    <a id=${props.prestationId} href="#" class="button button-small button-outline delete" @click="${openConfirm}">
+                    <a id=${props.prestationId} href="#" class="link link-fill link-fill-danger link-fill-raised delete" @click="${openConfirm}">
                         <i class="f7-icons">trash_circle_fill</i>
                     </a>
-                </span>
+                </div>
+                <div class="card-footer display-flex justify-content-center">
+                    <a href="/form-work/invoice/${props.prestationId}/${work.client.id}" class="link link-fill link-fill-secondary link-fill-raised">
+                        <i class="f7-icons">doc_text_fill</i>
+                        <span>Générer la facture</span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>

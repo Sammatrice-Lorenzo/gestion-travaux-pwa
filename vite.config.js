@@ -70,7 +70,7 @@ export default async () => {
             },
         },
         server: {
-            // https: https.createServer(options),
+            https: https.createServer(options),
             host: true,
             hmr: {
                 overlay: true

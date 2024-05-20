@@ -31,9 +31,10 @@ export function getUrlById(url, id)
     return new URL(url + id, API_URL)
 }
 
+/**
+ * @returns { URL }
+ */
 export function getUrlUser()
 {
-    const tokenDecoded = getDecodedToken()
-    
-    return URL_USER + tokenDecoded.id
+    return getUrlByUser(URL_USER)
 }

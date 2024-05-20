@@ -1,5 +1,5 @@
 import * as messages from './messages'
-import { getUrlUser, getUrlById, getUrl } from './urlGenerator.js'
+import { getUrlById, getUrl, getUrlUser } from './urlGenerator.js'
 import { getToken } from './token.js'
 import { clearCache } from './cache'
 

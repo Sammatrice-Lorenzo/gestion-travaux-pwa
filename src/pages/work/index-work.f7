@@ -37,24 +37,20 @@
                 </div>
             </div>
             ${worksByUser.map((item) => $h`
-            <div class="card color-card">
-                <div class="card-header">${item.name}</div>
-                <div class="card-content card-content-padding display-flex align-content-center">
-                    <div class="col">
-                        <div class="row">Prestation réalisé à ${item.city}</div>
-                        <div class="row">Date de début :  ${formatDate(item.start)}</div>
-                        <div class="row">Date de fin:  ${formatDate(item.end)}</div>
-                        <div class="row">État : ${item.progression}</div>
-                        <div class="row">
-                            Les équipements utilisées : ${getEquipemntsInLine(item.equipements)}
-                        </div>
-                        <div class="row">
-                            Pour ${item.client.lastname} ${item.client.firstname}
-                        </div>
-                    </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">${item.name}</h3>
+                </div>
+                <div class="card-body">
+                    <p class="card-text"><strong>Lieu :</strong> ${item.city}</p>
+                    <p class="card-text"><strong>Date de début :</strong> ${formatDate(item.start)}</p>
+                    <p class="card-text"><strong>Date de fin :</strong> ${formatDate(item.end)}</p>
+                    <p class="card-text"><strong>État :</strong> ${item.progression}</p>
+                    <p class="card-text"><strong>Équipements :</strong> ${getEquipemntsInLine(item.equipements)}</p>
+                    <p class="card-text"><strong>Client :</strong> ${item.client.lastname} ${item.client.firstname}</p>
                 </div>
                 <div class="card-footer d-flex justify-content-end">
-                    <a href="/prestation/"${item['@id'].split('/').pop()}>
+                    <a href="/prestation/${item['@id'].split('/').pop()}" class="card-link" aria-label="Voir les détails de la prestation">
                         <i class="f7-icons">eye_fill</i>
                     </a>
                 </div>
@@ -72,7 +68,7 @@
     import { sendNotificationPushForProgression } from '../../js/notification'
 
     export default async (props, { $, $on, $f7 }) => {
-        const works = await getWorkByUser()
+        const works = await getWorkByUser($f7)
         let worksByUser = works.reverse()
 
         const logoutConst = () => {
