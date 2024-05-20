@@ -1,0 +1,24 @@
+FROM node:20.11.1 AS build-stage
+
+WORKDIR /app
+
+RUN npm install --force -g @angular/cli@latest
+
+COPY /package.json ./
+
+RUN npm install --force
+
+COPY gestion-travaux-pwa/ .
+
+RUN npm run build --prod
+
+FROM nginx:1.25
+
+COPY --from=build-stage /app/dist/gestion-travaux-pwa /usr/share/nginx/html
+RUN rm /etc/nginx/conf.d/default.conf
+
+COPY gestion-travaux-pwa/nginx/nginx.conf /etc/nginx/nginx.conf
+
+
+EXPOSE 80
+EXPOSE 443
