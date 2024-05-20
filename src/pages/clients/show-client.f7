@@ -53,7 +53,7 @@
 </template>
 <script>
     import Framework7 from 'framework7/bundle';
-    import Dom7 from 'Dom7';
+    import Dom7 from 'dom7';
 
     import { findClientById, deleteClient, getNumberPhoneInString } from '../../js/client.js'
     import { logout } from '../../js/token.js'

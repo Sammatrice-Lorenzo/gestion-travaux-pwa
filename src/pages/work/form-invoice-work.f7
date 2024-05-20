@@ -83,7 +83,7 @@
 </template>
 <script>
     import Framework7 from 'framework7/bundle'
-    import Dom7 from 'Dom7'
+    import Dom7 from 'dom7'
 
     import { createInvoiceWork, isValidForm } from '../../js/invoiceWork.js'
     import { addInvoiceLine } from '../../js/work/component/invoiceLineComponent.js'

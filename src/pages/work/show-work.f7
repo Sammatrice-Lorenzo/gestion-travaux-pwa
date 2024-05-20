@@ -65,7 +65,7 @@
 </template>
 <script>
     import Framework7 from 'framework7/bundle';
-    import Dom7 from 'Dom7';
+    import Dom7 from 'dom7';
 
     import { logout } from '../../js/token.js'
     import { formatDate } from '../../js/date.js'

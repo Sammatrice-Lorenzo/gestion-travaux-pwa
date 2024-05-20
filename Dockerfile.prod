@@ -4,13 +4,12 @@ WORKDIR /app
 
 RUN npm install --force -g @angular/cli@latest
 
-COPY /package.json ./
-
-RUN npm install --force
+COPY gestion-travaux-pwa/package.json ./
 
 COPY gestion-travaux-pwa/ .
 
-RUN npm run build --prod
+RUN npm install --force
+RUN npm run build
 
 FROM nginx:1.25
 
