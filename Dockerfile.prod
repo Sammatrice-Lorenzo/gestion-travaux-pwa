@@ -13,11 +13,16 @@ RUN npm run build
 
 FROM nginx:1.25
 
-COPY --from=build-stage /app/www/ /usr/share/nginx/html
+COPY --from=build-stage /app/src/www/ /usr/share/nginx/html
 RUN rm /etc/nginx/conf.d/default.conf
 
 COPY gestion-travaux-pwa/nginx/nginx.conf /etc/nginx/nginx.conf
 
+RUN echo "upstream php-upstream { server backend:9000; }" > /etc/nginx/conf.d/upstream.conf
+
+
+COPY gestion-travaux-pwa/config/ssl-prod/cert.pem /etc/nginx/cert.pem
+COPY gestion-travaux-pwa/config/ssl-prod/key.pem /etc/nginx/key.pem
 
 EXPOSE 80
 EXPOSE 443
