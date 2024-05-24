@@ -26,7 +26,7 @@ export function login(username, password, $f7) {
                     username: username,
                     password: password
                 }),
-            }).then(response => handleLogin(response, $f7))
+            }).then(response => handleLogin(response, $f7, url))
         })
         .catch(function (error) {
             $f7.dialog.alert(messages.ERROR_SERVER)
@@ -74,7 +74,7 @@ function successLogin(token, $f7) {
     $f7.views.main.router.navigate('/prestation/');
 }
 
-function handleLogin(response, $f7) {
+function handleLogin(response, $f7, url) {
     response.clone().json().then(function (token) {
         if ('code' in token && token.code === 401) {
             $f7.dialog.alert('Vos identifiants sont incorrects!')
