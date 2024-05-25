@@ -1,4 +1,3 @@
-
 const ERROR_DELETE_CACHE = 'Erreur lors de la suppression du cache "v1":'
 const CACHE_V1 = 'v1'
 

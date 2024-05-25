@@ -1,4 +1,5 @@
 import jwt_decode from 'jwt-decode'
+import { clearCache } from './cache'
 
 const TOKEN = 'token'
 
@@ -23,4 +24,7 @@ export function logout ($f7) {
     })
 
     localStorage.removeItem(TOKEN)
+    if (process.env.NODE_ENV === 'production') {
+        clearCache()
+    }
 }
