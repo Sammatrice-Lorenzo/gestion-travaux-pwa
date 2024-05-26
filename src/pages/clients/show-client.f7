@@ -26,36 +26,34 @@
             </div>
         </div>
         <div class="page-content">
-            <div class="block-title">Informations sur le client</div>
-            <div class="list list-strong list-outline inset list-dividers-ios simple-list">
-                <ul>
-                    <li>${client.lastname} ${client.firstname}</li>
-                    <li>Rue : ${client.streetAddress}</li>
-                    <li>Ville: ${client.city}</li>
-                    <li>Code Postal : ${client.postalCode}</li>
-                    <li>Numéro de téléphone: ${getNumberPhoneInString(client.phoneNumber)}</li>
-                </ul>
-            </div>
-
-            <div class="display-flex justify-content-center">
-                <span>
-                    <a href="/form-client/update/"${props.clientId} class="button button-small button-outline">
-                        <i class="f7-icons">square_pencil</i>
+            <div class="block-title card-header display-flex justify-content-space-between">Informations sur le client</div>
+            <div class="card card-outline">
+                <div class="card-content card-content-padding ">
+                    <div class="list simple-list no-hairlines-between">
+                        <ul>
+                            <li>${client.lastname} ${client.firstname}</li>
+                            <li>Rue : ${client.streetAddress}</li>
+                            <li>Ville : ${client.city}</li>
+                            <li>Code Postal : ${client.postalCode}</li>
+                            <li>Numéro de téléphone : ${getNumberPhoneInString(client.phoneNumber)}</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-footer display-flex justify-content-center">
+                    <a href="/form-client/update/${props.clientId}" class="link link-fill link-fill-primary link-fill-raised">
+                        <i class="f7-icons">square_pencil_fill</i>
                     </a>
-                </span>
-                    <a id=${props.clientId} href="#" class="button button-small button-outline delete" @click="${openConfirm}">
+                    <a id=${props.clientId} href="#" class="link link-fill link-fill-danger link-fill-raised delete" @click="${openConfirm}">
                         <i class="f7-icons">trash_circle_fill</i>
                     </a>
-                <span>
-                </span>
+                </div>
             </div>
-
         </div>
     </div>
 </template>
 <script>
     import Framework7 from 'framework7/bundle';
-    import Dom7 from 'Dom7';
+    import Dom7 from 'dom7';
 
     import { findClientById, deleteClient, getNumberPhoneInString } from '../../js/client.js'
     import { logout } from '../../js/token.js'

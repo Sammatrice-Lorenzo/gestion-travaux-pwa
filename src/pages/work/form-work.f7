@@ -70,7 +70,7 @@
                                 <div class="item-inner">
                                     <div class="item-title item-label">Date de début</div>
                                     <div class="item-input-wrap">
-                                        <input name='start' type="datetime-local" placeholder="Date de début" value="2023-05-08 09:00" />
+                                        <input name='start' type="datetime-local" placeholder="Date de début" value="${convertFrenchDate(now)}" />
                                     </div>
                                 </div>
                             </div>
@@ -80,7 +80,7 @@
                                 <div class="item-inner">
                                     <div class="item-title item-label">Date de fin</div>
                                     <div class="item-input-wrap">
-                                        <input name='end' type="datetime-local" placeholder="Date de fin" value="2023-05-08 18:00" />
+                                        <input name='end' type="datetime-local" placeholder="Date de fin" value="${convertFrenchDate(now)}" />
                                     </div>
                                 </div>
                             </div>
@@ -102,26 +102,29 @@
                         </li>
                     </ul>
                 </div>
-    
             </form>
-            <button class="button button-small button-round button-fill" @click="${send}">Sauvegarder</button>
+            <div class="block">
+                <button class="button button-small button-round button-fill" @click="${send}">Sauvegarder</button>
+            </div>
         </div>
     </div>
 </template>
 <script>
     import Framework7 from 'framework7/bundle'
-    import Dom7 from 'Dom7'
+    import Dom7 from 'dom7'
 
+    import { formatDate, convertFrenchDate } from '../../js/date.js'
     import { createWork } from '../../js/work.js'
     import { getClientsByUser } from '../../js/client.js'
     import { addInputEquipement, getEquipementsInForm } from '../../js/work/component/btnComponent.js'
 
     export default async (props, {$, $on, $f7, $onBeforeUnmount } ) => {
 
+        const now = new Date().toLocaleString()
         const clients = await getClientsByUser()
         const send = () => {
             const equipements = getEquipementsInForm(Dom7)
-            var formData = $f7.form.convertToData('#form-work')
+            const formData = $f7.form.convertToData('#form-work')
             formData.equipements = equipements
 
             createWork(formData, $f7)

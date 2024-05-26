@@ -14,3 +14,14 @@ export const formatDate = (date) => {
 
     return `${day}/${month}/${year} ${hours}:${minutes}`
 }
+
+/**
+ * @param { string } date
+ * @returns { string }
+ */
+export const convertFrenchDate = (date) => {
+    const [datePart, timePart] = date.split(' ')
+    const [day, month, year] = datePart.split('/')
+
+    return `${year}-${month}-${day} ${timePart}`
+}

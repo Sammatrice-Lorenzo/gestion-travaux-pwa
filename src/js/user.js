@@ -1,7 +1,8 @@
 import * as messages from './messages'
-import { getUrlUser, getUrlById, getUrl } from './urlGenerator.js'
+import { getUrlById, getUrl, getUrlUser } from './urlGenerator.js'
 import { getToken } from './token.js'
 import { clearCache } from './cache'
+import Dom7 from 'dom7'
 
 export async function showUser()
 {
@@ -54,11 +55,16 @@ export function createUser(form, $f7)
         response
             .json()
             .then(function (data) {
-                if (data.code === '422') {
+                if (data.code === 422) {
                     $f7.dialog.alert('Cette email existe déjà au sein de l\'application veuillez ressayer avec une autre')
                 } else {
                     $f7.dialog.alert(messages.SUCCESS_INSERTION_FORM)
                     $f7.dialog.alert('Un email de confirmation vous a été envoyée veuillez confirmer votre email avant de vous connecté')
+
+                    $f7.views.main.router.navigate('/', {
+                        clearPreviousHistory: true,
+                        animate: false
+                    })
                 }
             })
     )
@@ -66,11 +72,6 @@ export function createUser(form, $f7)
             console.log(error)
             $f7.dialog.alert(messages.ERROR_SERVER)
         })
-
-    $f7.views.main.router.navigate('/', {
-        clearPreviousHistory: true,
-        animate: false
-    })
 }
 
 export function updateUser(form, idUser, $f7)
@@ -113,29 +114,38 @@ export function updateUser(form, idUser, $f7)
 function customValidation(form, $f7)
 {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    let valueReturned = false
+    let isFormValid = true
 
-    if (form.lastname === '') {
-        $f7.dialog.alert('Veuillez saisir un nom')
-        return valueReturned
-    } else if (form.firstname === '') {
-        $f7.dialog.alert('Veuillez saisir un prénom')
-        return valueReturned
-    } else if (form.email === '') {
-        $f7.dialog.alert('Veuillez saisir un email')
-        return valueReturned
-    }
+    const $$ = Dom7
+    const formSelector = $$('form#form-user')
+    const inputs = $$(formSelector).find('input')
+
+    inputs.forEach(function(input) {
+        const divParent = $$(input).closest('.item-inner')
+        if (input.value.trim() === '') {
+            isFormValid = false
+            const label = $$(divParent).find('.item-title').text()
+            $f7.dialog.alert(`${label} ne peut pas être vide.`)
+            $$(divParent).addClass('input-error')
+        } else {
+            $$(divParent).removeClass('input-error')
+        }
+    })
 
     if (form.password !== form.confirmPassword) {
+        isFormValid = false
         $f7.dialog.alert('Les deux mots passe ne correspond pas')
+        return isFormValid
     }
-
+    
     if (!emailRegex.test(form.email)) {
+        isFormValid = false
         $f7.dialog.alert('Veuillez saisir un email valide')
-        return valueReturned
+
+        return isFormValid
     }
 
-    return true
+    return isFormValid
 }
 
 /**

@@ -1,0 +1,16 @@
+.invoice-link-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.invoice-link {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+}
+
+.invoice-link__icon {
+    margin-right: 0.5rem;
+}

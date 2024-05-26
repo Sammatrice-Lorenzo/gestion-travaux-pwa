@@ -13,8 +13,7 @@ export function login(username, password, $f7) {
             if (response) {
                 // Utilisation de la réponse en cache
                 return response.json().then(function (token) {
-                    localStorage.setItem('token', token.token);
-                    $f7.views.main.router.navigate('/prestation/');
+                    successLogin(token, $f7)
                 });
             }
             // Si la réponse n'est pas dans le cache, on fait une requête réseau
@@ -27,21 +26,7 @@ export function login(username, password, $f7) {
                     username: username,
                     password: password
                 }),
-            }).then(response =>
-                response.clone().json().then(function (token) {
-                    if ('code' in token && token.code === 401) {
-                        $f7.dialog.alert('Vos identifiants sont incorrects!')
-                        $f7.preloader.hide()
-                    } else {
-                        if (process.env.NODE_ENV === 'production') {
-                            cache.stockResponseInCache(url, response.clone())
-                        }
-                        localStorage.setItem('token', token.token)
-                        $f7.preloader.hide()
-                        $f7.views.main.router.navigate('/prestation/')
-                    }
-                })
-            )
+            }).then(response => handleLogin(response, $f7, url))
         })
         .catch(function (error) {
             $f7.dialog.alert(messages.ERROR_SERVER)
@@ -81,4 +66,24 @@ function checkInputFormLogin(username, password, $f7) {
 
     return returnedValue
 
+}
+
+function successLogin(token, $f7) {
+    localStorage.setItem('token', token.token);
+    $f7.preloader.hide()
+    $f7.views.main.router.navigate('/prestation/');
+}
+
+function handleLogin(response, $f7, url) {
+    response.clone().json().then(function (token) {
+        if ('code' in token && token.code === 401) {
+            $f7.dialog.alert('Vos identifiants sont incorrects!')
+            $f7.preloader.hide()
+        } else {
+            if (process.env.NODE_ENV === 'production') {
+                cache.stockResponseInCache(url, response.clone())
+            }
+            successLogin(token, $f7)
+        }
+    })
 }

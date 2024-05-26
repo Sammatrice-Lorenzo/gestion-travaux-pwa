@@ -34,20 +34,17 @@
                     <li>Email : ${user.email}</li>
                 </ul>
             </div>
-
-            <div class="display-flex justify-content-center">
-                <span>
-                    <a href="/mon-compte/update/"${idUser} class="button button-small button-outline">
-                        <i class="f7-icons">square_pencil</i>
-                    </a>
-                </span>
+            <div class="card-footer display-flex justify-content-center">
+                <a href="/mon-compte/update/"${idUser} class="link link-fill link-fill-primary link-fill-raised">
+                    <i class="f7-icons">square_pencil</i>
+                </a>
             </div>
         </div>
     </div>
 </template>
 <script>
     import Framework7 from 'framework7/bundle';
-    import Dom7 from 'Dom7';
+    import Dom7 from 'dom7';
 
     import { showUser } from '../../js/user.js'
     import { getDecodedToken } from '../../js/token.js'

@@ -104,13 +104,15 @@
                 </div>
     
             </form>
-            <button class="button button-small button-round button-fill" @click="${send}">Sauvegarder</button>
+            <div class="block">
+                <button class="button button-small button-round button-fill" @click="${send}">Sauvegarder</button>
+            </div>
         </div>
     </div>
 </template>
 <script>
     import Framework7 from 'framework7/bundle'
-    import Dom7 from 'Dom7'
+    import Dom7 from 'dom7'
 
     import { getClientsByUser } from '../../js/client.js'
     import { updateWork } from '../../js/work.js'
@@ -133,7 +135,7 @@
 
         const send = () => {
             const equipements = btnComponent.getEquipementsInForm(Dom7)
-            var formData = $f7.form.convertToData('#form-work')
+            const formData = $f7.form.convertToData('#form-work')
             formData.equipements = equipements
 
             updateWork(formData, props.prestationId, $f7)

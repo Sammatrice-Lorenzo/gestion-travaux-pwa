@@ -7,7 +7,7 @@ import { clearCache, checkDataToGetOfAResponseCached, responseIsCached, stockRes
 const URL_WORK = '/api/works/'
 const URL_WORK_BY_USER = '/api/worksByUser/'
 
-export async function getWorkByUser() {
+export async function getWorkByUser($f7) {
     let worksByUser = []
     const url = getUrlByUser(URL_WORK_BY_USER)
 
@@ -16,10 +16,10 @@ export async function getWorkByUser() {
         return checkDataToGetOfAResponseCached(url)
     }
 
-    return callApi(worksByUser)
+    return callApi(worksByUser, $f7)
 }
 
-async function callApi(workByUser) {
+async function callApi(workByUser, $f7) {
     const url = getUrlByUser(URL_WORK_BY_USER)
     const token = getToken()
 
@@ -36,6 +36,11 @@ async function callApi(workByUser) {
             .then(function (data) {
                 if (process.env.NODE_ENV === 'production') {
                     stockResponseInCache(url, response.clone()) // Utiliser la réponse clonée
+                }
+
+                if (data.code === 401) {
+                    $f7.dialog.alert(messages.TOKEN_EXPIRED)
+                    $f7.views.main.router.navigate('/')
                 }
 
                 for (const iterator of data["hydra:member"]) {
