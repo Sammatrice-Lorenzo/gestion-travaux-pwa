@@ -196,7 +196,7 @@ function customValidation(form, $f7)
  * @param { Array } equipements 
  * @returns { string }
  */
-export function getEquipemntsInLine(equipements)
+export function getEquipementsInLine(equipements)
 {
     return equipements.join(', ')
 }

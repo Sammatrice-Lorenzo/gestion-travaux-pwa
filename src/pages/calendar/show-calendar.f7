@@ -1,0 +1,211 @@
+<template>
+    <div class="page">
+        <div class="navbar no-shadow">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner sliding">
+                <div class="left">
+                    <a class="link back">
+                        <i class="icon icon-back"></i>
+                        <span class="if-not-md">Retour</span>
+                    </a>
+                </div>
+                <div class="title navbar-calendar-title"></div>
+            </div>
+        </div>
+        <div class="page-content">
+            <div id="calendar" class="block block-strong no-padding no-margin no-hairline-top"></div>
+            <div class="popup popup-swipe">
+                <div class="page">
+                    <div class="navbar">
+                        <div class="navbar-bg"></div>
+                        <div class="navbar-inner">
+                            <div class="title">Créer un nouveau événement</div>
+                            <div class="right">
+                                <a class="link popup-close">
+                                    Fermer
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-content">
+                        <div class="display-flex justify-content-center align-items-center">
+                            <form id="form-calendar">
+                                <div class="block-title text-align-center">
+                                    <p>Création prestation jour</p>
+                                </div>
+                                <div class="list list-strong-ios list-dividers-ios list-outline-ios no-hairlines-md">
+                                    <ul>
+                                        <li class="item-content item-input">
+                                            <div class="item-inner">
+                                                <div class="item-title item-label">Titre : </div>
+                                                <div class="item-input-wrap">
+                                                    <input name='title' type="text" placeholder="RDV chez le client" />
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="item-content item-input">
+                                            <div class="item-inner">
+                                                <div class="item-title item-label">Heure de début : </div>
+                                                <div class="item-input-wrap">
+                                                    <input name='startHour' type="time" value="${startHoursValue}" />
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="item-content item-input">
+                                            <div class="item-inner">
+                                                <div class="item-title item-label">Heure de fin : </div>
+                                                <div class="item-input-wrap">
+                                                    <input name='endHour' type="time" value="${endHoursValue}" />
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="item-content item-input">
+                                            <div class="item-media">
+                                                <i class="icon f7-icons" id="color-picker-spectrum-value">paintbrush_fill</i>
+                                            </div>
+                                            <div class="item-inner">
+                                                <div class="item-title item-label">Couleur : </div>
+                                                <div class="item-input-wrap">
+                                                    <input name='color' type="text" placeholder="Couleur" readonly="readonly" id="color-picker-spectrum" />
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <div class="block display-flex justify-content-center">
+                                        <a href="#" class="button button-small button-round button-fill" @click="${send}">
+                                            <i class="f7-icons">checkmark_circle</i>
+                                            Sauvegarder
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="calendar-events" class="list no-margin no-hairlines no-safe-area-left">
+                <ul>
+                    ${eventItems.length > 0 && eventItems.map((item) => $h`
+                        <li class="item-content swipeout">
+                            <div class="event-color" style="background-color: ${item.color}"></div>
+                            <div class="item-inner swipeout-content">
+                                <div class="item-title">${item.title}</div>
+                                <div class="item-after">
+                                    <p class="event-times">${item.startTime}</p>
+                                    <p class="event-times">${item.endTime}</p>
+                                </div>
+                            </div>
+                            <div class="swipeout-actions-right">
+                                <a href="#" @click="${edit}">
+                                    <i class="f7-icons">square_pencil</i>
+                                </a>
+                                <a class="swipeout-delete">
+                                    <i class="f7-icons">trash</i>
+                                </a>
+                            </div>
+                        </li>
+                    `)}
+                    ${eventItems.length === 0 && $h`
+                        <li class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title text-color-gray">Pas d'événement ce jour</div>
+                            </div>
+                        </li>
+                    `}
+                    <a href="#" class="display-flex justify-content-center button-raised col popup-open" data-popup=".popup-swipe">
+                        <i class="f7-icons">calendar_badge_plus</i>
+                    </a>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</template>
+<script>
+    import { monthsEnum } from '../../js/enum/monthEnum.js'
+    import { renderEventsCalendar } from '../../js/service/calendar/renderCalendarService.js'
+    import { createCalendar } from '../../js/service/calendar/createCalendarService.js'
+    import {
+        getBodyWorkDayCalendar,
+        getElementEdit,
+        handleEditClassForm,
+        getEventSelected 
+    } from '../../js/service/calendar/calendarForm.js'
+    import { createColorPickerForEventCalendar } from '../../js/service/calendar/colorPickerEventCalendar.js'
+    // import { events } from '../../js/service/calendar/events.js'
+    import { getWorkEventDayByUser } from '../../js/workEventDay.js'
+    import { getEventsFormatted } from '../../js/formatter/eventsFormatter.js'
+    import Framework7DTO from '../../js/Framework7DTO.js'
+
+    export default async (props, { $f7, $, $el, $update, $on, $onMounted }) => {
+        const date = new Date()
+        const year = date.getFullYear()
+        const month = date.getMonth()
+        const day = date.getDate()
+
+        const workEventDays = await getWorkEventDayByUser($f7)
+        let events = getEventsFormatted(workEventDays)
+        console.log(events);
+        const framework7DTO = new Framework7DTO($f7, $el, $)
+
+        let calendar
+        let popupSwipe
+        let colorPickerSpectrum
+        let eventItems = []
+        let indexOfEventToEdit
+
+        let startHoursValue = "08:00"
+        let endHoursValue = "18:00"
+        const today = new Date(year, month, day)
+  
+        const renderEvents = (calendar) => {
+            eventItems = renderEventsCalendar(calendar, events, eventItems)
+            $update()
+        }
+
+        $on('pageInit', () => {
+            calendar = createCalendar(framework7DTO, today, renderEvents, events)
+            colorPickerSpectrum = createColorPickerForEventCalendar($f7)
+        })
+
+        const send = () => {
+            const formData = $f7.form.convertToData('#form-calendar')
+
+            if ($('#form-calendar').hasClass('edit')) {
+                events[indexOfEventToEdit] = getBodyWorkDayCalendar(formData, today)
+            } else {
+                events.push(getBodyWorkDayCalendar(formData, today))
+            }
+
+            calendar = createCalendar(framework7DTO, today, renderEvents, events)
+            $update()
+            $('#form-calendar').removeClass('edit')
+        }
+
+        const edit = (element) => {
+            const title = getElementEdit(element)
+            indexOfEventToEdit = eventItems.findIndex(event => event.title === title)
+
+            const formCalendar = getEventSelected(title, eventItems, framework7DTO)
+            startHoursValue = formCalendar.startTime
+            endHoursValue = formCalendar.endTime
+
+            popupSwipe.open()
+        }
+
+        const removeEvent = () => {
+            
+        }
+
+        handleEditClassForm(framework7DTO)
+
+        $onMounted(() => {
+            popupSwipe = $f7.popup.create({
+                el: '.popup-swipe',
+                swipeToClose: true,
+            })
+        })
+  
+        return $render
+    }
+</script>

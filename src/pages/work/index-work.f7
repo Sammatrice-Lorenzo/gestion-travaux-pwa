@@ -1,28 +1,14 @@
 <template>
-    <div class="page">
+    <div id="index-work" class="page">
         <div class="navbar">
             <div class="navbar-inner">
                 <div class="title">Mes prestations</div>
-            </div>
-        </div>
-        <div class="toolbar tabbar tabbar-icons toolbar-bottom">
-            <div class="toolbar-inner">
-                <a href="/mon-compte/" class="tab-link">
-                    <i class="f7-icons">person</i>
-                    <span class="tabbar-label">Mon profil</span>
-                </a>
-                <a href="/prestation/" class="tab-link tab-link-active">
-                    <i class="material-icons">home</i>
-                    <span class="tabbar-label">Prestations</span>
-                </a>
-                <a href="/clients/" class="tab-link">
-                    <i class="f7-icons">person_2</i>
-                    <span class="tabbar-label">Clients</span>
-                </a>
-                <a href="" @click="${logoutConst}" class="tab-link">
-                    <i class="f7-icons blue">arrow_right_circle</i>
-                    <span class="tabbar-label">Déconnexion</span>
-                </a>
+                <div class="right">
+                    <a class="link icon-only panel-open ripple-inset" data-panel="right">
+                        <i class="icon material-icons md-only">menu</i>
+                        <i class="icon f7-icons if-not-md">menu</i>
+                    </a>
+                </div>
             </div>
         </div>
         <div class="page-content">
@@ -46,7 +32,7 @@
                     <p class="card-text"><strong>Date de début :</strong> ${formatDate(item.start)}</p>
                     <p class="card-text"><strong>Date de fin :</strong> ${formatDate(item.end)}</p>
                     <p class="card-text"><strong>État :</strong> ${item.progression}</p>
-                    <p class="card-text"><strong>Équipements :</strong> ${getEquipemntsInLine(item.equipements)}</p>
+                    <p class="card-text"><strong>Équipements :</strong> ${getEquipementsInLine(item.equipements)}</p>
                     <p class="card-text"><strong>Client :</strong> ${item.client.lastname} ${item.client.firstname}</p>
                 </div>
                 <div class="card-footer d-flex justify-content-end">
@@ -64,8 +50,9 @@
 
     import { formatDate } from '../../js/date.js'
     import { logout } from '../../js/token.js'
-    import { getWorkByUser, getEquipemntsInLine } from '../../js/work.js'
+    import { getWorkByUser, getEquipementsInLine } from '../../js/work.js'
     import { sendNotificationPushForProgression } from '../../js/notification'
+    import { loadTabbar } from '../../js/components/tabbar.js'
 
     export default async (props, { $, $on, $f7 }) => {
         const works = await getWorkByUser($f7)
@@ -75,6 +62,10 @@
             logout($f7)
         }
 
+        $on('pageInit', function (page) {
+            loadTabbar('index-work', logoutConst);
+        })
+    
         setTimeout(() => {
             sendNotificationPushForProgression($f7)
         // }, 10000)

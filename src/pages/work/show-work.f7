@@ -39,7 +39,7 @@
                             <li>État : ${work.progression}</li>
                             <li>Équipements utilisés :</li>
                             <li class="equipements-wrapper">
-                                <div class="equipements-container">${getEquipemntsInLine(work.equipements)}</div>
+                                <div class="equipements-container">${getEquipementsInLine(work.equipements)}</div>
                             </li>
                             <li>Pour ${work.client.lastname} ${work.client.firstname}</li>
                         </ul>
@@ -69,7 +69,7 @@
 
     import { logout } from '../../js/token.js'
     import { formatDate } from '../../js/date.js'
-    import { findWorkById, deleteWork, getEquipemntsInLine } from '../../js/work.js'
+    import { findWorkById, deleteWork, getEquipementsInLine } from '../../js/work.js'
     import { CONFIRMATION_TO_DELETE } from '../../js/messages.js'
 
     export default async (props, { $, $on, $f7 }) => {
