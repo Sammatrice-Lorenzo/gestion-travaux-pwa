@@ -19,10 +19,10 @@
                     <div class="navbar">
                         <div class="navbar-bg"></div>
                         <div class="navbar-inner">
-                            <div class="title">Créer un nouveau événement</div>
+                            <div class="title title-popup">Créer un nouveau événement</div>
                             <div class="right">
                                 <a class="link popup-close">
-                                    Fermer
+                                    <i class="f7-icons">xmark_circle</i>
                                 </a>
                             </div>
                         </div>
@@ -39,7 +39,7 @@
                                             <div class="item-inner">
                                                 <div class="item-title item-label">Titre : </div>
                                                 <div class="item-input-wrap">
-                                                    <input name='title' type="text" placeholder="RDV chez le client" />
+                                                    <input name='title' type="text" placeholder="RDV chez le client" required validate/>
                                                 </div>
                                             </div>
                                         </li>
@@ -47,7 +47,7 @@
                                             <div class="item-inner">
                                                 <div class="item-title item-label">Heure de début : </div>
                                                 <div class="item-input-wrap">
-                                                    <input name='startHour' type="time" value="${startHoursValue}" />
+                                                    <input name='startHour' type="time" value="08:00" required validate/>
                                                 </div>
                                             </div>
                                         </li>
@@ -55,7 +55,7 @@
                                             <div class="item-inner">
                                                 <div class="item-title item-label">Heure de fin : </div>
                                                 <div class="item-input-wrap">
-                                                    <input name='endHour' type="time" value="${endHoursValue}" />
+                                                    <input name='endHour' type="time" value="18:00" required validate/>
                                                 </div>
                                             </div>
                                         </li>
@@ -66,16 +66,16 @@
                                             <div class="item-inner">
                                                 <div class="item-title item-label">Couleur : </div>
                                                 <div class="item-input-wrap">
-                                                    <input name='color' type="text" placeholder="Couleur" readonly="readonly" id="color-picker-spectrum" />
+                                                    <input name='color' type="text" placeholder="Couleur" 
+                                                        readonly="readonly" id="color-picker-spectrum" required validate />
                                                 </div>
                                             </div>
                                         </li>
                                     </ul>
                                     <div class="block display-flex justify-content-center">
-                                        <a href="#" class="button button-small button-round button-fill" @click="${send}">
+                                        <a href="#" class="button button-small button-round" @click="${send}">
                                             <i class="f7-icons">checkmark_circle</i>
-                                            Sauvegarder
-                                        </button>
+                                        </a>
                                     </div>
                                 </div>
                             </form>
@@ -88,18 +88,19 @@
                     ${eventItems.length > 0 && eventItems.map((item) => $h`
                         <li class="item-content swipeout">
                             <div class="event-color" style="background-color: ${item.color}"></div>
-                            <div class="item-inner swipeout-content">
+                            <div class="item-inner swipeout-content" data-id="${item.id}">
                                 <div class="item-title">${item.title}</div>
                                 <div class="item-after">
                                     <p class="event-times">${item.startTime}</p>
                                     <p class="event-times">${item.endTime}</p>
                                 </div>
+                                <div id="${item.id}" class="id-work-event-day"></div>
                             </div>
                             <div class="swipeout-actions-right">
                                 <a href="#" @click="${edit}">
                                     <i class="f7-icons">square_pencil</i>
                                 </a>
-                                <a class="swipeout-delete">
+                                <a class="swipeout-delete" @click="${removeEvent}">
                                     <i class="f7-icons">trash</i>
                                 </a>
                             </div>
@@ -126,14 +127,20 @@
     import { renderEventsCalendar } from '../../js/service/calendar/renderCalendarService.js'
     import { createCalendar } from '../../js/service/calendar/createCalendarService.js'
     import {
-        getBodyWorkDayCalendar,
+        getWorkDayCalendar,
         getElementEdit,
         handleEditClassForm,
-        getEventSelected 
+        getEventSelected ,
+        getMaxId
     } from '../../js/service/calendar/calendarForm.js'
     import { createColorPickerForEventCalendar } from '../../js/service/calendar/colorPickerEventCalendar.js'
-    // import { events } from '../../js/service/calendar/events.js'
-    import { getWorkEventDayByUser } from '../../js/workEventDay.js'
+    import {
+        getWorkEventDayByUser,
+        createWorkEventDay,
+        updateWorkEventDay,
+        deleteWorkEventDay,
+        isValidForm
+    } from '../../js/workEventDay.js'
     import { getEventsFormatted } from '../../js/formatter/eventsFormatter.js'
     import Framework7DTO from '../../js/Framework7DTO.js'
 
@@ -143,9 +150,10 @@
         const month = date.getMonth()
         const day = date.getDate()
 
+        const selectorForm = '#form-calendar'
+
         const workEventDays = await getWorkEventDayByUser($f7)
         let events = getEventsFormatted(workEventDays)
-        console.log(events);
         const framework7DTO = new Framework7DTO($f7, $el, $)
 
         let calendar
@@ -154,8 +162,6 @@
         let eventItems = []
         let indexOfEventToEdit
 
-        let startHoursValue = "08:00"
-        let endHoursValue = "18:00"
         const today = new Date(year, month, day)
   
         const renderEvents = (calendar) => {
@@ -169,32 +175,50 @@
         })
 
         const send = () => {
-            const formData = $f7.form.convertToData('#form-calendar')
-
-            if ($('#form-calendar').hasClass('edit')) {
-                events[indexOfEventToEdit] = getBodyWorkDayCalendar(formData, today)
-            } else {
-                events.push(getBodyWorkDayCalendar(formData, today))
+            if (!isValidForm(framework7DTO)) {
+                return
             }
 
-            calendar = createCalendar(framework7DTO, today, renderEvents, events)
+            let formData = $f7.form.convertToData(selectorForm)
+            const dateSelected = $f7.calendar.get().value[0]
+
+            const workEventDay = getWorkDayCalendar(formData, dateSelected)
+            if ($(selectorForm).hasClass('edit')) {
+                const id = events[indexOfEventToEdit].id
+                workEventDay.id = id
+                events[indexOfEventToEdit] = workEventDay
+                updateWorkEventDay(workEventDay, id, $f7)
+                $(selectorForm).removeClass('edit')
+            } else {
+                const futureId = getMaxId(events) + 1
+                workEventDay.id = futureId
+                events.push(workEventDay)
+                createWorkEventDay(workEventDay, $f7)
+            }
+
+            calendar = createCalendar(framework7DTO, dateSelected, renderEvents, events)
             $update()
-            $('#form-calendar').removeClass('edit')
+            popupSwipe.close()
         }
 
         const edit = (element) => {
-            const title = getElementEdit(element)
-            indexOfEventToEdit = eventItems.findIndex(event => event.title === title)
+            const idElement = parseInt(getElementEdit(element))
+            const textUpdate = 'Modification événement'
+            indexOfEventToEdit = events.findIndex(event => event.id === idElement)
 
-            const formCalendar = getEventSelected(title, eventItems, framework7DTO)
-            startHoursValue = formCalendar.startTime
-            endHoursValue = formCalendar.endTime
+            $(selectorForm).find('.block-title').children().text(textUpdate)
+            $('.title-popup').text(textUpdate)
+
+            const formCalendar = getEventSelected(idElement, eventItems, framework7DTO)
+            colorPickerSpectrum = createColorPickerForEventCalendar($f7, formCalendar.color)
 
             popupSwipe.open()
         }
 
-        const removeEvent = () => {
-            
+        const removeEvent = (element) => {
+            const idElement = parseInt(getElementEdit(element))
+
+            deleteWorkEventDay(idElement, $f7)
         }
 
         handleEditClassForm(framework7DTO)

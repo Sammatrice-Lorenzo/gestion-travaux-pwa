@@ -1,6 +1,6 @@
 import Framework7DTO from "../../Framework7DTO"
 
-const getBodyWorkDayCalendar = (form, date) => {
+const getWorkDayCalendar = (form, date) => {
     return {
         date: date,
         startHours: form.startHour,
@@ -10,7 +10,6 @@ const getBodyWorkDayCalendar = (form, date) => {
     }
 }
 
-
 const getElementEdit = (element) => {
     const target = element.target
     const liEvent = target.className === "f7-icons"
@@ -19,7 +18,7 @@ const getElementEdit = (element) => {
 
     const itemInnerEventTitle = liEvent.children[1]
 
-    return itemInnerEventTitle.children[0].innerText
+    return itemInnerEventTitle.children[2].id
 }
 
 /**
@@ -27,23 +26,39 @@ const getElementEdit = (element) => {
  */
 const handleEditClassForm = (framework7DTO) => {
     const $ = framework7DTO.getSelector()
+    const selectorForm = '#form-calendar'
+    const textCreation = 'Création nouveau événement'
 
     framework7DTO.getApp().on('popupClosed', (popup) => {
         if ($(popup.el).hasClass('popup-swipe')) {
-            $('#form-calendar').removeClass('edit');
+            $(selectorForm).removeClass('edit')
+
+            $(selectorForm).find('.block-title').children().text(textCreation)
+            $('.title-popup').text(textCreation)
+            $(selectorForm).find('input[name="title"]').val('')
+            $(selectorForm).find('input[name="startHour"]').val('08:00')
+            $(selectorForm).find('input[name="endHour"]').val('18:00')
         }
     })
 }
 /**
  * 
- * @param { string } title 
+ * @param { number } id 
  * @param { Array } eventItems 
  * @param { Framework7DTO } framework7DTO 
  * @returns 
  */
-const getEventSelected = (title, eventItems, framework7DTO) => {
+const getEventSelected = (id, eventItems, framework7DTO) => {
     const $ = framework7DTO.getSelector()
-    const formCalendar = eventItems.filter(event => event.title === title)[0]
+    const event = eventItems.filter(event => event.id === id)[0]
+
+    const formCalendar = {
+        id: event.id,
+        title: event.title,
+        startHour: event.startTime,
+        endHour: event.endTime,
+        color: event.color
+    }
 
     $('#form-calendar').addClass('edit')
     framework7DTO.getApp().form.fillFromData('#form-calendar', formCalendar)
@@ -51,4 +66,14 @@ const getEventSelected = (title, eventItems, framework7DTO) => {
     return formCalendar
 }
 
-export { getBodyWorkDayCalendar, getElementEdit, handleEditClassForm, getEventSelected }
+/**
+ * @param { Array } events 
+ * @returns { number }
+ */
+const getMaxId = (events) => {
+    return events.reduce((maxId, event) => {
+        return event.id > maxId ? event.id : maxId;
+    }, -Infinity)
+}
+
+export { getWorkDayCalendar, getElementEdit, handleEditClassForm, getEventSelected, getMaxId }

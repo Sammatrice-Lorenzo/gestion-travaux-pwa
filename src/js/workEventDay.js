@@ -1,11 +1,12 @@
-import { apiRequest } from './api'
+import { apiRequest, deleteAPI } from './api'
 import { getToken } from './token'
-import { getBodyWorkDayCalendar } from './service/calendar/calendarForm.js'
 import * as messages from './messages'
 import { getUrlByUser, getUrlUser, getUrl, getUrlById} from './urlGenerator'
-import { clearCache, checkDataToGetOfAResponseCached, responseIsCached, stockResponseInCache } from './cache'
+import { checkDataToGetOfAResponseCached, responseIsCached, stockResponseInCache } from './cache'
+import { RouteDTO } from './dto/RouteDTO.js'
+import Framework7DTO from './Framework7DTO.js'
 
-const URL_WORK_EVENT_DAY = '/api/work_event_day'
+const URL_WORK_EVENT_DAY = '/api/work_event_days/'
 const URL_TO_REDIRECT = '/calendar/'
 const URL_WORK_EVENT_DAY_BY_USER = '/api/work/event/day/'
 
@@ -59,11 +60,11 @@ async function callApi(eventsByUser, $f7) {
     return eventsByUser
 }
 
-
-function createWorkEventDay(form, $f7, date)
+function createWorkEventDay(form, $f7)
 {
-    const url = getUrl(URL_WORK_EVENT_DAY)
-    const body = JSON.stringify(getBodyWorkDayCalendar(form, date))
+    const urlWorkEventDay = URL_WORK_EVENT_DAY.slice(0, -1)
+    const url = getUrl(urlWorkEventDay)
+    const body = getBody(form)
 
     apiRequest(url, 'POST', [body, URL_TO_REDIRECT], $f7)
 }
@@ -71,9 +72,73 @@ function createWorkEventDay(form, $f7, date)
 function updateWorkEventDay(form, idWorkEventDay, $f7)
 {
     const url = getUrlById(URL_WORK_EVENT_DAY, idWorkEventDay)
-    const body = JSON.stringify(getBodyWorkDayCalendar(form, date))
+    const body = getBody(form)
 
     apiRequest(url, 'PUT', [body, URL_TO_REDIRECT], $f7)
 }
 
-export { createWorkEventDay, updateWorkEventDay }
+function deleteWorkEventDay(idWorkEventDay, $f7) {
+    const routeDTO = new RouteDTO()
+        .setApp($f7)
+        .setIdElement(idWorkEventDay)
+        .setRoute(URL_TO_REDIRECT)
+        .setUrlAPI(URL_WORK_EVENT_DAY)
+
+    deleteAPI(routeDTO)
+}
+
+/**
+ * On ajoute plus deux aux date pour le format américain
+ * 
+ * @param { Object } body 
+ * @returns 
+ */
+const getBody = (body) => {
+    const urlUser = getUrlUser()
+    let date = body.date
+
+    const [startHours, startMinutes] = body.startHours.split(':')
+    const [endHours, endMinutes] = body.endHours.split(':')
+
+    date.setHours(parseInt(startHours) + 2, parseInt(startMinutes))
+    const startDate = new Date(date)
+
+    date.setHours(parseInt(endHours) + 2, parseInt(endMinutes))
+    const endDate = new Date(date)
+
+    return JSON.stringify({
+        title: body.title,
+        startDate: startDate,
+        endDate: endDate,
+        color: body.color,
+        user: urlUser
+    })
+}
+
+/**
+ * @param { Framework7DTO } framework7DTO 
+ * @returns { Boolean }
+ */
+function isValidForm(framework7DTO) {
+    const $ = framework7DTO.getSelector()
+    const $f7 = framework7DTO.getApp()
+
+    const form = $('form#form-calendar')
+    const inputs = $(form).find('input')
+
+    let isValid = true
+
+    inputs.forEach(function(input) {
+        const divParent = $(input).closest('.item-inner')
+        if (input.value.trim() === '') {
+            isValid = false
+            const label = $(divParent).find('.item-title').text()
+            $f7.dialog.alert(`${label} ne peut pas être vide.`)
+        }
+    })
+
+    return isValid
+}
+
+
+export { createWorkEventDay, updateWorkEventDay, deleteWorkEventDay, isValidForm }

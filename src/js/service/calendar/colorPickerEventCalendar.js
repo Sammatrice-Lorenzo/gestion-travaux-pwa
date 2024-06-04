@@ -1,8 +1,9 @@
 /**
- * @param {*} $f7 
+ * @param {*} $f7
+ * @param { ?String } color
  * @returns 
  */
-const createColorPickerForEventCalendar = ($f7) => {
+const createColorPickerForEventCalendar = ($f7, color = null) => {
     return $f7.colorPicker.create({
         inputEl: '#color-picker-spectrum',
         targetEl: '#color-picker-spectrum-value',
@@ -10,7 +11,7 @@ const createColorPickerForEventCalendar = ($f7) => {
         modules: ['sb-spectrum', 'hue-slider'],
         openIn: 'popover',
         value: {
-            hex: '#ff0000',
+            hex: color ?? '#ff0000',
         },
     });
 }

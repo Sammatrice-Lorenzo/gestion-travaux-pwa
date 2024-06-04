@@ -4,7 +4,6 @@ import { monthsEnum } from '../../enum/monthEnum.js'
 
 const updateNavbarCalendar = (calendar, framework7DTO) => {
     const $f7 = framework7DTO.app
-
     const monthNames = monthsEnum.getMonths()
 
     framework7DTO.selectorF7('.navbar-calendar-title').text(monthNames[calendar.currentMonth] + ', ' + calendar.currentYear)
@@ -20,7 +19,6 @@ const updateNavbarCalendar = (calendar, framework7DTO) => {
 const createCalendar = async (framework7DTO, today, renderEvents, events) => {
     const $f7 = framework7DTO.app
 
-    console.log(events);
     $f7.calendar.create({
         containerEl: '#calendar',
         toolbar: false,

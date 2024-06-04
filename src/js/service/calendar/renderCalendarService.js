@@ -9,17 +9,16 @@ const getEventsFiltered = (events, currentTime) => {
     })
 }
 
-const buildEvent = (currentEvents, eventItems) => {
-    for (const event of currentEvents) {
-        eventItems.push({
+const buildEvent = (currentEvents) => {
+    return currentEvents.map(event => {
+        return {
+            id: event.id,
             title: event.title,
             startTime: event.startHours,
             endTime: event.endHours,
             color: event.color,
-        })
-    }
-
-    return eventItems
+        }
+    })
 }
 
 const renderEventsCalendar = (calendar, events, eventItems) => {
@@ -28,7 +27,7 @@ const renderEventsCalendar = (calendar, events, eventItems) => {
 
     eventItems = []
     if (currentEvents.length) {
-       eventItems = buildEvent(currentEvents, eventItems)
+       eventItems = buildEvent(currentEvents)
     }
 
     return eventItems
