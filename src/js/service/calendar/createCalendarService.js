@@ -19,7 +19,7 @@ const updateNavbarCalendar = (calendar, framework7DTO) => {
 const createCalendar = async (framework7DTO, today, renderEvents, events) => {
     const $f7 = framework7DTO.app
 
-    $f7.calendar.create({
+    return $f7.calendar.create({
         containerEl: '#calendar',
         toolbar: false,
         value: [today],

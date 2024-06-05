@@ -1,6 +1,6 @@
 const getEventsFiltered = (events, currentTime) => {
     return events.filter(function (event) {
-        const timeEvent = event.date.getTime()
+        const timeEvent = new Date(event.date).getTime()
 
         return (
             timeEvent >= currentTime &&

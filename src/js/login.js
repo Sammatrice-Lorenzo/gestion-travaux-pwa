@@ -2,10 +2,12 @@ import * as messages from './messages'
 import * as cache from './cache'
 
 export function login(username, password, $f7) {
-    $f7.preloader.show()
-    const url = new URL('/api/login', API_URL);
+    const preloader = $f7.preloader
 
+    const url = new URL('/api/login', API_URL);
+    
     if (!checkInputFormLogin(username, password, $f7)) return
+    preloader.show()
 
     // Récupération de la réponse depuis le cache
     getCacheLogin(url)
@@ -30,7 +32,7 @@ export function login(username, password, $f7) {
         })
         .catch(function (error) {
             $f7.dialog.alert(messages.ERROR_SERVER)
-            $f7.preloader.hide()
+            preloader.hide()
 
             console.error('Error in fetch handler:', error);
         });

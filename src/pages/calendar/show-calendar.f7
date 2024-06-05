@@ -130,7 +130,7 @@
         getWorkDayCalendar,
         getElementEdit,
         handleEditClassForm,
-        getEventSelected ,
+        getEventSelected,
         getMaxId
     } from '../../js/service/calendar/calendarForm.js'
     import { createColorPickerForEventCalendar } from '../../js/service/calendar/colorPickerEventCalendar.js'
@@ -169,8 +169,8 @@
             $update()
         }
 
-        $on('pageInit', () => {
-            calendar = createCalendar(framework7DTO, today, renderEvents, events)
+        $on('pageInit', async () => {
+            calendar = await createCalendar(framework7DTO, today, renderEvents, events)
             colorPickerSpectrum = createColorPickerForEventCalendar($f7)
         })
 
@@ -180,7 +180,7 @@
             }
 
             let formData = $f7.form.convertToData(selectorForm)
-            const dateSelected = $f7.calendar.get().value[0]
+            const dateSelected = new Date($f7.calendar.get().value[0])
 
             const workEventDay = getWorkDayCalendar(formData, dateSelected)
             if ($(selectorForm).hasClass('edit')) {
@@ -196,7 +196,7 @@
                 createWorkEventDay(workEventDay, $f7)
             }
 
-            calendar = createCalendar(framework7DTO, dateSelected, renderEvents, events)
+            eventItems = renderEventsCalendar(calendar, events, eventItems)
             $update()
             popupSwipe.close()
         }
