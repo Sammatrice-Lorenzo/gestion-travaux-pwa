@@ -63,7 +63,6 @@
     import Dom7 from 'dom7';
 
     import { findClientById, deleteClient, getNumberPhoneInString } from '../../js/client.js'
-    import { logout } from '../../js/token.js'
     import { CONFIRMATION_TO_DELETE } from '../../js/messages.js'
     import { loadTabbar } from '../../js/components/tabbar.js'
 
@@ -71,9 +70,8 @@
         var $$ = Dom7
 
         const client = await findClientById(props.clientId, $f7)
-        const logoutConst = () => logout($f7)
         $on('pageInit', function (page) {
-            loadTabbar('show-clients', logoutConst);
+            loadTabbar('show-clients', $f7);
         })
 
         const openConfirm = () => {

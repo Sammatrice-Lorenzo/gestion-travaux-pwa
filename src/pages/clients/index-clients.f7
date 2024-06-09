@@ -47,19 +47,14 @@
     import Framework7 from 'framework7/bundle';
 
     import { getClientsByUser, getNumberPhoneInString } from '../../js/client.js'
-    import { logout } from '../../js/token.js'
     import { loadTabbar } from '../../js/components/tabbar.js'
 
     export default async (props, { $, $on, $f7 }) => {
         const clients = await getClientsByUser()
         let clientsByUser = clients.reverse()
 
-        const logoutConst = () => {
-            logout($f7)
-        }
-
         $on('pageInit', function (page) {
-            loadTabbar('index-client', logoutConst);
+            loadTabbar('index-client', $f7);
         })
 
         return $render;

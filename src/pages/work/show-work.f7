@@ -53,7 +53,6 @@
     import Framework7 from 'framework7/bundle';
     import Dom7 from 'dom7';
 
-    import { logout } from '../../js/token.js'
     import { formatDate } from '../../js/date.js'
     import { findWorkById, deleteWork, getEquipementsInLine } from '../../js/work.js'
     import { CONFIRMATION_TO_DELETE } from '../../js/messages.js'
@@ -70,9 +69,8 @@
             })
         }
 
-        const logoutConst = () => logout($f7)
         $on('pageInit', function (page) {
-            loadTabbar('show-work', logoutConst)
+            loadTabbar('show-work', $f7)
         })
 
         return $render
