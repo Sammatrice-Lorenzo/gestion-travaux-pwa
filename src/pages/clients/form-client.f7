@@ -93,7 +93,7 @@
     import { createClient } from '../../js/client.js'
 
     export default async (props, {$, $on, $f7, $onBeforeUnmount } ) => {
-        
+
         const send = () => {
             const formData = $f7.form.convertToData('#form-client')
             createClient(formData, $f7)

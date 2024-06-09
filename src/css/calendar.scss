@@ -1,0 +1,51 @@
+#calendar,
+#calendar-events {
+    height: 50%;
+    box-sizing: border-box;
+}
+
+#calendar .calendar {
+    height: 100%;
+}
+
+#calendar-events ul {
+    height: 100%;
+    overflow: auto;
+}
+
+#calendar-events .event-color {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 8px;
+    height: 100%;
+}
+
+.event-times {
+    margin: 0 0 0 10px; 
+}
+
+@media (orientation: landscape) {
+    #calendar {
+        float: left;
+    }
+
+    #calendar,
+    #calendar-events {
+        height: 100%;
+    }
+
+    #calendar,
+    #calendar-events {
+        width: 50%;
+    }
+
+    #calendar-events {
+        margin-left: 50% !important;
+        border-left: 1px solid #eee;
+    }
+
+    .dark #calendar-events {
+        border-left-color: #282828;
+    }
+}
