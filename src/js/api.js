@@ -1,7 +1,8 @@
 import { clearCache } from './cache'
 import { RouteDTO } from './dto/RouteDTO'
-import { getUrlById } from './urlGenerator'
+import { getUrlById, getUrl } from './urlGenerator'
 import * as messages from './messages'
+import { getToken } from './token'
 
 /**
  * @param { URL } url 
@@ -69,4 +70,40 @@ function deleteAPI(routeDTO) {
         })
 }
 
-export { apiRequest, deleteAPI }
+/**
+ * @param { RouteDTO } routeDTO 
+ * @param { String } nameFile 
+ */
+function fetchFileAPI(routeDTO, nameFile) {
+    const $f7 = routeDTO.getApp()
+    const url = getUrl(routeDTO.getUrlAPI())
+    const token = getToken()
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: routeDTO.getBody()
+    }).then(response =>
+        response
+            .blob()
+            .then(function (data) {
+                const blobUrl = window.URL.createObjectURL(data)
+        
+                const link = document.createElement('a')
+                link.href = blobUrl
+                link.download = nameFile
+        
+                link.style.display = 'none'
+                link.click()
+            })
+    )
+        .catch(error => {
+            console.log(error)
+            $f7.dialog.alert(messages.ERROR_SERVER)
+        })
+}
+
+export { apiRequest, deleteAPI, fetchFileAPI }

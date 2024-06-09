@@ -9,7 +9,13 @@
                         <span class="if-not-md">Retour</span>
                     </a>
                 </div>
-                <div class="title navbar-calendar-title"></div>
+                <div class="title navbar-calendar-title">
+                </div>
+                <div class="right">
+                    <a href="#" download class="link icon-only" @click="${downloadCalendar}">
+                        <i class="icon f7-icons">arrow_down_circle_fill</i>
+                    </a>
+                </div>
             </div>
         </div>
         <div class="page-content">
@@ -139,7 +145,8 @@
         createWorkEventDay,
         updateWorkEventDay,
         deleteWorkEventDay,
-        isValidForm
+        isValidForm,
+        downloadCalendarEvents
     } from '../../js/workEventDay.js'
     import { getEventsFormatted } from '../../js/formatter/eventsFormatter.js'
     import Framework7DTO from '../../js/Framework7DTO.js'
@@ -220,6 +227,8 @@
 
             deleteWorkEventDay(idElement, $f7)
         }
+
+        const downloadCalendar = () => downloadCalendarEvents(calendar, $f7)
 
         handleEditClassForm(framework7DTO)
 

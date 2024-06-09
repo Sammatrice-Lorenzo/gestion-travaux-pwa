@@ -1,4 +1,4 @@
-import { apiRequest, deleteAPI } from './api'
+import { apiRequest, deleteAPI, fetchFileAPI } from './api'
 import { getToken } from './token'
 import * as messages from './messages'
 import { getUrlByUser, getUrlUser, getUrl, getUrlById} from './urlGenerator'
@@ -141,4 +141,20 @@ function isValidForm(framework7DTO) {
 }
 
 
-export { createWorkEventDay, updateWorkEventDay, deleteWorkEventDay, isValidForm }
+function downloadCalendarEvents(calendar, $f7) {
+    const currentMonth = calendar.currentMonth
+    const currentYear = calendar.currentYear
+
+    const body = JSON.stringify({
+        date: new Date(currentYear, currentMonth).toLocaleDateString(),
+    })
+
+    const routeDTO = new RouteDTO()
+        .setApp($f7)
+        .setUrlAPI('/api/work-event-day/file')
+        .setBody(body)
+
+    fetchFileAPI(routeDTO, 'summary_events.pdf')
+}
+
+export { createWorkEventDay, updateWorkEventDay, deleteWorkEventDay, isValidForm, downloadCalendarEvents }
