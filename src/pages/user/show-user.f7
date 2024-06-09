@@ -26,7 +26,6 @@
     import Framework7 from 'framework7/bundle';
     import Dom7 from 'dom7';
 
-    import { logout } from '../../js/token.js'
     import { showUser } from '../../js/user.js'
     import { getDecodedToken } from '../../js/token.js'
     import { loadTabbar } from '../../js/components/tabbar.js'
@@ -35,12 +34,8 @@
         const user = await showUser()
         const idUser = getDecodedToken().id
 
-        const logoutConst = () => {
-            logout($f7)
-        }
-
         $on('pageInit', function (page) {
-            loadTabbar('show-user', logoutConst)
+            loadTabbar('show-user', $f7)
         })
 
         return $render
