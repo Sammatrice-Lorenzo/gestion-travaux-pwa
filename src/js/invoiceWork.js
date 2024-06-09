@@ -1,5 +1,5 @@
-import * as messages from './messages'
-import { getUrl } from './urlGenerator'
+import { fetchFileAPI } from './api'
+import { RouteDTO } from './dto/RouteDTO'
 
 /**
  * @param { Dom7 } $$
@@ -54,33 +54,14 @@ function getBody(form, idClient) {
  */
 function createInvoiceWork(form, $f7, idClient)
 {
-    const url = getUrl('/api/invoice-file')
     const body = getBody(form, idClient)
 
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: body
-    }).then(response =>
-        response
-            .blob()
-            .then(function (data) {
-                const blobUrl = window.URL.createObjectURL(data)
-        
-                const link = document.createElement('a')
-                link.href = blobUrl
-                link.download = 'facture_prestation.pdf'
-        
-                link.style.display = 'none'
-                link.click()
-            })
-    )
-        .catch(error => {
-            console.log(error)
-            $f7.dialog.alert(messages.ERROR_SERVER)
-        })
+    const routeDTO = new RouteDTO()
+        .setApp($f7)
+        .setUrlAPI('/api/invoice-file')
+        .setBody(body)
+
+    fetchFileAPI(routeDTO, 'facture_prestation.pdf')
 }
 
 export { createInvoiceWork, isValidForm }

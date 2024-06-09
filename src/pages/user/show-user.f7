@@ -1,28 +1,8 @@
 <template>
-    <div class="page">
+    <div id="show-user" class="page">
         <div class="navbar">
             <div class="navbar-inner">
                 <div class="title">Mon profil</div>
-            </div>
-        </div>
-        <div class="toolbar tabbar tabbar-icons toolbar-bottom">
-            <div class="toolbar-inner">
-                <a href="/mon-compte/" class="tab-link tab-link-active">
-                    <i class="f7-icons">person</i>
-                    <span class="tabbar-label">Mon profil</span>
-                </a>
-                <a href="/prestation/" class="tab-link">
-                    <i class="material-icons">home</i>
-                    <span class="tabbar-label">Prestations</span>
-                </a>
-                <a href="/clients/" class="tab-link">
-                    <i class="f7-icons">person_2</i>
-                    <span class="tabbar-label">Clients</span>
-                </a>
-                <a href="" @click="${logoutConst}" class="tab-link">
-                    <i class="f7-icons blue">arrow_right_circle</i>
-                    <span class="tabbar-label">Déconnexion</span>
-                </a>
             </div>
         </div>
         <div class="page-content">
@@ -46,9 +26,10 @@
     import Framework7 from 'framework7/bundle';
     import Dom7 from 'dom7';
 
+    import { logout } from '../../js/token.js'
     import { showUser } from '../../js/user.js'
     import { getDecodedToken } from '../../js/token.js'
-    import { logout } from '../../js/token.js'
+    import { loadTabbar } from '../../js/components/tabbar.js'
 
     export default async (props, { $, $on, $f7 }) => {
         const user = await showUser()
@@ -57,6 +38,10 @@
         const logoutConst = () => {
             logout($f7)
         }
+
+        $on('pageInit', function (page) {
+            loadTabbar('show-user', logoutConst)
+        })
 
         return $render
     }

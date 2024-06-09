@@ -1,5 +1,8 @@
 @import "work";
 @import "invoice_file";
+@import "calendar";
+@import "input_color";
+@import "form_calendar";
 
 .center-login {
     margin-top: 10%;
@@ -14,16 +17,12 @@ li.btn-register {
     white-space: pre;
     word-break: break-word;
     max-width: 100%;
+    overflow: auto;
 }
 
 .equipements-wrapper {
     overflow: hidden;
     word-break: break-word;
-}
-
-.equipements-container {
-    white-space: pre;
-    overflow: auto;
 }
 
 .input-error {

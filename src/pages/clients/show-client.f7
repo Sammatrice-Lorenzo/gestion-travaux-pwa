@@ -1,7 +1,14 @@
 <template>
-    <div class="page">
+    <div id="show-clients" class="page">
         <div class="navbar">
-            <div class="navbar-inner">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner sliding">
+                <div class="left">
+                    <a href="#" class="link back">
+                        <i class="icon icon-back"></i>
+                        <span class="if-not-md">Retour</span>
+                    </a>
+                </div>
                 <div class="title">Client</div>
             </div>
         </div>
@@ -58,11 +65,16 @@
     import { findClientById, deleteClient, getNumberPhoneInString } from '../../js/client.js'
     import { logout } from '../../js/token.js'
     import { CONFIRMATION_TO_DELETE } from '../../js/messages.js'
+    import { loadTabbar } from '../../js/components/tabbar.js'
 
     export default async (props, { $, $on, $f7 }) => {
         var $$ = Dom7
 
         const client = await findClientById(props.clientId, $f7)
+        const logoutConst = () => logout($f7)
+        $on('pageInit', function (page) {
+            loadTabbar('show-clients', logoutConst);
+        })
 
         const openConfirm = () => {
             $f7.dialog.confirm(CONFIRMATION_TO_DELETE, function () {

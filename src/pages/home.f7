@@ -60,6 +60,10 @@
     width: 100%;
 }
 
+#form-login .item-content {
+    margin-left: auto;
+}
+
 .login-screen-content {
     width: 100%;
     max-width: 42rem;
