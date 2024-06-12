@@ -14,13 +14,10 @@ function isValidForm($$, $f7) {
 
     inputs.forEach(function(input) {
         const divParent = $$(input).closest('.item-inner')
-        if (input.value.trim() === '') {
+        if (input.value.trim() === '' && input.name !== 'localisation') {
             isValid = false
             const label = $$(divParent).find('.item-title').text()
             $f7.dialog.alert(`${label} ne peut pas être vide.`)
-            $$(divParent).addClass('input-error')
-        } else {
-            $$(divParent).removeClass('input-error')
         }
     })
 

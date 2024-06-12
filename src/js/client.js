@@ -54,12 +54,12 @@ async function callApi(clientsByUser) {
 
 export function createClient(form, $f7)
 {
-    const url = getUrl('/api/clients')
-    const body = getBodyClient(form)
-
     if (!customValidation(form, $f7)) {
         return
     }
+
+    const url = getUrl('/api/clients')
+    const body = getBodyClient(form)
 
     fetch(url, {
         method: 'POST',
@@ -174,8 +174,8 @@ function getBodyClient(form) {
 }
 
 function customValidation(form, $f7) {
-    const regexCodePostal = /^\d{5}$/
-    const regexNumeroTelephone = /^(0|\+33|0033)[1-9](\d{2}){4}$/
+    const regexPostalCode = /^\d{5}$/
+    const regexPhoneNumber = /^(0|\+33|0033)[1-9](\d{2}){4}$/
 
     const fields = [
         { field: form.firstname, message: 'Veuillez saisir un prénom' },
@@ -193,12 +193,12 @@ function customValidation(form, $f7) {
         }
     }
   
-    if (!regexCodePostal.test(form.postalCode)) {
+    if (!regexPostalCode.test(form.postalCode)) {
         $f7.dialog.alert('Veuillez saisir un code postal valide')
         return false
     }
   
-    if (!regexNumeroTelephone.test(form.phoneNumber)) {
+    if (!regexPhoneNumber.test(form.phoneNumber)) {
         $f7.dialog.alert('Veuillez saisir un numéro de téléphone valide')
         return false
     }
@@ -208,7 +208,8 @@ function customValidation(form, $f7) {
 
 /**
  * En format 06.01.02.03.04
- * @param { string } numberPhone
+ * @param { String } numberPhone
+ * @returns { String }
  */
 export function getNumberPhoneInString(numberPhone)
 {
