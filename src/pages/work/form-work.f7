@@ -22,7 +22,7 @@
                                 <div class="item-inner">
                                     <div class="item-title item-label">Nom</div>
                                     <div class="item-input-wrap">
-                                        <input name='name' type="text" placeholder="Nom prestation" />
+                                        <input name='name' type="text" placeholder="Nom prestation" required validate />
                                     </div>
                                 </div>
                             </div>
@@ -32,7 +32,7 @@
                                 <div class="item-inner">
                                     <div class="item-title item-label">Ville</div>
                                     <div class="item-input-wrap">
-                                        <input name='city' type="text" placeholder="Paris" />
+                                        <input name='city' type="text" placeholder="Paris" required validate />
                                     </div>
                                 </div>
                             </div>
@@ -70,7 +70,7 @@
                                 <div class="item-inner">
                                     <div class="item-title item-label">Date de début</div>
                                     <div class="item-input-wrap">
-                                        <input name='start' type="datetime-local" placeholder="Date de début" value="${convertFrenchDate(now)}" />
+                                        <input name='start' type="datetime-local" placeholder="Date de début" value="${convertFrenchDate(now)}" required validate />
                                     </div>
                                 </div>
                             </div>
@@ -80,7 +80,7 @@
                                 <div class="item-inner">
                                     <div class="item-title item-label">Date de fin</div>
                                     <div class="item-input-wrap">
-                                        <input name='end' type="datetime-local" placeholder="Date de fin" value="${convertFrenchDate(now)}" />
+                                        <input name='end' type="datetime-local" placeholder="Date de fin" value="${convertFrenchDate(now)}" required validate />
                                     </div>
                                 </div>
                             </div>

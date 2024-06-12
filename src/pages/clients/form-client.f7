@@ -22,7 +22,7 @@
                                 <div class="item-inner">
                                     <div class="item-title item-label">Nom : </div>
                                     <div class="item-input-wrap">
-                                        <input name='lastname' type="text" placeholder="Nom de famille" />
+                                        <input name='lastname' type="text" placeholder="Nom de famille" required validate />
                                     </div>
                                 </div>
                             </div>
@@ -32,7 +32,7 @@
                                 <div class="item-inner">
                                     <div class="item-title item-label">Prénom : </div>
                                     <div class="item-input-wrap">
-                                        <input name='firstname' type="text" placeholder="Prénom" />
+                                        <input name='firstname' type="text" placeholder="Prénom" required validate />
                                     </div>
                                 </div>
                             </div>
@@ -42,7 +42,7 @@
                                 <div class="item-inner">
                                     <div class="item-title item-label">Rue : </div>
                                     <div class="item-input-wrap">
-                                        <input name='streetAddress' type="text" placeholder="Rue" />
+                                        <input name='streetAddress' type="text" placeholder="Rue" required validate />
                                     </div>
                                 </div>
                             </div>
@@ -62,7 +62,7 @@
                                 <div class="item-inner">
                                     <div class="item-title item-label"> Code Postal : </div>
                                     <div class="item-input-wrap">
-                                        <input name='postalCode' pattern="[0-9]{5}" type="text" maxlength="5" placeholder="75000" />
+                                        <input name='postalCode' pattern="[0-9]{5}" type="text" maxlength="5" placeholder="75000" required validate />
                                     </div>
                                 </div>
                             </div>
@@ -72,7 +72,7 @@
                                 <div class="item-inner">
                                     <div class="item-title item-label"> Numéro de téléphone : </div>
                                     <div class="item-input-wrap">
-                                        <input name='phoneNumber' pattern="0[1-9][0-9]{8}" type="tel" placeholder="06 78 54 23 45" />
+                                        <input name='phoneNumber' pattern="0[1-9][0-9]{8}" type="tel" placeholder="06 78 54 23 45" required validate />
                                     </div>
                                 </div>
                             </div>

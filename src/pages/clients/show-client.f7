@@ -12,26 +12,6 @@
                 <div class="title">Client</div>
             </div>
         </div>
-        <div class="toolbar tabbar tabbar-icons toolbar-bottom">
-            <div class="toolbar-inner">
-                <a href="/mon-compte/" class="tab-link">
-                    <i class="f7-icons">person</i>
-                    <span class="tabbar-label">Mon profil</span>
-                </a>
-                <a href="/prestation/" class="tab-link">
-                    <i class="material-icons">home</i>
-                    <span class="tabbar-label">Prestations</span>
-                </a>
-                <a href="/clients/" class="tab-link">
-                    <i class="f7-icons">person_2</i>
-                    <span class="tabbar-label">Clients</span>
-                </a>
-                <a href="/" @click="${logout}" class="tab-link">
-                    <i class="f7-icons blue">arrow_right_circle</i>
-                    <span class="tabbar-label">Déconnexion</span>
-                </a>
-            </div>
-        </div>
         <div class="page-content">
             <div class="block-title card-header display-flex justify-content-space-between">Informations sur le client</div>
             <div class="card card-outline">
