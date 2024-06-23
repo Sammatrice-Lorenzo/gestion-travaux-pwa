@@ -74,5 +74,19 @@ const addInvoiceLine = (event) => {
     invoiceLinesContainer.appendChild(lineElement)
 }
 
+const addInvoiceLineForUpdate = (invoiceLines, $f7) => {
+    for (let i = 1; i < invoiceLines.length; i++) {
+        addInvoiceLine(new Event('click'))
+        const newLine = invoiceLines[i]
+        const newFormData = {
+            [`localisation${i}`]: newLine.localisation,
+            [`description${i}`]: newLine.description,
+            [`price_unitaire${i}`]: newLine.unitPrice,
+            [`total_line${i}`]: newLine.totalPriceLine
+        }
+        $f7.form.fillFromData('#form-work-invoice', newFormData)
+    }
+}
 
-export { addInvoiceLine }
+
+export { addInvoiceLine, addInvoiceLineForUpdate }

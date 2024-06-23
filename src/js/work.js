@@ -73,6 +73,7 @@ export async function findWorkById(id, $f7)
             .json()
             .then(function (data) {
                 work = {
+                    id: data.id,
                     name: data.name,
                     city: data.city,
                     start: data.start,
@@ -80,7 +81,8 @@ export async function findWorkById(id, $f7)
                     progression: data.progression,
                     equipements: data.equipements,
                     user: data.user,
-                    client: data.client
+                    client: data.client,
+                    invoice: data.invoice
                 }
 
                 return work
