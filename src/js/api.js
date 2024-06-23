@@ -98,10 +98,12 @@ function fetchFileAPI(routeDTO, nameFile) {
         
                 link.style.display = 'none'
                 link.click()
+                clearCache()
             })
     )
         .catch(error => {
             console.log(error)
+            clearCache()
             $f7.dialog.alert(messages.ERROR_SERVER)
         })
 }

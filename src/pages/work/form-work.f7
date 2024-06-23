@@ -70,7 +70,10 @@
                                 <div class="item-inner">
                                     <div class="item-title item-label">Date de début</div>
                                     <div class="item-input-wrap">
-                                        <input name='start' type="datetime-local" placeholder="Date de début" value="${convertFrenchDate(now)}" required validate />
+                                        <input name='start' type="datetime-local"
+                                            placeholder="Date de début" 
+                                            value="${convertFrenchDate(now)}" required validate 
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -80,7 +83,10 @@
                                 <div class="item-inner">
                                     <div class="item-title item-label">Date de fin</div>
                                     <div class="item-input-wrap">
-                                        <input name='end' type="datetime-local" placeholder="Date de fin" value="${convertFrenchDate(now)}" required validate />
+                                        <input name='end' type="datetime-local"
+                                            placeholder="Date de fin"
+                                            value="${convertFrenchDate(now)}" required validate 
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -92,7 +98,7 @@
                                     <div class="item-input-wrap display-flex justify-content-end">
                                         <input name='equipements' type="text" placeholder="Cables réseaux" />
                                         <a href="#" @click="${addEquipement}" class="tooltip-init add-equipement"
-                                            data-tooltip="Ajouter d'autre équipements"
+                                            data-tooltip="Ajouter d'autres équipements"
                                         >
                                             <i class="f7-icons">plus_app_fill</i>
                                         </a>
