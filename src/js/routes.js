@@ -44,7 +44,7 @@ const routes = [
         component: FormUpdateWork,
     },
     {
-        path: '/form-work/invoice/:prestationId/:clientId',
+        path: '/form-work/invoice/:prestation/:clientId',
         component: FormInvoiceWork,
     },
     {

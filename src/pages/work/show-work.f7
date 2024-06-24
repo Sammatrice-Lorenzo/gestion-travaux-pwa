@@ -40,7 +40,10 @@
                     </a>
                 </div>
                 <div class="card-footer display-flex justify-content-center">
-                    <a href="/form-work/invoice/${props.prestationId}/${work.client.id}" class="link link-fill link-fill-secondary link-fill-raised">
+                    <a id="generate-invoice-link"
+                        href="/form-work/invoice/${workStringify}/${work.client.id}"
+                        class="link link-fill link-fill-secondary link-fill-raised"
+                    >
                         <i class="f7-icons">doc_text_fill</i>
                         <span>Générer la facture</span>
                     </a>
@@ -61,7 +64,8 @@
     export default async (props, { $, $on, $f7 }) => {
         var $$ = Dom7
 
-        const work = await findWorkById(props.prestationId, $f7)
+        let work = await findWorkById(props.prestationId, $f7)
+        let workStringify = encodeURIComponent(JSON.stringify(work))
 
         const openConfirm = () => {
             $f7.dialog.confirm(CONFIRMATION_TO_DELETE, function () {
@@ -71,6 +75,12 @@
 
         $on('pageInit', function (page) {
             loadTabbar('show-work', $f7)
+        })
+
+        $on('pageReinit', async function (page) {
+            work = await findWorkById(props.prestationId, $f7)
+            workStringify = encodeURIComponent(JSON.stringify(work))
+            $$('#generate-invoice-link').attr('href', `/form-work/invoice/${workStringify}/${work.client.id}`)
         })
 
         return $render

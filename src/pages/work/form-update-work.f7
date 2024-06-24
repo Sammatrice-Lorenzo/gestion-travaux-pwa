@@ -92,7 +92,7 @@
                                     <div class="item-input-wrap display-flex justify-content-end">
                                         <input name='equipements' type="text" placeholder="Cables réseaux" />
                                         <a href="#" @click="${addEquipement}" class="tooltip-init add-equipement"
-                                            data-tooltip="Ajouter d'autre équipements"
+                                            data-tooltip="Ajouter d'autres équipements"
                                         >
                                             <i class="f7-icons">plus_app_fill</i>
                                         </a>

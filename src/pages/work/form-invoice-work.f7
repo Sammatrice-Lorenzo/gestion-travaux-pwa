@@ -85,19 +85,27 @@
     import Framework7 from 'framework7/bundle'
     import Dom7 from 'dom7'
 
-    import { createInvoiceWork, isValidForm } from '../../js/invoiceWork.js'
+    import { createInvoiceWork, isValidForm, showInvoiceForUpdate } from '../../js/invoiceWork.js'
     import { addInvoiceLine } from '../../js/work/component/invoiceLineComponent.js'
+    import { findWorkById } from '../../js/work.js'
 
     export default async (props, {$, $on, $f7, $onBeforeUnmount } ) => {
+
+        $on('pageBeforeIn', function (page) {
+            const work = JSON.parse(props.prestation)
+
+            if (work.invoice) {
+                showInvoiceForUpdate(work.invoice, $f7)
+            }
+        })
 
         const send = (event) => {
             event.preventDefault()
             const $$ = Dom7
-
             let formData = $f7.form.convertToData('#form-work-invoice')
             const isValid = isValidForm($$, $f7)
             if (isValid) {
-                createInvoiceWork(formData, $f7, props.clientId)
+                createInvoiceWork(formData, $f7, props)
             }
         }
 
