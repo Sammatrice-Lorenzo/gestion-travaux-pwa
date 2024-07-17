@@ -5,7 +5,7 @@ const monthsEnum = Object.freeze({
     APRIL: 'Avril',
     MAY: 'Mai',
     JUNE: 'Juin',
-    JULY: 'Juliet',
+    JULY: 'Juillet',
     AUGUST: 'Août',
     SEPTEMBER: 'Septembre',
     OCTOBER: 'Octobre', 

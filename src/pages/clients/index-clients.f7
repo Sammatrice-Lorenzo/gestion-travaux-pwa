@@ -50,7 +50,7 @@
     import { loadTabbar } from '../../js/components/tabbar.js'
 
     export default async (props, { $, $on, $f7 }) => {
-        const clients = await getClientsByUser()
+        const clients = await getClientsByUser($f7)
         let clientsByUser = clients.reverse()
 
         $on('pageInit', function (page) {

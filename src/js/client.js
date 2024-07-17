@@ -1,14 +1,14 @@
-import { getToken } from './token'
-import { stockResponseInCache, responseIsCached, checkDataToGetOfAResponseCached, clearCache } from './cache'
-import { getUrlByUser, getUrlUser, getUrl, getUrlById } from './urlGenerator'
 import * as messages from './messages'
-import { apiRequest } from './api'
+import { RouteDTO } from './dto/RouteDTO'
+import { apiRequest, callAPI, createAPI, deleteAPI } from './api'
+import { responseIsCached, checkDataToGetOfAResponseCached } from './cache'
+import { getUrlByUser, getUrlUser, getUrl, getUrlById } from './urlGenerator'
 
 const URL_CLIENTS_BY_USER = '/api/clientsByUser/' 
 const URL_CLIENTS = '/api/clients/'
+const URL_TO_REDIRECT = '/clients/'
 
-export async function getClientsByUser() {
-    let clientsByUser = []
+async function getClientsByUser($f7) {
     const url = getUrlByUser(URL_CLIENTS_BY_USER)
 
     const cache = await responseIsCached(url)
@@ -16,43 +16,10 @@ export async function getClientsByUser() {
         return checkDataToGetOfAResponseCached(url)
     }
 
-    return callApi(clientsByUser)
+    return callAPI(URL_CLIENTS_BY_USER, $f7)
 }
 
-async function callApi(clientsByUser) {
-    const url = getUrlByUser(URL_CLIENTS_BY_USER)
-    const token = getToken()
-
-    await fetch(url, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-    }).then(response =>
-        response
-            .clone() // Cloner la réponse pour stockResponseInCache
-            .json()
-            .then(function (data) {
-                if (process.env.NODE_ENV === 'production') {
-                    stockResponseInCache(url, response.clone()) // Utiliser la réponse clonée
-                }
-
-                for (const iterator of data["hydra:member"]) {
-                    clientsByUser.push(iterator)
-                }
-
-                return clientsByUser
-            })
-    )
-        .catch(error => {
-            console.log(error)
-        })
-
-    return clientsByUser
-}
-
-export function createClient(form, $f7)
+function createClient(form, $f7)
 {
     if (!customValidation(form, $f7)) {
         return
@@ -61,33 +28,16 @@ export function createClient(form, $f7)
     const url = getUrl('/api/clients')
     const body = getBodyClient(form)
 
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            // 'Authorization': `Bearer ${token}`
-        },
-        body: body
-    }).then(response =>
-        response
-            .json()
-            .then(function (data) {
-                if (response.status === 422) {
-                    $f7.dialog.alert(data['hydra:description'])
-                } else {
-                    clearCache()
-                    $f7.dialog.alert(messages.SUCCESS_INSERTION_FORM)
-                    $f7.views.main.router.navigate('/clients/')
-                }
-            })
-    )
-        .catch(error => {
-            console.log(error)
-            $f7.dialog.alert(messages.ERROR_SERVER)
-        })
+    const routeDTO = new RouteDTO()
+        .setApp($f7)
+        .setRoute(URL_TO_REDIRECT)
+        .setUrlAPI(url)
+        .setBody(body)
+
+    createAPI(routeDTO)
 }
 
-export function updateClient(form, idClient, $f7)
+function updateClient(form, idClient, $f7)
 {
     const url = getUrlById(URL_CLIENTS, idClient)
     const body = getBodyClient(form)
@@ -96,35 +46,28 @@ export function updateClient(form, idClient, $f7)
         return
     }
 
-    apiRequest(url, 'PUT', [body, '/clients/'], $f7)
+    const routeDTO = new RouteDTO()
+        .setApp($f7)
+        .setRoute(URL_TO_REDIRECT)
+        .setUrlAPI(url)
+        .setBody(body)
+        .setMethod('PUT')
+
+    apiRequest(routeDTO)
 }
 
-export function deleteClient(idClient, $f7)
+function deleteClient(idClient, $f7)
 {
-    const url = getUrlById(URL_CLIENTS, idClient)
+    const routeDTO = new RouteDTO()
+        .setApp($f7)
+        .setIdElement(idClient)
+        .setRoute(URL_TO_REDIRECT)
+        .setUrlAPI(URL_CLIENTS)
 
-    fetch(url, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            // 'Authorization': `Bearer ${token}`
-        },
-    }).then(function (response) {
-        clearCache()
-        if (response.status === 204) {
-            $f7.dialog.alert(messages.SUCCESS_DELETE_FORM)
-            $f7.views.main.router.navigate('/clients/')
-        } else {
-            $f7.dialog.alert(messages.ERROR_SERVER)
-        }
-    })
-        .catch(error => {
-            console.log(error)
-            $f7.dialog.alert(messages.ERROR_SERVER)
-        })
+    deleteAPI(routeDTO)
 }
 
-export async function findClientById(id, $f7){
+async function findClientById(id, $f7) {
     const url = getUrlById(URL_CLIENTS, id)
     let client = {}
 
@@ -211,7 +154,15 @@ function customValidation(form, $f7) {
  * @param { String } numberPhone
  * @returns { String }
  */
-export function getNumberPhoneInString(numberPhone)
-{
+function getNumberPhoneInString(numberPhone) {
     return numberPhone.length <= 10 ? numberPhone.match(/.{1,2}/g).join('.') : numberPhone
+}
+
+export {
+    getClientsByUser,
+    createClient,
+    updateClient,
+    deleteClient,
+    findClientById,
+    getNumberPhoneInString
 }
