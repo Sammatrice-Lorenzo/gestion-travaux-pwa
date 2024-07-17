@@ -122,7 +122,7 @@
     export default async (props, {$, $on, $f7, $onBeforeUnmount } ) => {
 
         const work = await findWorkById(props.prestationId, $f7)
-        const clients = await getClientsByUser()
+        const clients = await getClientsByUser($f7)
 
         const formWork = {
             name: work.name,

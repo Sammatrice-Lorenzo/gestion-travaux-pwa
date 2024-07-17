@@ -98,4 +98,11 @@ export class RouteDTO {
 
         return this
     }
+
+    /**
+     * @returns { String }
+     */
+    getMethod() {
+        return this.method
+    }
 }

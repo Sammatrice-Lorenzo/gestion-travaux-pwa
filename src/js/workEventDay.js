@@ -1,4 +1,4 @@
-import { apiRequest, deleteAPI, fetchFileAPI } from './api'
+import { apiRequest, callAPI, deleteAPI, fetchFileAPI } from './api'
 import { getToken } from './token'
 import * as messages from './messages'
 import { getUrlByUser, getUrlUser, getUrl, getUrlById} from './urlGenerator'
@@ -10,8 +10,7 @@ const URL_WORK_EVENT_DAY = '/api/work_event_days/'
 const URL_TO_REDIRECT = '/calendar/'
 const URL_WORK_EVENT_DAY_BY_USER = '/api/work/event/day/'
 
-export async function getWorkEventDayByUser($f7) {
-    let eventsByUser = []
+async function getWorkEventDayByUser($f7) {
     const url = getUrlByUser(URL_WORK_EVENT_DAY_BY_USER)
 
     const cache = await responseIsCached(url)
@@ -19,7 +18,7 @@ export async function getWorkEventDayByUser($f7) {
         return checkDataToGetOfAResponseCached(url)
     }
 
-    return callApi(eventsByUser, $f7)
+    return callAPI(URL_WORK_EVENT_DAY_BY_USER, $f7)
 }
 
 async function callApi(eventsByUser, $f7) {
@@ -66,7 +65,14 @@ function createWorkEventDay(form, $f7)
     const url = getUrl(urlWorkEventDay)
     const body = getBody(form)
 
-    apiRequest(url, 'POST', [body, URL_TO_REDIRECT], $f7)
+    const routeDTO = new RouteDTO()
+        .setApp($f7)
+        .setRoute(URL_TO_REDIRECT)
+        .setUrlAPI(url)
+        .setBody(body)
+        .setMethod('POST')
+
+    apiRequest(routeDTO)
 }
 
 function updateWorkEventDay(form, idWorkEventDay, $f7)
@@ -74,7 +80,14 @@ function updateWorkEventDay(form, idWorkEventDay, $f7)
     const url = getUrlById(URL_WORK_EVENT_DAY, idWorkEventDay)
     const body = getBody(form)
 
-    apiRequest(url, 'PUT', [body, URL_TO_REDIRECT], $f7)
+    const routeDTO = new RouteDTO()
+        .setApp($f7)
+        .setRoute(URL_TO_REDIRECT)
+        .setUrlAPI(url)
+        .setBody(body)
+        .setMethod('PUT')
+    
+    apiRequest(routeDTO)
 }
 
 function deleteWorkEventDay(idWorkEventDay, $f7) {
@@ -157,4 +170,11 @@ function downloadCalendarEvents(calendar, $f7) {
     fetchFileAPI(routeDTO, 'summary_events.pdf')
 }
 
-export { createWorkEventDay, updateWorkEventDay, deleteWorkEventDay, isValidForm, downloadCalendarEvents }
+export { 
+    getWorkEventDayByUser,
+    createWorkEventDay,
+    updateWorkEventDay,
+    deleteWorkEventDay,
+    isValidForm,
+    downloadCalendarEvents
+}

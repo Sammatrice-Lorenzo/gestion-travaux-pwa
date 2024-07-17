@@ -1,14 +1,14 @@
-import { apiRequest } from './api'
-import { getToken } from './token'
+import { RouteDTO } from './dto/RouteDTO'
 import * as messages from './messages'
+import { apiRequest, callAPI, createAPI, deleteAPI } from './api'
+import { checkDataToGetOfAResponseCached, responseIsCached } from './cache'
 import { getUrlByUser, getUrlUser, getUrl, getUrlById} from './urlGenerator'
-import { clearCache, checkDataToGetOfAResponseCached, responseIsCached, stockResponseInCache } from './cache'
 
 const URL_WORK = '/api/works/'
 const URL_WORK_BY_USER = '/api/worksByUser/'
+const URL_TO_REDIRECT = '/prestation/'
 
-export async function getWorkByUser($f7) {
-    let worksByUser = []
+async function getWorkByUser($f7) {
     const url = getUrlByUser(URL_WORK_BY_USER)
 
     const cache = await responseIsCached(url)
@@ -16,48 +16,10 @@ export async function getWorkByUser($f7) {
         return checkDataToGetOfAResponseCached(url)
     }
 
-    return callApi(worksByUser, $f7)
+    return callAPI(URL_WORK_BY_USER, $f7)
 }
 
-async function callApi(workByUser, $f7) {
-    const url = getUrlByUser(URL_WORK_BY_USER)
-    const token = getToken()
-
-    await fetch(url, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-    }).then(response =>
-        response
-            .clone() // Cloner la réponse pour stockResponseInCache
-            .json()
-            .then(function (data) {
-                if (process.env.NODE_ENV === 'production') {
-                    stockResponseInCache(url, response.clone()) // Utiliser la réponse clonée
-                }
-
-                if (data.code === 401) {
-                    $f7.dialog.alert(messages.TOKEN_EXPIRED)
-                    $f7.views.main.router.navigate('/')
-                }
-
-                for (const iterator of data["hydra:member"]) {
-                    workByUser.push(iterator)
-                }
-
-                return workByUser
-            })
-    )
-        .catch(error => {
-            console.log(error)
-        })
-
-    return workByUser
-}
-
-export async function findWorkById(id, $f7)
+async function findWorkById(id, $f7)
 {
     const url = getUrlById(URL_WORK, id)
     let work = {}
@@ -96,66 +58,36 @@ export async function findWorkById(id, $f7)
     return work
 }
 
-export function createWork(form, $f7)
+function createWork(form, $f7)
 {
+    if (!customValidation(form, $f7)) {
+        return
+    }
+
     const url = getUrl('/api/works')
     const body = getBodyWork(form)
-    if (!customValidation(form, $f7)) {
-        return
-    }
 
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            // 'Authorization': `Bearer ${token}`
-        },
-        body: body
-    }).then(response =>
-        response
-            .json()
-            .then(function (data) {
-                if (data.code === '400') {
-                    $f7.dialog.alert(messages.ERROR_SERVER)
-                } else {
-                    clearCache()
-                    $f7.dialog.alert(messages.SUCCESS_INSERTION_FORM)
-                    $f7.views.main.router.navigate('/prestation/')
-                }
-            })
-    )
-        .catch(error => {
-            console.log(error)
-            $f7.dialog.alert(messages.ERROR_SERVER)
-        })
+    const routeDTO = new RouteDTO()
+        .setApp($f7)
+        .setRoute(URL_TO_REDIRECT)
+        .setUrlAPI(url)
+        .setBody(body)
+
+    createAPI(routeDTO)
 }
 
-export function deleteWork(idWork, $f7)
+function deleteWork(idWork, $f7)
 {
-    const url = getUrlById(URL_WORK, idWork)
+    const routeDTO = new RouteDTO()
+        .setApp($f7)
+        .setIdElement(idWork)
+        .setRoute(URL_TO_REDIRECT)
+        .setUrlAPI(URL_WORK)
 
-    fetch(url, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            // 'Authorization': `Bearer ${token}`
-        },
-    }).then(function (response) {
-        clearCache()
-        if (response.status === 204) {
-            $f7.dialog.alert(messages.SUCCESS_DELETE_FORM)
-            $f7.views.main.router.navigate('/prestation/')
-        } else {
-            $f7.dialog.alert(messages.ERROR_SERVER)
-        }
-    })
-        .catch(error => {
-            console.log(error)
-            $f7.dialog.alert(messages.ERROR_SERVER)
-        })
+    deleteAPI(routeDTO)
 }
 
-export function updateWork(form, idWork, $f7)
+function updateWork(form, idWork, $f7)
 {
     const url = getUrlById(URL_WORK, idWork)
     const body = getBodyWork(form)
@@ -164,7 +96,14 @@ export function updateWork(form, idWork, $f7)
         return
     }
 
-    apiRequest(url, 'PUT', [body, '/prestation/'], $f7)
+    const routeDTO = new RouteDTO()
+        .setApp($f7)
+        .setRoute(URL_TO_REDIRECT)
+        .setUrlAPI(url)
+        .setBody(body)
+        .setMethod('PUT')
+
+    apiRequest(routeDTO)
 }
 
 function customValidation(form, $f7)
@@ -196,9 +135,9 @@ function customValidation(form, $f7)
 
 /**
  * @param { Array } equipements 
- * @returns { string }
+ * @returns { String }
  */
-export function getEquipementsInLine(equipements)
+function getEquipementsInLine(equipements)
 {
     return equipements.join(', ')
 }
@@ -217,4 +156,13 @@ function getBodyWork(form)
         user: urlAPiUser,
         client: form.client
     })
+}
+
+export {
+    getWorkByUser,
+    findWorkById,
+    createWork,
+    updateWork,
+    deleteWork,
+    getEquipementsInLine
 }
