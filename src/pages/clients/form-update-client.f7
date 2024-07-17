@@ -100,7 +100,7 @@
             firstname: client.firstname,
             lastname: client.lastname,
             city: client.city,
-            phoneNumber: client.phoneNumber,
+            phoneNumber: client.phoneNumber.replace(/\./g, ''),
             postalCode: client.postalCode,
             streetAddress: client.streetAddress,
         }

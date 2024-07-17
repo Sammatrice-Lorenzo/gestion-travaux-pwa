@@ -127,7 +127,7 @@
     export default async (props, {$, $on, $f7, $onBeforeUnmount } ) => {
 
         const now = new Date().toLocaleString()
-        const clients = await getClientsByUser()
+        const clients = await getClientsByUser($f7)
         const send = () => {
             const equipements = getEquipementsInForm(Dom7)
             const formData = $f7.form.convertToData('#form-work')
