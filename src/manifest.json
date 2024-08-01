@@ -1,7 +1,7 @@
 {
   "prefer_related_applications": false,
   "name": "Gestion Travaux",
-  "short_name": "gestion travaux",
+  "short_name": "Gestion Travaux",
   "description": "gestion-travaux-pwa",
   "lang": "fr-FR",
   "start_url": "/",

@@ -33,7 +33,7 @@
                     <p class="card-text"><strong>Date de fin :</strong> ${formatDate(item.end)}</p>
                     <p class="card-text"><strong>État :</strong> ${item.progression}</p>
                     <p class="card-text"><strong>Équipements :</strong> ${getEquipementsInLine(item.equipements)}</p>
-                    <p class="card-text"><strong>Client :</strong> ${item.client.lastname} ${item.client.firstname}</p>
+                    <p class="card-text"><strong>Client :</strong> ${item.client.name}</p>
                 </div>
                 <div class="card-footer d-flex justify-content-end">
                     <a href="/prestation/${item['@id'].split('/').pop()}" class="card-link" aria-label="Voir les détails de la prestation">

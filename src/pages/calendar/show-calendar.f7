@@ -77,9 +77,37 @@
                                                 </div>
                                             </div>
                                         </li>
+                                        <li class="item-content item-input">
+                                            <div class="item-media">
+                                                <i class="icon f7-icons">person_alt_circle</i>
+                                            </div>
+                                            <div class="item-inner">
+                                                <div class="item-input-wrap">
+                                                    <a
+                                                        class="item-link smart-select smart-select-init"
+                                                        data-open-in="popup"
+                                                        data-searchbar="true"
+                                                        data-searchbar-placeholder="Rechercher le client"
+                                                        data-close-placeholder="Fermer"
+                                                    >
+                                                        <select name="client">
+                                                            ${clients.map((client) => $h`
+                                                                <option value='${client["@id"]}'>${client.name}</option>
+                                                            `)}
+                                                            <option value="" selected>Aucun</option>
+                                                        </select>
+                                                        <div class="item-content">
+                                                            <div class="item-inner">
+                                                                <div class="item-title">Client</div>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </li>
                                     </ul>
                                     <div class="block display-flex justify-content-center">
-                                        <a href="#" class="button button-small button-round" @click="${send}">
+                                        <a href="#" class="button button-outline button-round" @click="${send}">
                                             <i class="f7-icons">checkmark_circle</i>
                                         </a>
                                     </div>
@@ -95,7 +123,7 @@
                         <li class="item-content swipeout">
                             <div class="event-color" style="background-color: ${item.color}"></div>
                             <div class="item-inner swipeout-content" data-id="${item.id}">
-                                <div class="item-title">${item.title}</div>
+                                <div class="item-title">${item.title} ${item.client && item.client !== undefined ? '(' + item.client.name +')' : ''}</div>
                                 <div class="item-after">
                                     <p class="event-times">${item.startTime}</p>
                                     <p class="event-times">${item.endTime}</p>
@@ -150,8 +178,12 @@
     } from '../../js/workEventDay.js'
     import { getEventsFormatted } from '../../js/formatter/eventsFormatter.js'
     import Framework7DTO from '../../js/Framework7DTO.js'
+    import { getClientsByUser } from '../../js/client.js'
+
 
     export default async (props, { $f7, $, $el, $update, $on, $onMounted }) => {
+        const clients = await getClientsByUser($f7)
+
         const date = new Date()
         const year = date.getFullYear()
         const month = date.getMonth()

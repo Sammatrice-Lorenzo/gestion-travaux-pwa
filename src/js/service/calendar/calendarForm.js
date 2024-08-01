@@ -7,6 +7,7 @@ const getWorkDayCalendar = (form, date) => {
         endHours: form.endHour,
         title: form.title,
         color: form.color,
+        client: form.client
     }
 }
 
@@ -51,13 +52,15 @@ const handleEditClassForm = (framework7DTO) => {
 const getEventSelected = (id, eventItems, framework7DTO) => {
     const $ = framework7DTO.getSelector()
     const event = eventItems.filter(event => event.id === id)[0]
+    const client = event.client
 
     const formCalendar = {
         id: event.id,
         title: event.title,
         startHour: event.startTime,
         endHour: event.endTime,
-        color: event.color
+        color: event.color,
+        client: client ? client['@id'] : ""
     }
 
     $('#form-calendar').addClass('edit')
