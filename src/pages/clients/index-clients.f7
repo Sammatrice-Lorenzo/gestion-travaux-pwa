@@ -24,7 +24,7 @@
             </div>
             ${clientsByUser.map((item) => $h`
             <div class="card color-card">
-                <div class="card-header">${item.firstname} ${item.lastname}</div>
+                <div class="card-header">${item.name}</div>
                 <div class="card-content card-content-padding display-flex align-content-center">
                     <div class="col">
                         <div class="row"> Rue : ${item.streetAddress}</div>

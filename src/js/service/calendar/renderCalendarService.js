@@ -17,6 +17,7 @@ const buildEvent = (currentEvents) => {
             startTime: event.startHours,
             endTime: event.endHours,
             color: event.color,
+            client: typeof event.client === 'string' ? null : event.client
         }
     })
 }

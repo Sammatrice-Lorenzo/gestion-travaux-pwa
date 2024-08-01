@@ -27,7 +27,7 @@
                             <li class="equipements-wrapper">
                                 <div class="equipements-container">${getEquipementsInLine(work.equipements)}</div>
                             </li>
-                            <li>Pour ${work.client.lastname} ${work.client.firstname}</li>
+                            <li>Pour ${work.client.name}</li>
                         </ul>
                     </div>
                 </div>
