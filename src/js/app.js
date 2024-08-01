@@ -13,6 +13,7 @@ import App from '../app.f7'
 import routes from './routes.js'
 import { reloadPage } from './helper/routerHelper.js'
 import { setupServicesWorkers } from './serviceWorker.js'
+import { checkAndClearCache } from './cache.js'
 
 const app = new Framework7({
     name: 'Gestion Travaux', // App name
@@ -34,7 +35,7 @@ const app = new Framework7({
 
 askUserPermissionForSendANotificationPush()
 setupServicesWorkers()
-
+checkAndClearCache()
 reloadPage(app, '/prestation/')
 
 export default app

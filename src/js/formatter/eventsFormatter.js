@@ -7,6 +7,8 @@ const getEventsFormatted = (workEventDays) => {
         const month = date.getMonth()
         const day = date.getDate()
     
+        const client = event.hasOwnProperty('client') ? event.client : null
+
         return {
             id: event.id,
             date: new Date(year, month, day),
@@ -14,6 +16,7 @@ const getEventsFormatted = (workEventDays) => {
             startHours: getTime(event.startDate),
             endHours: getTime(event.endDate),
             color: event.color,
+            client: client
         }
     })
 }

@@ -1,6 +1,4 @@
 import { apiRequest, callAPI, deleteAPI, fetchFileAPI } from './api'
-import { getToken } from './token'
-import * as messages from './messages'
 import { getUrlByUser, getUrlUser, getUrl, getUrlById} from './urlGenerator'
 import { checkDataToGetOfAResponseCached, responseIsCached, stockResponseInCache } from './cache'
 import { RouteDTO } from './dto/RouteDTO.js'
@@ -19,44 +17,6 @@ async function getWorkEventDayByUser($f7) {
     }
 
     return callAPI(URL_WORK_EVENT_DAY_BY_USER, $f7)
-}
-
-async function callApi(eventsByUser, $f7) {
-    const url = getUrlByUser(URL_WORK_EVENT_DAY_BY_USER)
-    const token = getToken()
-
-    await fetch(url, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-    }).then(response =>
-        response
-            .clone()
-            .json()
-            .then(function (data) {
-                if (process.env.NODE_ENV === 'production') {
-                    stockResponseInCache(url, response.clone())
-                }
-
-                if (data.code === 401) {
-                    $f7.dialog.alert(messages.TOKEN_EXPIRED)
-                    $f7.views.main.router.navigate('/')
-                }
-
-                for (const iterator of data["hydra:member"]) {
-                    eventsByUser.push(iterator)
-                }
-
-                return eventsByUser
-            })
-    )
-        .catch(error => {
-            console.log(error)
-        })
-
-    return eventsByUser
 }
 
 function createWorkEventDay(form, $f7)
@@ -119,13 +79,16 @@ const getBody = (body) => {
     date.setHours(parseInt(endHours) + 2, parseInt(endMinutes))
     const endDate = new Date(date)
 
-    return JSON.stringify({
+    let json = {
         title: body.title,
         startDate: startDate,
         endDate: endDate,
         color: body.color,
-        user: urlUser
-    })
+        user: urlUser,
+        client: body.client !== '' ? body.client : null
+    }
+
+    return JSON.stringify(json)
 }
 
 /**
