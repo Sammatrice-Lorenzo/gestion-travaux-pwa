@@ -46,3 +46,15 @@
 .card-link:hover {
     text-decoration: underline;
 }
+
+/* Total amount */
+
+.total-section {
+    margin-top: 1em;
+    padding-top: 1em;
+    border-top: 1px solid #ccc;
+}
+.final-total {
+    font-weight: bold;
+    color: #38b000;
+}

@@ -44,7 +44,8 @@ async function findWorkById(id, $f7)
                     equipements: data.equipements,
                     user: data.user,
                     client: data.client,
-                    invoice: data.invoice
+                    invoice: data.invoice,
+                    totalAmount: data.totalAmount
                 }
 
                 return work
@@ -142,6 +143,10 @@ function getEquipementsInLine(equipements)
     return equipements.join(', ')
 }
 
+/**
+ * @param { Object } form
+ * @returns { String }
+ */
 function getBodyWork(form)
 {
     const urlAPiUser = getUrlUser()
@@ -154,7 +159,8 @@ function getBodyWork(form)
         progression: form.progression,
         equipements: form.equipements,
         user: urlAPiUser,
-        client: form.client
+        client: form.client,
+        totalAmount: parseFloat(form.totalAmount)
     })
 }
 

@@ -120,9 +120,10 @@ function isValidForm(framework7DTO) {
 function downloadCalendarEvents(calendar, $f7) {
     const currentMonth = calendar.currentMonth
     const currentYear = calendar.currentYear
+    const date = new Date(currentYear, currentMonth).toLocaleDateString()
 
     const body = JSON.stringify({
-        date: new Date(currentYear, currentMonth).toLocaleDateString(),
+        date: date,
     })
 
     const routeDTO = new RouteDTO()
@@ -130,7 +131,7 @@ function downloadCalendarEvents(calendar, $f7) {
         .setUrlAPI('/api/work-event-day/file')
         .setBody(body)
 
-    fetchFileAPI(routeDTO, 'summary_events.pdf')
+    fetchFileAPI(routeDTO, `prestations_${date}.pdf`)
 }
 
 export { 

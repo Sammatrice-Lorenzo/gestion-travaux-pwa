@@ -203,8 +203,8 @@
 
         const today = new Date(year, month, day)
   
-        const renderEvents = (calendar) => {
-            eventItems = renderEventsCalendar(calendar, events, eventItems)
+        const renderEvents = async (calendar) => {
+            eventItems = await renderEventsCalendar(calendar, events, eventItems)
             $update()
         }
 
@@ -213,7 +213,7 @@
             colorPickerSpectrum = createColorPickerForEventCalendar($f7)
         })
 
-        const send = () => {
+        const send = async () => {
             if (!isValidForm(framework7DTO)) {
                 return
             }
@@ -235,7 +235,7 @@
                 createWorkEventDay(workEventDay, $f7)
             }
 
-            eventItems = renderEventsCalendar(calendar, events, eventItems)
+            eventItems = await renderEventsCalendar(calendar, events, eventItems)
             $update()
             popupSwipe.close()
         }
