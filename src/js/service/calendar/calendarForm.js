@@ -39,6 +39,7 @@ const handleEditClassForm = (framework7DTO) => {
             $(selectorForm).find('input[name="title"]').val('')
             $(selectorForm).find('input[name="startHour"]').val('08:00')
             $(selectorForm).find('input[name="endHour"]').val('18:00')
+            $(selectorForm).find('select[name="client"]').val('Aucun')
         }
     })
 }
@@ -75,7 +76,7 @@ const getEventSelected = (id, eventItems, framework7DTO) => {
  */
 const getMaxId = (events) => {
     return events.reduce((maxId, event) => {
-        return event.id > maxId ? event.id : maxId;
+        return event.id > maxId ? event.id : maxId
     }, -Infinity)
 }
 

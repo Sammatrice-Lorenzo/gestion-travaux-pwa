@@ -23,24 +23,29 @@
                 </div>
             </div>
             ${worksByUser.map((item) => $h`
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">${item.name}</h3>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">${item.name}</h3>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text"><strong>Lieu :</strong> ${item.city}</p>
+                        <p class="card-text"><strong>Date de début :</strong> ${formatDate(item.start)}</p>
+                        <p class="card-text"><strong>Date de fin :</strong> ${formatDate(item.end)}</p>
+                        <p class="card-text"><strong>État :</strong> ${item.progression}</p>
+                        <p class="card-text"><strong>Équipements :</strong> ${getEquipementsInLine(item.equipements)}</p>
+                        <p class="card-text"><strong>Client :</strong> ${item.client.name}</p>
+                        <div class="total-section">
+                            <p class="card-text"><strong>Total hors taxes :</strong> ${item.totalAmount.toFixed(2)} €</p>
+                            <p class="card-text"><strong>TVA :</strong> ${tvaOnAmount(item.totalAmount, tvaEnum.TVA_MAINTENANCE_WORK).toFixed(2)} €</p>
+                            <p class="card-text final-total"><strong>Total TTC :</strong> ${totalAmountTVA(item.totalAmount, tvaEnum.TVA_MAINTENANCE_WORK).toFixed(2)} €</p>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-end">
+                        <a href="/prestation/${item['@id'].split('/').pop()}" class="card-link" aria-label="Voir les détails de la prestation">
+                            <i class="f7-icons">eye_fill</i>
+                        </a>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <p class="card-text"><strong>Lieu :</strong> ${item.city}</p>
-                    <p class="card-text"><strong>Date de début :</strong> ${formatDate(item.start)}</p>
-                    <p class="card-text"><strong>Date de fin :</strong> ${formatDate(item.end)}</p>
-                    <p class="card-text"><strong>État :</strong> ${item.progression}</p>
-                    <p class="card-text"><strong>Équipements :</strong> ${getEquipementsInLine(item.equipements)}</p>
-                    <p class="card-text"><strong>Client :</strong> ${item.client.name}</p>
-                </div>
-                <div class="card-footer d-flex justify-content-end">
-                    <a href="/prestation/${item['@id'].split('/').pop()}" class="card-link" aria-label="Voir les détails de la prestation">
-                        <i class="f7-icons">eye_fill</i>
-                    </a>
-                </div>
-            </div>
             `)}
         </div>
     </div>
@@ -52,10 +57,12 @@
     import { getWorkByUser, getEquipementsInLine } from '../../js/work.js'
     import { sendNotificationPushForProgression } from '../../js/notification'
     import { loadTabbar } from '../../js/components/tabbar.js'
+    import { totalAmountTVA, tvaOnAmount } from '../../js/helper/priceWorkHelper'
+    import { tvaEnum } from '../../js//enum/tvaEnum.js'
 
     export default async (props, { $, $on, $f7 }) => {
         const works = await getWorkByUser($f7)
-        let worksByUser = works.reverse()
+        const worksByUser = works.reverse()
 
         $on('pageInit', function (page) {
             loadTabbar('index-work', $f7);

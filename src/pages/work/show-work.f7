@@ -29,21 +29,31 @@
                             </li>
                             <li>Pour ${work.client.name}</li>
                         </ul>
+                        <div class="total-section">
+                            <ul>
+                                <li>
+                                    <p class="card-text total-text"><strong>Total hors taxes :</strong> ${work.totalAmount.toFixed(2)} €</p>
+                                </li>
+                                <li>
+                                    <p class="card-text total-text"><strong>TVA :</strong> ${tvaOnAmount(work.totalAmount, tvaEnum.TVA_MAINTENANCE_WORK).toFixed(2)} €</p>
+                                </li>
+                                <li>
+                                    <p class="card-text total-text final-total"><strong>Total TTC :</strong> ${totalAmountTVA(work.totalAmount, tvaEnum.TVA_MAINTENANCE_WORK).toFixed(2)} €</p>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 <div class="card-footer display-flex justify-content-center">
                     <a href="/form-work/update/${props.prestationId}" class="link link-fill link-fill-primary link-fill-raised">
                         <i class="f7-icons">square_pencil_fill</i>
                     </a>
-                    <a id=${props.prestationId} href="#" class="link link-fill link-fill-danger link-fill-raised delete" @click="${openConfirm}">
+                    <a id="${props.prestationId}" href="#" class="link link-fill link-fill-danger link-fill-raised delete" @click="${openConfirm}">
                         <i class="f7-icons">trash_circle_fill</i>
                     </a>
                 </div>
                 <div class="card-footer display-flex justify-content-center">
-                    <a id="generate-invoice-link"
-                        href="/form-work/invoice/${workStringify}/${work.client.id}"
-                        class="link link-fill link-fill-secondary link-fill-raised"
-                    >
+                    <a id="generate-invoice-link" href="/form-work/invoice/${workStringify}/${work.client.id}" class="link link-fill link-fill-secondary link-fill-raised">
                         <i class="f7-icons">doc_text_fill</i>
                         <span>Générer la facture</span>
                     </a>
@@ -60,6 +70,8 @@
     import { findWorkById, deleteWork, getEquipementsInLine } from '../../js/work.js'
     import { CONFIRMATION_TO_DELETE } from '../../js/messages.js'
     import { loadTabbar } from '../../js/components/tabbar.js'
+    import { totalAmountTVA, tvaOnAmount } from '../../js/helper/priceWorkHelper'
+    import { tvaEnum } from '../../js//enum/tvaEnum.js'
 
     export default async (props, { $, $on, $f7 }) => {
         var $$ = Dom7
