@@ -164,5 +164,7 @@ export {
     updateClient,
     deleteClient,
     findClientById,
-    getNumberPhoneInString
+    getNumberPhoneInString,
+    URL_CLIENTS_BY_USER,
+    URL_CLIENTS
 }
