@@ -1,0 +1,131 @@
+<template>
+    <div id="index-invoices" class="page">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="title">Factures Téléchargées</div>
+                <div class="right">
+                    <a class="link icon-only panel-open ripple-inset" data-panel="right">
+                        <i class="icon material-icons md-only">menu</i>
+                        <i class="icon f7-icons if-not-md">menu</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page content -->
+        <div class="page-content">
+            <div class="block-title">Factures de vos produits du mois</div>
+            <div class="data-table data-table-init card">
+                
+                <div class="card-header">
+                    <div class="data-table-links">
+                        <a class="color-white" @click=${displaySheet}>
+                            <i class="f7-icons">plus_circle</i>
+                        </a>
+                        <a class="color-white">
+                            <i class="f7-icons">trash_circle_fill</i>    
+                        </a>
+                    </div>
+                    <div class="data-table-actions">
+                        <a class="link icon-only">
+                            <i class="icon f7-icons if-not-md">line_horizontal_3_decrease</i>
+                            <i class="icon material-icons md-only">sort</i>
+                        </a>
+                        <a class="link icon-only">
+                            <i class="icon f7-icons if-not-md">ellipsis_vertical_circle</i>
+                            <i class="icon material-icons md-only">more_vert</i>
+                        </a>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="checkbox-cell">
+                                    <label class="checkbox">
+                                        <input type="checkbox" />
+                                        <i class="icon-checkbox"></i>
+                                    </label>
+                                </th>
+                                <th class="label-cell">Date</th>
+                                <th class="label-cell">Nom</th>
+                                <th class="label-cell">Visualiser</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${productInvoicesByUser.map((invoice) => $h`
+                                <tr>
+                                    <td class='checkbox-cell'>
+                                        <label class="checkbox">
+                                            <input type="checkbox" />
+                                            <i class="icon-checkbox"></i>
+                                        </label>
+                                    </td>
+                                    <td class="label-cell">${new Date(invoice.date).toLocaleDateString()}</td>
+                                    <td class="label-cell">${invoice.name}</td>
+                                    <td class="label-cell">
+                                        <a href="${uploadsUrl}/products-invoice/${invoice.path}" target="_blank" class="link external">
+                                            <i class="f7-icons">eye_fill</i>
+                                        </a>
+                                    </td>
+                                    <td class="actions-cell">
+                                        <a class="link icon-only">
+                                            <i class="icon f7-icons if-not-md">square_pencil</i>
+                                            <i class="icon material-icons md-only">edit</i>
+                                        </a>
+                                        <a class="link icon-only">
+                                            <i class="icon f7-icons if-not-md">trash</i>
+                                            <i class="icon material-icons md-only">delete</i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            `)}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    import Framework7 from 'framework7/bundle';
+    import { loadTabbar } from '../../js/components/tabbar.js';
+    import { getProductsInvoicesByUser, createProductInvoices, isValidForm } from '../../js/productInvoice.js';
+    import { createSheet } from '../../js/components/modalUploadFile.js';
+    import Framework7DTO from '../../js/Framework7DTO.js'
+
+    export default async (props, { $, $on, $el, $f7, $onMounted, $update }) => {
+        let date = new Date()
+        let productInvoicesByUser = await getProductsInvoicesByUser($f7, date)
+        console.log(productInvoicesByUser.length)
+
+        $on('pageInit', function (page) {
+            loadTabbar('index-invoices', $f7)
+        })
+
+        let sheet
+        const framework7DTO = new Framework7DTO($f7, $el, $)
+        
+        const uploadsUrl = API_URL
+        const displaySheet = () => sheet.open()
+
+        const sendFiles = async (date, framework7DTO) => {
+            $f7.sheet.close()
+            createProductInvoices(date, framework7DTO)
+            productInvoicesByUser = await getProductsInvoicesByUser($f7, date)
+
+            $f7.on('dialogClosed', async () => {
+                productInvoicesByUser = await getProductsInvoicesByUser($f7, date);
+                $update()
+            })
+        }
+        
+        $onMounted(() => {
+            sheet = createSheet(date, framework7DTO, sendFiles)
+        })
+
+        return $render
+    }
+</script>

@@ -16,7 +16,7 @@ async function getWorkByUser($f7) {
         return checkDataToGetOfAResponseCached(url)
     }
 
-    return callAPI(URL_WORK_BY_USER, $f7)
+    return callAPI(url, $f7)
 }
 
 async function findWorkById(id, $f7)

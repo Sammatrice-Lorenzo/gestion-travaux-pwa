@@ -16,7 +16,7 @@ async function getWorkEventDayByUser($f7) {
         return checkDataToGetOfAResponseCached(url)
     }
 
-    return callAPI(URL_WORK_EVENT_DAY_BY_USER, $f7)
+    return callAPI(url, $f7)
 }
 
 function createWorkEventDay(form, $f7)

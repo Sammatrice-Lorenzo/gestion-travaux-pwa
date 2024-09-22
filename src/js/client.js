@@ -16,7 +16,7 @@ async function getClientsByUser($f7) {
         return checkDataToGetOfAResponseCached(url)
     }
 
-    return callAPI(URL_CLIENTS_BY_USER, $f7)
+    return callAPI(url, $f7)
 }
 
 function createClient(form, $f7)

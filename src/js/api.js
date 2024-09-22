@@ -42,17 +42,35 @@ function apiRequest(routeDTO)
         })
 }
 
+function sendFilesAPI(routeDTO) {
+    const token = getToken()
+    let headers = {
+        'Authorization': `Bearer ${token}`,
+    }
+
+    fetchCreate(routeDTO, headers)
+}
+
 /**
  * @param { RouteDTO } routeDTO 
  */
 function createAPI(routeDTO) {
+    let headers = {
+        'Content-Type': 'application/json',
+    }
+
+    fetchCreate(routeDTO, headers)
+}
+
+/**
+ * @param { RouteDTO } routeDTO 
+ */
+function fetchCreate(routeDTO, headers) {
     const $f7 = routeDTO.getApp()
 
     fetch(routeDTO.getUrlAPI(), {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
+        headers: headers,
         body: routeDTO.getBody()
     }).then(response =>
         response
@@ -138,15 +156,14 @@ function fetchFileAPI(routeDTO, nameFile) {
 }
 
 /**
- * @param { String } urlByUser 
+ * @param { URL } url 
  * @param { any } $f7 
  * @returns { Promise<any> }
  */
-async function callAPI(urlByUser, $f7) {
+async function callAPI(url, $f7) {
     let responses = []
-    const url = getUrlByUser(urlByUser)
     const token = getToken()
-
+    
     await fetch(url, {
         method: 'GET',
         headers: {
@@ -167,7 +184,8 @@ async function callAPI(urlByUser, $f7) {
                     $f7.views.main.router.navigate('/')
                 }
 
-                for (const iterator of data["hydra:member"]) {
+                const dataResponse = data.hasOwnProperty('hydra:member') ? data["hydra:member"] : []
+                for (const iterator of dataResponse) {
                     responses.push(iterator)
                 }
 
@@ -181,4 +199,4 @@ async function callAPI(urlByUser, $f7) {
     return responses
 }
 
-export { apiRequest, deleteAPI, fetchFileAPI, callAPI, createAPI }
+export { apiRequest, deleteAPI, fetchFileAPI, callAPI, createAPI, sendFilesAPI }
