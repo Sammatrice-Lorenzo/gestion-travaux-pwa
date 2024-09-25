@@ -17,7 +17,7 @@ export function isExpired() {
     return Boolean(decodedToken.exp < Date.now() / 1000)
 }
 
-export function logout ($f7) {
+export async function logout ($f7) {
     $f7.views.main.router.navigate('/', {
         clearPreviousHistory: true,
         animate: false
@@ -25,6 +25,6 @@ export function logout ($f7) {
 
     localStorage.removeItem(TOKEN)
     if (process.env.NODE_ENV === 'production') {
-        clearCache()
+        await clearCache()
     }
 }

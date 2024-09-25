@@ -55,10 +55,11 @@ function getBody(form, props) {
 function createInvoiceWork(form, $f7, props)
 {
     const body = getBody(form, props)
+    const url = getUrl('/api/invoice-file')
 
     const routeDTO = new RouteDTO()
         .setApp($f7)
-        .setUrlAPI('/api/invoice-file')
+        .setUrlAPI(url)
         .setBody(body)
 
     fetchFileAPI(routeDTO, 'facture_prestation.pdf')

@@ -1,6 +1,8 @@
+import { monthsEnum } from "./enum/monthEnum"
+
 /** Format date en FR
- * @param { string } date 
- * @returns { string }
+ * @param { String } date 
+ * @returns { String }
  */
 const formatDate = (date) => {
     const adjustedDate = new Date(date)
@@ -24,10 +26,16 @@ const getTime = (date) => {
     return `${hours}:${adjustedDate.getMinutes().toString().padStart(2, '0')}`
 }
 
+const getMontYear = (date) => {
+    const adjustedDate = new Date(date)
+    const month = monthsEnum.getMonths()[adjustedDate.getMonth()]
+
+    return `${month} ${adjustedDate.getFullYear()}`
+} 
 
 /**
- * @param { string } date
- * @returns { string }
+ * @param { String } date
+ * @returns { String }
  */
 const convertFrenchDate = (date) => {
     const [datePart, timePart] = date.split(' ')
@@ -36,4 +44,4 @@ const convertFrenchDate = (date) => {
     return `${year}-${month}-${day} ${timePart}`
 }
 
-export { formatDate, convertFrenchDate, getTime }
+export { formatDate, convertFrenchDate, getTime, getMontYear }

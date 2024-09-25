@@ -14,16 +14,13 @@
 
         <!-- Page content -->
         <div class="page-content">
-            <div class="block-title">Factures de vos produits du mois</div>
+            <div class="block-title">Factures de vos produits de ${getMontYear(date)} </div>
             <div class="data-table data-table-init card">
                 
                 <div class="card-header">
                     <div class="data-table-links">
                         <a class="color-white" @click=${displaySheet}>
                             <i class="f7-icons">plus_circle</i>
-                        </a>
-                        <a class="color-white">
-                            <i class="f7-icons">trash_circle_fill</i>    
                         </a>
                     </div>
                     <div class="data-table-actions">
@@ -70,11 +67,11 @@
                                         </a>
                                     </td>
                                     <td class="actions-cell">
-                                        <a class="link icon-only">
-                                            <i class="icon f7-icons if-not-md">square_pencil</i>
-                                            <i class="icon material-icons md-only">edit</i>
+                                        <a id='${invoice.id}' class="link icon-only" @click="${downloadPDF}">
+                                            <i class="icon f7-icons if-not-md">download_circle</i>
+                                            <i class="icon material-icons md-only">download</i>
                                         </a>
-                                        <a class="link icon-only">
+                                        <a id='${invoice.id}' class="link icon-only" @click="${openConfirm}">
                                             <i class="icon f7-icons if-not-md">trash</i>
                                             <i class="icon material-icons md-only">delete</i>
                                         </a>
@@ -92,14 +89,18 @@
 <script>
     import Framework7 from 'framework7/bundle';
     import { loadTabbar } from '../../js/components/tabbar.js';
-    import { getProductsInvoicesByUser, createProductInvoices, isValidForm } from '../../js/productInvoice.js';
+    import { getProductsInvoicesByUser, createProductInvoices, isValidForm, deleteProductInvoice,
+        downloadFileProductInvoice
+     } from '../../js/productInvoice.js';
     import { createSheet } from '../../js/components/modalUploadFile.js';
+    import { getMontYear } from '../../js/date.js'
+    import { getIdOfElementClicked } from '../../js/helper/domElementClick'
     import Framework7DTO from '../../js/Framework7DTO.js'
+    import { CONFIRMATION_TO_DELETE } from '../../js/messages.js'
 
     export default async (props, { $, $on, $el, $f7, $onMounted, $update }) => {
         let date = new Date()
         let productInvoicesByUser = await getProductsInvoicesByUser($f7, date)
-        console.log(productInvoicesByUser.length)
 
         $on('pageInit', function (page) {
             loadTabbar('index-invoices', $f7)
@@ -121,7 +122,23 @@
                 $update()
             })
         }
-        
+
+        const downloadPDF = (element) => {
+            const invoiceId = getIdOfElementClicked($, element)
+            const productInvoice = productInvoicesByUser.filter(productInvoice => productInvoice.id === parseInt(invoiceId))[0]
+
+            downloadFileProductInvoice($f7, productInvoice)
+        }
+
+        const openConfirm = (element) => {
+            $f7.dialog.confirm(CONFIRMATION_TO_DELETE, function () {
+                const invoiceId = getIdOfElementClicked($, element)
+                deleteProductInvoice($f7, invoiceId)
+
+                $update()
+            })
+        }
+
         $onMounted(() => {
             sheet = createSheet(date, framework7DTO, sendFiles)
         })

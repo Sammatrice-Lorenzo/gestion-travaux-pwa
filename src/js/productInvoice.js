@@ -1,9 +1,13 @@
-import { callAPI, sendFilesAPI } from "./api"
+import Framework7 from "framework7"
+import { callAPI, deleteAPI, fetchFileAPI, sendFilesAPI } from "./api"
 import { checkDataToGetOfAResponseCached, responseIsCached } from "./cache"
 import { RouteDTO } from "./dto/RouteDTO"
-import { getUrl, getUrlWithParameters } from "./urlGenerator"
+import { getUrl, getUrlById, getUrlWithParameters } from "./urlGenerator"
+import Framework7DTO from "./Framework7DTO"
 
 const URL_PRODUCT_INVOICE_BY_USER = '/api/product_invoice/month'
+const URL_PRODUCT_INVOICE_DELETE = '/api/product_invoice_delete/'
+const URL_PRODUCT_INVOICE_DOWNLOAD_PDF = '/api/product_invoice_download/'
 const URL_PRODUCT_INVOICE_SEND_FILES = '/api/product_invoice_files'
 const URL_TO_REDIRECT = '/product/invoices/'
 
@@ -40,10 +44,36 @@ async function createProductInvoices(date, framework7DTO) {
         .setUrlAPI(url)
         .setBody(body)
         .setMethod('POST')
-        .setContentType('multipart/form-data')
 
-    return sendFilesAPI(routeDTO)
+    sendFilesAPI(routeDTO)
 }
+
+/**
+ * @param { Framework7 } $f7 
+ * @param { String } id 
+ */
+async function deleteProductInvoice($f7, id) {
+
+    const routeDTO = new RouteDTO()
+        .setApp($f7)
+        .setIdElement(id)
+        .setRoute(URL_TO_REDIRECT)
+        .setUrlAPI(URL_PRODUCT_INVOICE_DELETE)
+
+    deleteAPI(routeDTO, true)
+}
+
+function downloadFileProductInvoice($f7, productInvoice) {
+    const url = getUrlById(URL_PRODUCT_INVOICE_DOWNLOAD_PDF, productInvoice.id)
+
+    const routeDTO = new RouteDTO()
+        .setApp($f7)
+        .setUrlAPI(url)
+        .setBody({})
+
+    fetchFileAPI(routeDTO, `${productInvoice.name}.pdf`)
+}
+
 
 /**
  * @param { Object } body 
@@ -90,4 +120,10 @@ function isValidForm(framework7DTO, files) {
     return isValid
 }
 
-export { getProductsInvoicesByUser, createProductInvoices, isValidForm }
+export { 
+    getProductsInvoicesByUser,
+    createProductInvoices,
+    isValidForm,
+    deleteProductInvoice,
+    downloadFileProductInvoice
+ }

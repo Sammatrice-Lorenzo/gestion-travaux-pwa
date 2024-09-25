@@ -121,6 +121,7 @@ function downloadCalendarEvents(calendar, $f7) {
     const currentMonth = calendar.currentMonth
     const currentYear = calendar.currentYear
     const date = new Date(currentYear, currentMonth).toLocaleDateString()
+    const url = getUrl('/api/work-event-day/file')
 
     const body = JSON.stringify({
         date: date,
@@ -128,7 +129,7 @@ function downloadCalendarEvents(calendar, $f7) {
 
     const routeDTO = new RouteDTO()
         .setApp($f7)
-        .setUrlAPI('/api/work-event-day/file')
+        .setUrlAPI(url)
         .setBody(body)
 
     fetchFileAPI(routeDTO, `prestations_${date}.pdf`)
