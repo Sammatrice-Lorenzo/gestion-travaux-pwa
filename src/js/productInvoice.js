@@ -4,10 +4,12 @@ import { checkDataToGetOfAResponseCached, responseIsCached } from "./cache"
 import { RouteDTO } from "./dto/RouteDTO"
 import { getUrl, getUrlById, getUrlWithParameters } from "./urlGenerator"
 import Framework7DTO from "./Framework7DTO"
+import { getMontYear } from "./date"
 
 const URL_PRODUCT_INVOICE_BY_USER = '/api/product_invoice/month'
 const URL_PRODUCT_INVOICE_DELETE = '/api/product_invoice_delete/'
 const URL_PRODUCT_INVOICE_DOWNLOAD_PDF = '/api/product_invoice_download/'
+const URL_PRODUCT_INVOICE_DOWNLOAD_ZIP = '/api/product_invoice_download_zip'
 const URL_PRODUCT_INVOICE_SEND_FILES = '/api/product_invoice_files'
 const URL_TO_REDIRECT = '/product/invoices/'
 
@@ -74,6 +76,18 @@ function downloadFileProductInvoice($f7, productInvoice) {
     fetchFileAPI(routeDTO, `${productInvoice.name}.pdf`)
 }
 
+function downloadZIP($f7, ids, date) {
+    const url = getUrl(URL_PRODUCT_INVOICE_DOWNLOAD_ZIP)
+    let formattedDate = getMontYear(date)
+    formattedDate = formattedDate.replace(' ', '_')
+
+    const routeDTO = new RouteDTO()
+        .setApp($f7)
+        .setUrlAPI(url)
+        .setBody(JSON.stringify({ids: ids}))
+
+    fetchFileAPI(routeDTO, `Factures_${formattedDate}.zip`)
+}
 
 /**
  * @param { Object } body 
@@ -125,5 +139,6 @@ export {
     createProductInvoices,
     isValidForm,
     deleteProductInvoice,
-    downloadFileProductInvoice
+    downloadFileProductInvoice,
+    downloadZIP
  }

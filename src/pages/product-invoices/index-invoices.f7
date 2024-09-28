@@ -2,7 +2,7 @@
     <div id="index-invoices" class="page">
         <div class="navbar">
             <div class="navbar-inner">
-                <div class="title">Factures Téléchargées</div>
+                <div class="title">Factures de vos produits de ${getMontYear(date)}</div>
                 <div class="right">
                     <a class="link icon-only panel-open ripple-inset" data-panel="right">
                         <i class="icon material-icons md-only">menu</i>
@@ -14,33 +14,45 @@
 
         <!-- Page content -->
         <div class="page-content">
-            <div class="block-title">Factures de vos produits de ${getMontYear(date)} </div>
+            
+            <div class="block-title">Factures insérés</div>
+
+            <!-- Data Table -->
             <div class="data-table data-table-init card">
-                
                 <div class="card-header">
                     <div class="data-table-links">
                         <a class="color-white" @click=${displaySheet}>
                             <i class="f7-icons">plus_circle</i>
                         </a>
                     </div>
+                    <!-- Bouton de téléchargement ZIP ajouté -->
                     <div class="data-table-actions">
+                        <a class="link icon-only tooltip-init"
+                            @click="${() => downloadSelectedInvoices(selectedInvoices, $f7, date)}"
+                            data-tooltip="Télécharger le zip"
+                        >
+                            <i class="icon f7-icons if-not-md">archive</i>
+                            <i class="icon material-icons md-only">archive</i>
+                        </a>
                         <a class="link icon-only">
                             <i class="icon f7-icons if-not-md">line_horizontal_3_decrease</i>
                             <i class="icon material-icons md-only">sort</i>
                         </a>
-                        <a class="link icon-only">
+                        <a id="" class="link icon-only">
                             <i class="icon f7-icons if-not-md">ellipsis_vertical_circle</i>
                             <i class="icon material-icons md-only">more_vert</i>
                         </a>
                     </div>
                 </div>
+
+                <!-- Table des factures -->
                 <div class="card-content">
                     <table>
                         <thead>
                             <tr>
                                 <th class="checkbox-cell">
                                     <label class="checkbox">
-                                        <input type="checkbox" />
+                                        <input type="checkbox" @change="${selectAllInvoices}"/>
                                         <i class="icon-checkbox"></i>
                                     </label>
                                 </th>
@@ -55,7 +67,7 @@
                                 <tr>
                                     <td class='checkbox-cell'>
                                         <label class="checkbox">
-                                            <input type="checkbox" />
+                                            <input type="checkbox" @click="${() => toggleInvoiceSelection(invoice)}"/>
                                             <i class="icon-checkbox"></i>
                                         </label>
                                     </td>
@@ -67,11 +79,11 @@
                                         </a>
                                     </td>
                                     <td class="actions-cell">
-                                        <a id='${invoice.id}' class="link icon-only" @click="${downloadPDF}">
+                                        <a id='${invoice.id}' class="link icon-only" @click="${(e) => downloadPDF(e, framework7DTO, productInvoicesByUser)}">
                                             <i class="icon f7-icons if-not-md">download_circle</i>
                                             <i class="icon material-icons md-only">download</i>
                                         </a>
-                                        <a id='${invoice.id}' class="link icon-only" @click="${openConfirm}">
+                                        <a id='${invoice.id}' class="link icon-only" @click="${(e) => openConfirm(e, framework7DTO, $update())}">
                                             <i class="icon f7-icons if-not-md">trash</i>
                                             <i class="icon material-icons md-only">delete</i>
                                         </a>
@@ -85,14 +97,19 @@
         </div>
     </div>
 </template>
-
 <script>
-    import Framework7 from 'framework7/bundle';
-    import { loadTabbar } from '../../js/components/tabbar.js';
-    import { getProductsInvoicesByUser, createProductInvoices, isValidForm, deleteProductInvoice,
-        downloadFileProductInvoice
-     } from '../../js/productInvoice.js';
-    import { createSheet } from '../../js/components/modalUploadFile.js';
+    import Framework7 from 'framework7/bundle'
+    import { loadTabbar } from '../../js/components/tabbar.js'
+    import { getProductsInvoicesByUser,
+        createProductInvoices,
+        isValidForm,
+        deleteProductInvoice,
+        downloadFileProductInvoice,
+        downloadZIP
+     } from '../../js/productInvoice.js'
+    import { getInvoiceSelected,  getAllInvoicesSelected } from '../../js/service/productInvoices/dataTableProductInvoiceService'
+    import { openConfirm, downloadPDF, downloadSelectedInvoices } from '../../js/service/productInvoices/productInvoiceManagerService'
+    import { createSheet } from '../../js/components/modalUploadFile.js'
     import { getMontYear } from '../../js/date.js'
     import { getIdOfElementClicked } from '../../js/helper/domElementClick'
     import Framework7DTO from '../../js/Framework7DTO.js'
@@ -112,29 +129,25 @@
         const uploadsUrl = API_URL
         const displaySheet = () => sheet.open()
 
+        let selectedInvoices = []
+        function toggleInvoiceSelection(invoice) {
+            selectedInvoices = getInvoiceSelected(invoice, selectedInvoices)
+
+            const allSelected = selectedInvoices.length === productInvoicesByUser.length
+            $('.data-table thead input[type="checkbox"]').prop('checked', allSelected)
+        }
+
+        function selectAllInvoices(event) {
+            selectedInvoices = getAllInvoicesSelected(event, productInvoicesByUser, $)
+        }
+
         const sendFiles = async (date, framework7DTO) => {
             $f7.sheet.close()
             createProductInvoices(date, framework7DTO)
             productInvoicesByUser = await getProductsInvoicesByUser($f7, date)
 
             $f7.on('dialogClosed', async () => {
-                productInvoicesByUser = await getProductsInvoicesByUser($f7, date);
-                $update()
-            })
-        }
-
-        const downloadPDF = (element) => {
-            const invoiceId = getIdOfElementClicked($, element)
-            const productInvoice = productInvoicesByUser.filter(productInvoice => productInvoice.id === parseInt(invoiceId))[0]
-
-            downloadFileProductInvoice($f7, productInvoice)
-        }
-
-        const openConfirm = (element) => {
-            $f7.dialog.confirm(CONFIRMATION_TO_DELETE, function () {
-                const invoiceId = getIdOfElementClicked($, element)
-                deleteProductInvoice($f7, invoiceId)
-
+                productInvoicesByUser = await getProductsInvoicesByUser($f7, date)
                 $update()
             })
         }
