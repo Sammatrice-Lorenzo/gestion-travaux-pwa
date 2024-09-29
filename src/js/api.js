@@ -171,6 +171,8 @@ function fetchFileAPI(routeDTO, nameFile) {
 async function callAPI(url, $f7) {
     let responses = []
     const token = getToken()
+    const preloader = $f7.preloader
+    preloader.show()
     
     await fetch(url, {
         method: 'GET',
@@ -197,11 +199,14 @@ async function callAPI(url, $f7) {
                     responses.push(iterator)
                 }
 
+                preloader.hide()
+
                 return responses
             })
     )
         .catch(error => {
             console.log(error)
+            preloader.hide()
         })
 
     return responses

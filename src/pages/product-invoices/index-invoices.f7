@@ -97,6 +97,14 @@
                     </table>
                 </div>
             </div>
+
+            <div style="margin-top: 2%; width: 90%; justify-content: center; margin-left: 5%;">
+                <a class="button button-round button-small button-outline" href="#" @click="${() => sendEmail(date)}">
+                    <i class="icon f7-icons if-not-md">mail</i>
+                    <i class="icon material-icons md-only">mail</i>
+                    Envoyer un mail récapitulatif des factures
+                </a>
+            </div>
         </div>
     </div>
 </template>
@@ -119,6 +127,7 @@
     import Framework7DTO from '../../js/Framework7DTO.js'
     import { CONFIRMATION_TO_DELETE } from '../../js/messages.js'
     import { monthsEnum } from '../../js/enum/monthEnum.js'
+    import { sendEmail } from '../../js/service/mailService'
 
     export default async (props, { $, $on, $el, $f7, $onMounted, $update }) => {
         let date = new Date()
