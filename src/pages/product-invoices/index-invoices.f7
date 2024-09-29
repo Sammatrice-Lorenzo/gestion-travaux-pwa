@@ -2,7 +2,7 @@
     <div id="index-invoices" class="page">
         <div class="navbar">
             <div class="navbar-inner">
-                <div class="title">Factures de vos produits de ${getMontYear(date)}</div>
+                <div class="title">Factures insérés</div>
                 <div class="right">
                     <a class="link icon-only panel-open ripple-inset" data-panel="right">
                         <i class="icon material-icons md-only">menu</i>
@@ -15,32 +15,35 @@
         <!-- Page content -->
         <div class="page-content">
             
-            <div class="block-title">Factures insérés</div>
+            <div class="block-title">Factures de vos produits de ${getMontYear(date)}</div>
+
+            <div class="block calendar-input-container-modern">
+                <label for="calendar-input-product-invoice-file" class="calendar-product-invoice-label">
+                    <i class="icon f7-icons calendar-icon-modern">calendar</i>
+                </label>
+                <input type="text" id="calendar-input-product-invoice-file" placeholder="MM/AAAA" readonly="readonly" />
+            </div>
 
             <!-- Data Table -->
             <div class="data-table data-table-init card">
                 <div class="card-header">
                     <div class="data-table-links">
-                        <a class="color-white" @click=${displaySheet}>
-                            <i class="f7-icons">plus_circle</i>
+                        <a class="color-white tooltip-init"
+                            @click=${displaySheet}
+                            data-tooltip="Insérer les factures"
+                        >
+                            <i class="f7-icons">cloud_upload</i>
                         </a>
                     </div>
                     <!-- Bouton de téléchargement ZIP ajouté -->
                     <div class="data-table-actions">
-                        <a class="link icon-only tooltip-init"
+                        <a
+                            class="tooltip-init color-white"
                             @click="${() => downloadSelectedInvoices(selectedInvoices, $f7, date)}"
                             data-tooltip="Télécharger le zip"
                         >
-                            <i class="icon f7-icons if-not-md">archive</i>
+                            <i class="icon f7-icons if-not-md">archivebox</i>
                             <i class="icon material-icons md-only">archive</i>
-                        </a>
-                        <a class="link icon-only">
-                            <i class="icon f7-icons if-not-md">line_horizontal_3_decrease</i>
-                            <i class="icon material-icons md-only">sort</i>
-                        </a>
-                        <a id="" class="link icon-only">
-                            <i class="icon f7-icons if-not-md">ellipsis_vertical_circle</i>
-                            <i class="icon material-icons md-only">more_vert</i>
                         </a>
                     </div>
                 </div>
@@ -109,18 +112,38 @@
      } from '../../js/productInvoice.js'
     import { getInvoiceSelected,  getAllInvoicesSelected } from '../../js/service/productInvoices/dataTableProductInvoiceService'
     import { openConfirm, downloadPDF, downloadSelectedInvoices } from '../../js/service/productInvoices/productInvoiceManagerService'
+    import { createCalendar } from '../../js/service/calendar/calendarProductInvoiceInput'
     import { createSheet } from '../../js/components/modalUploadFile.js'
     import { getMontYear } from '../../js/date.js'
     import { getIdOfElementClicked } from '../../js/helper/domElementClick'
     import Framework7DTO from '../../js/Framework7DTO.js'
     import { CONFIRMATION_TO_DELETE } from '../../js/messages.js'
+    import { monthsEnum } from '../../js/enum/monthEnum.js'
 
     export default async (props, { $, $on, $el, $f7, $onMounted, $update }) => {
         let date = new Date()
         let productInvoicesByUser = await getProductsInvoicesByUser($f7, date)
 
+        async function updateToolbar(calendar) {
+            const monthNames = monthsEnum .getMonths()
+            const currentMonth = monthNames[calendar.currentMonth]
+            const currentYear = calendar.currentYear
+
+            if (currentMonth !== undefined) {
+                const selectorCalendar = $('#calendar-input-product-invoice-file')[0]
+                
+                $(selectorCalendar).val(`${currentMonth} ${currentYear}`)
+                date = new Date(currentYear, calendar.currentMonth, 15)
+                productInvoicesByUser = await getProductsInvoicesByUser($f7, date)
+                $update()
+            } else {
+                $(calendar).find('.calendar-custom-toolbar').val(`${currentMonth} ${currentYear}`)
+            }
+        }
+
         $on('pageInit', function (page) {
             loadTabbar('index-invoices', $f7)
+            createCalendar(framework7DTO, date, updateToolbar)
         })
 
         let sheet

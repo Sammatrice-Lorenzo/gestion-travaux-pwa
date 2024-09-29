@@ -141,4 +141,4 @@ export {
     deleteProductInvoice,
     downloadFileProductInvoice,
     downloadZIP
- }
+}
