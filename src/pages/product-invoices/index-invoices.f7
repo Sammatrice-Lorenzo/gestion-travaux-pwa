@@ -61,6 +61,7 @@
                                 </th>
                                 <th class="label-cell">Date</th>
                                 <th class="label-cell">Nom</th>
+                                <th class="label-cell">Montant total</th>
                                 <th class="label-cell">Visualiser</th>
                                 <th></th>
                             </tr>
@@ -76,12 +77,21 @@
                                     </td>
                                     <td class="label-cell">${new Date(invoice.date).toLocaleDateString()}</td>
                                     <td class="label-cell">${invoice.name}</td>
+                                    <td class="label-cell">${invoice.totalAmount} €</td>
                                     <td class="label-cell">
                                         <a href="${uploadsUrl}/products-invoice/${invoice.path}" target="_blank" class="link external">
                                             <i class="f7-icons">eye_fill</i>
                                         </a>
                                     </td>
                                     <td class="actions-cell">
+                                        <a id="${invoice.id}"
+                                            href="#" class="link external"
+                                            data-date="${invoice.date}"
+                                            data-total-amount="${invoice.totalAmount}"
+                                            @click="${updateProductInvoice}"
+                                        >
+                                            <i class="icon f7-icons">square_pencil</i>
+                                        </a>
                                         <a id='${invoice.id}' class="link icon-only" @click="${(e) => downloadPDF(e, framework7DTO, productInvoicesByUser)}">
                                             <i class="icon f7-icons if-not-md">download_circle</i>
                                             <i class="icon material-icons md-only">download</i>
@@ -99,6 +109,12 @@
             </div>
 
             <div style="margin-top: 2%; width: 90%; justify-content: center; margin-left: 5%;">
+                <p>
+                    Le montant total de vos facture est ${totalAmountProductInvoices(productInvoicesByUser)} TTC €
+                </p>
+                <p>
+                    ${getTVAOfTotalAmountProductInvoiceFiles(productInvoicesByUser)} de TVA €
+                </p>
                 <a class="button button-round button-small button-outline" href="#" @click="${() => sendEmail(date)}">
                     <i class="icon f7-icons if-not-md">mail</i>
                     <i class="icon material-icons md-only">mail</i>
@@ -116,12 +132,18 @@
         isValidForm,
         deleteProductInvoice,
         downloadFileProductInvoice,
-        downloadZIP
      } from '../../js/productInvoice.js'
     import { getInvoiceSelected,  getAllInvoicesSelected } from '../../js/service/productInvoices/dataTableProductInvoiceService'
-    import { openConfirm, downloadPDF, downloadSelectedInvoices } from '../../js/service/productInvoices/productInvoiceManagerService'
+    import {
+        openConfirm,
+        downloadPDF,
+        downloadSelectedInvoices,
+        totalAmountProductInvoices,
+        getTVAOfTotalAmountProductInvoiceFiles
+    } from '../../js/service/productInvoices/productInvoiceManagerService'
     import { createCalendar } from '../../js/service/calendar/calendarProductInvoiceInput'
     import { createSheet } from '../../js/components/modalUploadFile.js'
+    import { createPopup } from '../../js/components/popupProductInvoice.js'
     import { getMontYear } from '../../js/date.js'
     import { getIdOfElementClicked } from '../../js/helper/domElementClick'
     import Framework7DTO from '../../js/Framework7DTO.js'
@@ -132,7 +154,6 @@
     export default async (props, { $, $on, $el, $f7, $onMounted, $update }) => {
         let date = new Date()
         let productInvoicesByUser = await getProductsInvoicesByUser($f7, date)
-
         async function updateToolbar(calendar) {
             const monthNames = monthsEnum .getMonths()
             const currentMonth = monthNames[calendar.currentMonth]
@@ -156,6 +177,7 @@
         })
 
         let sheet
+        let popupEdit
         const framework7DTO = new Framework7DTO($f7, $el, $)
         
         const uploadsUrl = API_URL
@@ -182,6 +204,17 @@
                 productInvoicesByUser = await getProductsInvoicesByUser($f7, date)
                 $update()
             })
+        }
+
+        const updateProductInvoice = (element) => {
+            const currentTarget = $(element.currentTarget)
+            const dateInvoice = new Date(currentTarget.data('date'))
+            const totalAmount = currentTarget.data('total-amount')
+            const formattedDate = dateInvoice.toISOString().slice(0, 10);
+
+            const formPopup = {'date': formattedDate, 'total-amount': totalAmount, id: currentTarget.attr('id')}
+            popupEdit = createPopup(framework7DTO, formPopup)
+            popupEdit.open()
         }
 
         $onMounted(() => {

@@ -1,6 +1,6 @@
 import { apiRequest, callAPI, deleteAPI, fetchFileAPI } from './api'
 import { getUrlByUser, getUrlUser, getUrl, getUrlById} from './urlGenerator'
-import { checkDataToGetOfAResponseCached, responseIsCached, stockResponseInCache } from './cache'
+import { checkDataToGetOfAResponseCached, responseIsCached } from './cache'
 import { RouteDTO } from './dto/RouteDTO.js'
 import Framework7DTO from './Framework7DTO.js'
 
@@ -85,7 +85,7 @@ const getBody = (body) => {
         endDate: endDate,
         color: body.color,
         user: urlUser,
-        client: body.client !== '' ? body.client : null
+        client: body.client !== '' ? `api/clients/${body.client}` : null
     }
 
     return JSON.stringify(json)

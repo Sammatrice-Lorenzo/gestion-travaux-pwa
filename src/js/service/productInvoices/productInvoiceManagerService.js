@@ -2,6 +2,8 @@ import Framework7DTO from "../../Framework7DTO"
 import { CONFIRMATION_TO_DELETE } from "../../messages"
 import { deleteProductInvoice, downloadFileProductInvoice, downloadZIP } from "../../productInvoice"
 import { getIdOfElementClicked } from '../../helper/domElementClick'
+import { getAmountWithoutTVA } from "../../helper/priceWorkHelper"
+import { tvaEnum } from "../../enum/tvaEnum"
 
 /**
  * @param { HTMLElement } element 
@@ -42,15 +44,31 @@ const downloadPDF = (element, framework7DTO, productInvoicesByUser) => {
  */
 const downloadSelectedInvoices = (selectedInvoices, $f7, date) => {
     if (selectedInvoices.length < 1) {
-        $f7.dialog.alert('Veuillez sélectionner au moins une facture')
+        $f7.dialog.alert('Veuillez sélectionner au moins une facture !')
         return
     }
 
     downloadZIP($f7, selectedInvoices, date)
 }
 
+const totalAmountProductInvoices = (productInvoicesByUser) => {
+    return productInvoicesByUser.length >= 1
+        ? productInvoicesByUser
+            .map(invoice => invoice.totalAmount)
+            .reduce((accumulator, current) => accumulator + current)
+        : 0
+}
+
+const getTVAOfTotalAmountProductInvoiceFiles = (productInvoicesByUser) => {
+    const total = totalAmountProductInvoices(productInvoicesByUser)
+
+    return (total - getAmountWithoutTVA(total, tvaEnum.TVA_PRODUCT)).toFixed(2)
+}
+
 export {
     openConfirm,
     downloadPDF,
-    downloadSelectedInvoices
+    downloadSelectedInvoices,
+    totalAmountProductInvoices,
+    getTVAOfTotalAmountProductInvoiceFiles
 }

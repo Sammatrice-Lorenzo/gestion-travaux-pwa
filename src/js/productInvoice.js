@@ -1,5 +1,5 @@
 import Framework7 from "framework7"
-import { callAPI, deleteAPI, fetchFileAPI, sendFilesAPI } from "./api"
+import { apiRequest, callAPI, deleteAPI, fetchFileAPI, sendFilesAPI } from "./api"
 import { checkDataToGetOfAResponseCached, responseIsCached } from "./cache"
 import { RouteDTO } from "./dto/RouteDTO"
 import { getUrl, getUrlById, getUrlWithParameters } from "./urlGenerator"
@@ -11,6 +11,7 @@ const URL_PRODUCT_INVOICE_DELETE = '/api/product_invoice_delete/'
 const URL_PRODUCT_INVOICE_DOWNLOAD_PDF = '/api/product_invoice_download/'
 const URL_PRODUCT_INVOICE_DOWNLOAD_ZIP = '/api/product_invoice_download_zip'
 const URL_PRODUCT_INVOICE_SEND_FILES = '/api/product_invoice_files'
+const URL_PRODUCT_INVOICE_UPDATE = '/api/product_invoice_update/'
 const URL_TO_REDIRECT = '/product/invoices/'
 
 /**
@@ -73,7 +74,10 @@ function downloadFileProductInvoice($f7, productInvoice) {
         .setUrlAPI(url)
         .setBody({})
 
-    fetchFileAPI(routeDTO, `${productInvoice.name}.pdf`)
+    const productInvoiceNameSplitted = productInvoice.name.split('.').pop()
+    const nameFile = productInvoiceNameSplitted === 'pdf' ? productInvoice.name : `${productInvoice.name}.pdf`
+
+    fetchFileAPI(routeDTO, nameFile)
 }
 
 function downloadZIP($f7, ids, date) {
@@ -87,6 +91,20 @@ function downloadZIP($f7, ids, date) {
         .setBody(JSON.stringify({ids: ids}))
 
     fetchFileAPI(routeDTO, `Factures_${formattedDate}.zip`)
+}
+
+function updateProductInvoice($f7, id, form) {
+    const url = getUrlById(URL_PRODUCT_INVOICE_UPDATE, id)
+    const body = JSON.stringify({date: form.date, totalAmount: parseFloat(form['total-amount'])})
+
+    const routeDTO = new RouteDTO()
+        .setApp($f7)
+        .setRoute(URL_TO_REDIRECT)
+        .setUrlAPI(url)
+        .setBody(body)
+        .setMethod('PUT')
+
+    apiRequest(routeDTO, true)
 }
 
 /**
@@ -140,5 +158,6 @@ export {
     isValidForm,
     deleteProductInvoice,
     downloadFileProductInvoice,
-    downloadZIP
+    downloadZIP,
+    updateProductInvoice
 }

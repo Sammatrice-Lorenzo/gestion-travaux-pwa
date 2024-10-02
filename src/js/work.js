@@ -159,7 +159,7 @@ function getBodyWork(form)
         progression: form.progression,
         equipements: form.equipements,
         user: urlAPiUser,
-        client: form.client,
+        client: `/api/clients/${form.client}`,
         totalAmount: parseFloat(form.totalAmount)
     })
 }

@@ -9,18 +9,27 @@ import { getToken } from './token'
  * 
  * @returns { void } 
  */
-function apiRequest(routeDTO)
+function apiRequest(routeDTO, hasAuthentification = false)
 {
+    const token = getToken()
+
     const $f7 = routeDTO.getApp()
     const method = routeDTO.getMethod()
     const message = messages.getTypeMessageByMethodAPI(method)
 
+    let headers = {
+        'Content-Type': 'application/json',
+    }
+
+    if (hasAuthentification) {
+        headers = {
+            'Authorization': `Bearer ${token}`,
+        }
+    }
+
     fetch(routeDTO.getUrlAPI(), {
         method: method,
-        headers: {
-            'Content-Type': 'application/json',
-            // 'Authorization': `Bearer ${token}`
-        },
+        headers: headers,
         body: routeDTO.getBody()
     }).then(response =>
         response
