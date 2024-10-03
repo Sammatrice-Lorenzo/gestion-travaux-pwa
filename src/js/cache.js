@@ -1,5 +1,6 @@
 const ERROR_DELETE_CACHE = 'Erreur lors de la suppression du cache "v1":'
 const CACHE_V1 = 'v1'
+const LAST_CACHE_CLEAR = 'lastCacheClear'
 
 /**
  * @param { URL | String } url 
@@ -38,16 +39,16 @@ async function checkDataToGetOfAResponseCached(url) {
 }
 
 async function clearCache() {
-    await caches.delete(CACHE_V1).then(function (result) {
+    await caches.delete(CACHE_V1).then(function () {
     }).catch(function (error) {
         console.error(ERROR_DELETE_CACHE, error)
     })
 
-    localStorage.setItem('lastCacheClear', Date.now())
+    localStorage.setItem(LAST_CACHE_CLEAR, Date.now())
 }
 
 async function checkAndClearCache() {
-    const lastClear = localStorage.getItem('lastCacheClear')
+    const lastClear = localStorage.getItem(LAST_CACHE_CLEAR)
     const now = Date.now()
     const oneHour = 3600000
 

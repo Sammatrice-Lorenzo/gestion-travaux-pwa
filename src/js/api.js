@@ -1,6 +1,6 @@
 import { clearCache, stockResponseInCache } from './cache'
 import { RouteDTO } from './dto/RouteDTO'
-import { getUrlById, getUrl, getUrlByUser } from './urlGenerator'
+import { getUrlById } from './urlGenerator'
 import * as messages from './messages'
 import { getToken } from './token'
 
