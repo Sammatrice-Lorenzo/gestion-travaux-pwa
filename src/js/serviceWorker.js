@@ -32,8 +32,8 @@ export function setupServicesWorkers()
 }
 
 function setIntervalClearCache() {
-    setInterval(function () {
-       clearCache()
+    setInterval(async function () {
+       await clearCache()
     }, 3600000) // 36000
     // }, 	60000) // 60 sec
 }

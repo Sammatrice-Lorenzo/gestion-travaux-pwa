@@ -3,21 +3,21 @@ import { clearCache } from './cache'
 
 const TOKEN = 'token'
 
-export function getToken() {
+function getToken() {
     return localStorage.getItem(TOKEN) ?? null
 }
 
-export function getDecodedToken() {
+function getDecodedToken() {
     return jwt_decode(getToken())
 }
 
-export function isExpired() {
+function isExpired() {
     const decodedToken = getDecodedToken()
 
-    return Boolean(decodedToken.exp < Date.now() / 1000)
+    return Boolean(decodedToken.exp < (Date.now() / 1000))
 }
 
-export function logout ($f7) {
+async function logout ($f7) {
     $f7.views.main.router.navigate('/', {
         clearPreviousHistory: true,
         animate: false
@@ -25,6 +25,13 @@ export function logout ($f7) {
 
     localStorage.removeItem(TOKEN)
     if (process.env.NODE_ENV === 'production') {
-        clearCache()
+        await clearCache()
     }
+}
+
+export {
+    getToken,
+    getDecodedToken,
+    isExpired,
+    logout
 }

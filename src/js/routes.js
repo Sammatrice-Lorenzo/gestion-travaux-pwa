@@ -12,6 +12,7 @@ import ShowClient from '../pages/clients/show-client.f7'
 import FormUpdateClient from '../pages/clients/form-update-client.f7'
 import FormRegister from '../pages/user/form-user.f7'
 import ShowCalendar from '../pages/calendar/show-calendar.f7'
+import IndexInvoices from '../pages/product-invoices/index-invoices.f7'
 import NotFoundPage from '../pages/404.f7'
 
 const routes = [
@@ -70,6 +71,10 @@ const routes = [
     {
         path: '/calendar/',
         component: ShowCalendar,
+    },
+    {
+        path: '/product/invoices/',
+        component: IndexInvoices,
     },
     {
         path: '(.*)',

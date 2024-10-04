@@ -3,30 +3,30 @@ import { getDecodedToken } from './token'
 const URL_USER = '/api/user/'
 
 /**
- * @param {string} url 
- * @returns {URL}
+ * @param { String } url 
+ * @returns { URL }
  */
-export function getUrlByUser(url) {
+function getUrlByUser(url) {
     const tokenDecoded = getDecodedToken()
 
     return new URL(url + tokenDecoded.id, API_URL)
 }
 
 /**
- * @param {string} url 
- * @returns {URL}
+ * @param { String } url 
+ * @returns { URL }
  */
-export function getUrl(url)
+function getUrl(url)
 {
     return new URL(url, API_URL)
 }
 
 /**
- * @param {string} url 
- * @param {string|int} id 
+ * @param { String } url 
+ * @param { String | Number } id 
  * @returns {URL}
  */
-export function getUrlById(url, id)
+function getUrlById(url, id)
 {
     return new URL(url + id, API_URL)
 }
@@ -34,7 +34,38 @@ export function getUrlById(url, id)
 /**
  * @returns { URL }
  */
-export function getUrlUser()
+function getUrlUser()
 {
     return getUrlByUser(URL_USER)
+}
+
+/**
+ * @param { String } url 
+ * @param { Object } parameters
+ * @returns { URL }
+ */
+function getUrlWithParameters(url, parameters) {
+    let route = url + '?'
+
+    Object.keys(parameters).forEach((key) => {
+        if (Array.isArray(parameters[key])) {
+            parameters[key].forEach((value) => {
+                route += key + `[]=${value}&`
+            })
+        } else {
+            route += key + `=${parameters[key]}&`
+        }
+    })
+
+    route = route.slice(0, -1)
+
+    return new URL(route, API_URL)
+}
+
+export {
+    getUrlByUser,
+    getUrl,
+    getUrlById,
+    getUrlUser,
+    getUrlWithParameters
 }

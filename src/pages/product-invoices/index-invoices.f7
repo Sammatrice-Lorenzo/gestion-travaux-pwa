@@ -1,0 +1,226 @@
+<template>
+    <div id="index-invoices" class="page">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="title">Factures insérés</div>
+                <div class="right">
+                    <a class="link icon-only panel-open ripple-inset" data-panel="right">
+                        <i class="icon material-icons md-only">menu</i>
+                        <i class="icon f7-icons if-not-md">menu</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page content -->
+        <div class="page-content">
+            
+            <div class="block-title">Factures de vos produits de ${getMontYear(date)}</div>
+
+            <div class="block calendar-input-container-modern">
+                <label for="calendar-input-product-invoice-file" class="calendar-product-invoice-label">
+                    <i class="icon f7-icons calendar-icon-modern">calendar</i>
+                </label>
+                <input type="text" id="calendar-input-product-invoice-file" placeholder="MM/AAAA" readonly="readonly" />
+            </div>
+
+            <!-- Data Table -->
+            <div class="data-table data-table-init card">
+                <div class="card-header">
+                    <div class="data-table-links">
+                        <a class="color-white tooltip-init"
+                            @click=${displaySheet}
+                            data-tooltip="Insérer les factures"
+                        >
+                            <i class="f7-icons">cloud_upload</i>
+                        </a>
+                    </div>
+                    <!-- Bouton de téléchargement ZIP ajouté -->
+                    <div class="data-table-actions">
+                        <a
+                            class="tooltip-init color-white"
+                            @click="${() => downloadSelectedInvoices(selectedInvoices, $f7, date)}"
+                            data-tooltip="Télécharger le zip"
+                        >
+                            <i class="icon f7-icons if-not-md">archivebox</i>
+                            <i class="icon material-icons md-only">archive</i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Table des factures -->
+                <div class="card-content">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="checkbox-cell">
+                                    <label class="checkbox">
+                                        <input type="checkbox" @change="${selectAllInvoices}"/>
+                                        <i class="icon-checkbox"></i>
+                                    </label>
+                                </th>
+                                <th class="label-cell">Date</th>
+                                <th class="label-cell">Nom</th>
+                                <th class="label-cell">Montant total</th>
+                                <th class="label-cell">Visualiser</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${productInvoicesByUser.map((invoice) => $h`
+                                <tr>
+                                    <td class='checkbox-cell'>
+                                        <label class="checkbox">
+                                            <input type="checkbox" @click="${() => toggleInvoiceSelection(invoice)}"/>
+                                            <i class="icon-checkbox"></i>
+                                        </label>
+                                    </td>
+                                    <td class="label-cell">${new Date(invoice.date).toLocaleDateString()}</td>
+                                    <td class="label-cell">${invoice.name}</td>
+                                    <td class="label-cell">${invoice.totalAmount} €</td>
+                                    <td class="label-cell">
+                                        <a href="${uploadsUrl}/products-invoice/${invoice.path}" target="_blank" class="link external">
+                                            <i class="f7-icons">eye_fill</i>
+                                        </a>
+                                    </td>
+                                    <td class="actions-cell">
+                                        <a id="${invoice.id}"
+                                            href="#" class="link external"
+                                            data-date="${invoice.date}"
+                                            data-total-amount="${invoice.totalAmount}"
+                                            @click="${updateProductInvoice}"
+                                        >
+                                            <i class="icon f7-icons">square_pencil</i>
+                                        </a>
+                                        <a id='${invoice.id}' class="link icon-only" @click="${(e) => downloadPDF(e, framework7DTO, productInvoicesByUser)}">
+                                            <i class="icon f7-icons if-not-md">download_circle</i>
+                                            <i class="icon material-icons md-only">download</i>
+                                        </a>
+                                        <a id='${invoice.id}' class="link icon-only" @click="${(e) => openConfirm(e, framework7DTO, $update())}">
+                                            <i class="icon f7-icons if-not-md">trash</i>
+                                            <i class="icon material-icons md-only">delete</i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            `)}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div style="margin-top: 2%; width: 90%; justify-content: center; margin-left: 5%;">
+                <p>
+                    Le montant total de vos facture est ${totalAmountProductInvoices(productInvoicesByUser)} TTC €
+                </p>
+                <p>
+                    ${getTVAOfTotalAmountProductInvoiceFiles(productInvoicesByUser)} de TVA €
+                </p>
+                <a class="button button-round button-small button-outline" href="#" @click="${() => sendEmail(date)}">
+                    <i class="icon f7-icons if-not-md">mail</i>
+                    <i class="icon material-icons md-only">mail</i>
+                    Envoyer un mail récapitulatif des factures
+                </a>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+    import Framework7 from 'framework7/bundle'
+    import { loadTabbar } from '../../js/components/tabbar.js'
+    import { getProductsInvoicesByUser,
+        createProductInvoices,
+        isValidForm,
+        deleteProductInvoice,
+        downloadFileProductInvoice,
+     } from '../../js/productInvoice.js'
+    import { getInvoiceSelected,  getAllInvoicesSelected } from '../../js/service/productInvoices/dataTableProductInvoiceService'
+    import {
+        openConfirm,
+        downloadPDF,
+        downloadSelectedInvoices,
+        totalAmountProductInvoices,
+        getTVAOfTotalAmountProductInvoiceFiles
+    } from '../../js/service/productInvoices/productInvoiceManagerService'
+    import { createCalendar } from '../../js/service/calendar/calendarProductInvoiceInput'
+    import { createSheet } from '../../js/components/modalUploadFile.js'
+    import { createPopup } from '../../js/components/popupProductInvoice.js'
+    import { getMontYear } from '../../js/date.js'
+    import { getIdOfElementClicked } from '../../js/helper/domElementClick'
+    import Framework7DTO from '../../js/Framework7DTO.js'
+    import { CONFIRMATION_TO_DELETE } from '../../js/messages.js'
+    import { monthsEnum } from '../../js/enum/monthEnum.js'
+    import { sendEmail } from '../../js/service/mailService'
+
+    export default async (props, { $, $on, $el, $f7, $onMounted, $update }) => {
+        let date = new Date()
+        let productInvoicesByUser = await getProductsInvoicesByUser($f7, date)
+        async function updateToolbar(calendar) {
+            const monthNames = monthsEnum .getMonths()
+            const currentMonth = monthNames[calendar.currentMonth]
+            const currentYear = calendar.currentYear
+
+            if (currentMonth !== undefined) {
+                const selectorCalendar = $('#calendar-input-product-invoice-file')[0]
+                
+                $(selectorCalendar).val(`${currentMonth} ${currentYear}`)
+                date = new Date(currentYear, calendar.currentMonth, 15)
+                productInvoicesByUser = await getProductsInvoicesByUser($f7, date)
+                $update()
+            } else {
+                $(calendar).find('.calendar-custom-toolbar').val(`${currentMonth} ${currentYear}`)
+            }
+        }
+
+        $on('pageInit', function (page) {
+            loadTabbar('index-invoices', $f7)
+            createCalendar(framework7DTO, date, updateToolbar)
+        })
+
+        let sheet
+        let popupEdit
+        const framework7DTO = new Framework7DTO($f7, $el, $)
+        
+        const uploadsUrl = API_URL
+        const displaySheet = () => sheet.open()
+
+        let selectedInvoices = []
+        function toggleInvoiceSelection(invoice) {
+            selectedInvoices = getInvoiceSelected(invoice, selectedInvoices)
+
+            const allSelected = selectedInvoices.length === productInvoicesByUser.length
+            $('.data-table thead input[type="checkbox"]').prop('checked', allSelected)
+        }
+
+        function selectAllInvoices(event) {
+            selectedInvoices = getAllInvoicesSelected(event, productInvoicesByUser, $)
+        }
+
+        const sendFiles = async (date, framework7DTO) => {
+            $f7.sheet.close()
+            createProductInvoices(date, framework7DTO)
+            productInvoicesByUser = await getProductsInvoicesByUser($f7, date)
+
+            $f7.on('dialogClosed', async () => {
+                productInvoicesByUser = await getProductsInvoicesByUser($f7, date)
+                $update()
+            })
+        }
+
+        const updateProductInvoice = (element) => {
+            const currentTarget = $(element.currentTarget)
+            const dateInvoice = new Date(currentTarget.data('date'))
+            const totalAmount = currentTarget.data('total-amount')
+            const formattedDate = dateInvoice.toISOString().slice(0, 10);
+
+            const formPopup = {'date': formattedDate, 'total-amount': totalAmount, id: currentTarget.attr('id')}
+            popupEdit = createPopup(framework7DTO, formPopup)
+            popupEdit.open()
+        }
+
+        $onMounted(() => {
+            sheet = createSheet(date, framework7DTO, sendFiles)
+        })
+
+        return $render
+    }
+</script>

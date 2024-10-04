@@ -1,6 +1,6 @@
 import { clearCache, stockResponseInCache } from './cache'
 import { RouteDTO } from './dto/RouteDTO'
-import { getUrlById, getUrl, getUrlByUser } from './urlGenerator'
+import { getUrlById } from './urlGenerator'
 import * as messages from './messages'
 import { getToken } from './token'
 
@@ -9,26 +9,35 @@ import { getToken } from './token'
  * 
  * @returns { void } 
  */
-function apiRequest(routeDTO)
+function apiRequest(routeDTO, hasAuthentification = false)
 {
+    const token = getToken()
+
     const $f7 = routeDTO.getApp()
     const method = routeDTO.getMethod()
     const message = messages.getTypeMessageByMethodAPI(method)
 
+    let headers = {
+        'Content-Type': 'application/json',
+    }
+
+    if (hasAuthentification) {
+        headers = {
+            'Authorization': `Bearer ${token}`,
+        }
+    }
+
     fetch(routeDTO.getUrlAPI(), {
         method: method,
-        headers: {
-            'Content-Type': 'application/json',
-            // 'Authorization': `Bearer ${token}`
-        },
+        headers: headers,
         body: routeDTO.getBody()
     }).then(response =>
         response
             .json()
-            .then(function () {
+            .then(async function () {
                 const statusCode = response.status
                 if (statusCode === 200 || statusCode === 201) {
-                    clearCache()
+                    await clearCache()
                     $f7.dialog.alert(message)
                     $f7.views.main.router.navigate(routeDTO.getRoute())
                 } else {
@@ -42,26 +51,44 @@ function apiRequest(routeDTO)
         })
 }
 
+function sendFilesAPI(routeDTO) {
+    const token = getToken()
+    let headers = {
+        'Authorization': `Bearer ${token}`,
+    }
+
+    fetchCreate(routeDTO, headers)
+}
+
 /**
  * @param { RouteDTO } routeDTO 
  */
 function createAPI(routeDTO) {
+    let headers = {
+        'Content-Type': 'application/json',
+    }
+
+    fetchCreate(routeDTO, headers)
+}
+
+/**
+ * @param { RouteDTO } routeDTO 
+ */
+function fetchCreate(routeDTO, headers) {
     const $f7 = routeDTO.getApp()
 
     fetch(routeDTO.getUrlAPI(), {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
+        headers: headers,
         body: routeDTO.getBody()
     }).then(response =>
         response
             .json()
-            .then(function (data) {
+            .then(async function (data) {
                 if (response.status === 422) {
                     $f7.dialog.alert(data['hydra:description'])
                 } else {
-                    clearCache()
+                    await clearCache()
                     $f7.dialog.alert(messages.SUCCESS_INSERTION_FORM)
                     $f7.views.main.router.navigate(routeDTO.getRoute())
                 }
@@ -76,17 +103,26 @@ function createAPI(routeDTO) {
 /**
  * @param { RouteDTO } routeDTO 
  */
-function deleteAPI(routeDTO) {
+function deleteAPI(routeDTO, hasAuthentification = false) {
     const url = getUrlById(routeDTO.getUrlAPI(), routeDTO.getIdElement())
     const $f7 = routeDTO.getApp()
+    const token = getToken()
+
+    let headers = {
+        'Content-Type': 'application/json',
+    }
+
+    if (hasAuthentification) {
+        headers = {
+            'Authorization': `Bearer ${token}`,
+        }
+    }
 
     fetch(url, {
         method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    }).then(function (response) {
-        clearCache()
+        headers: headers,
+    }).then(async function (response) {
+        await clearCache()
         if (response.status === 204) {
             $f7.dialog.alert(messages.SUCCESS_DELETE_FORM)
             $f7.views.main.router.navigate(routeDTO.getRoute())
@@ -105,10 +141,9 @@ function deleteAPI(routeDTO) {
  */
 function fetchFileAPI(routeDTO, nameFile) {
     const $f7 = routeDTO.getApp()
-    const url = getUrl(routeDTO.getUrlAPI())
     const token = getToken()
 
-    fetch(url, {
+    fetch(routeDTO.getUrlAPI(), {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -118,7 +153,7 @@ function fetchFileAPI(routeDTO, nameFile) {
     }).then(response =>
         response
             .blob()
-            .then(function (data) {
+            .then(async function (data) {
                 const blobUrl = window.URL.createObjectURL(data)
         
                 const link = document.createElement('a')
@@ -127,26 +162,27 @@ function fetchFileAPI(routeDTO, nameFile) {
         
                 link.style.display = 'none'
                 link.click()
-                clearCache()
+                await clearCache()
             })
     )
-        .catch(error => {
+        .catch(async function (error) {
             console.log(error)
-            clearCache()
+            await clearCache()
             $f7.dialog.alert(messages.ERROR_SERVER)
         })
 }
 
 /**
- * @param { String } urlByUser 
+ * @param { URL } url 
  * @param { any } $f7 
  * @returns { Promise<any> }
  */
-async function callAPI(urlByUser, $f7) {
+async function callAPI(url, $f7) {
     let responses = []
-    const url = getUrlByUser(urlByUser)
     const token = getToken()
-
+    const preloader = $f7.preloader
+    preloader.show()
+    
     await fetch(url, {
         method: 'GET',
         headers: {
@@ -157,7 +193,7 @@ async function callAPI(urlByUser, $f7) {
         response
             .clone() // Cloner la réponse pour stockResponseInCache
             .json()
-            .then(function (data) {
+            .then(async function (data) {
                 if (process.env.NODE_ENV === 'production') {
                     stockResponseInCache(url, response.clone()) // Utiliser la réponse clonée
                 }
@@ -167,18 +203,22 @@ async function callAPI(urlByUser, $f7) {
                     $f7.views.main.router.navigate('/')
                 }
 
-                for (const iterator of data["hydra:member"]) {
+                const dataResponse = data.hasOwnProperty('hydra:member') ? data["hydra:member"] : data
+                for (const iterator of dataResponse) {
                     responses.push(iterator)
                 }
+
+                preloader.hide()
 
                 return responses
             })
     )
         .catch(error => {
             console.log(error)
+            preloader.hide()
         })
 
     return responses
 }
 
-export { apiRequest, deleteAPI, fetchFileAPI, callAPI, createAPI }
+export { apiRequest, deleteAPI, fetchFileAPI, callAPI, createAPI, sendFilesAPI }

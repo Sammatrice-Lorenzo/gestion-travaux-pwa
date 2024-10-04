@@ -5,6 +5,7 @@ export class RouteDTO {
     idElement = null
     urlAPI = null
     app = null
+    contentType = null
 
     /**
      * @param { String } route
@@ -83,7 +84,7 @@ export class RouteDTO {
     }
 
     /**
-     * @returns { String }
+     * @returns { ?String }
      */
     getUrlAPI() {
         return this.urlAPI
@@ -100,9 +101,28 @@ export class RouteDTO {
     }
 
     /**
-     * @returns { String }
+     * @returns { ?String }
      */
     getMethod() {
         return this.method
+    }
+
+    /**
+     * 
+     * @param { String } content 
+     * @returns { this }
+     */
+    setContentType(content) {
+        this.contentType = content
+
+        return this
+    }
+
+    /**
+     * 
+     * @returns { ?String }
+     */
+    getContentType() {
+        return this.contentType
     }
 }

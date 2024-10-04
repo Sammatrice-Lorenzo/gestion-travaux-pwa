@@ -30,14 +30,24 @@
                         <div class="list list-strong-ios list-outline-ios menu-list">
                             <ul>
                                 <li>
-                                <a href="/clients/" class="item-content item-link">
-                                    <div class="item-media">
-                                        <i class="f7-icons md icon-size">person_2</i>
-                                    </div>
-                                    <div class="item-inner">
-                                        <div class="item-title">Clients</div>
-                                    </div>
-                                </a>
+                                    <a href="/product/invoices/" class="item-content item-link">
+                                        <div class="item-media">
+                                            <i class="f7-icons md icon-size">doc_text</i>
+                                        </div>
+                                        <div class="item-inner">
+                                            <div class="item-title">Mes factures</div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/clients/" class="item-content item-link">
+                                        <div class="item-media">
+                                            <i class="f7-icons md icon-size">person_2</i>
+                                        </div>
+                                        <div class="item-inner">
+                                            <div class="item-title">Clients</div>
+                                        </div>
+                                    </a>
                                 </li>
                                 <li>
                                     <a href="/mon-compte/" class="item-content item-link">

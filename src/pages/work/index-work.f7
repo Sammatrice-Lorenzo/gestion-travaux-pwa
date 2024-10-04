@@ -41,7 +41,7 @@
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-end">
-                        <a href="/prestation/${item['@id'].split('/').pop()}" class="card-link" aria-label="Voir les détails de la prestation">
+                        <a href="/prestation/${idPrestation(item)}" class="card-link" aria-label="Voir les détails de la prestation">
                             <i class="f7-icons">eye_fill</i>
                         </a>
                     </div>
@@ -64,10 +64,12 @@
         const works = await getWorkByUser($f7)
         const worksByUser = works.reverse()
 
+        const idPrestation = (prestation) => prestation.hasOwnProperty('@id') ? prestation['@id'].split('/').pop() : prestation.id
+
         $on('pageInit', function (page) {
             loadTabbar('index-work', $f7);
         })
-    
+
         setTimeout(() => {
             sendNotificationPushForProgression($f7)
         // }, 10000)

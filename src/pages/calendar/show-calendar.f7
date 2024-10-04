@@ -92,7 +92,7 @@
                                                     >
                                                         <select name="client">
                                                             ${clients.map((client) => $h`
-                                                                <option value='${client["@id"]}'>${client.name}</option>
+                                                                <option value='${client.id}'>${client.name}</option>
                                                             `)}
                                                             <option value="" selected>Aucun</option>
                                                         </select>
