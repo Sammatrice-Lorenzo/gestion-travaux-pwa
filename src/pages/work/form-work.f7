@@ -44,7 +44,7 @@
                                     <div class="item-input-wrap">
                                         <select name="client">
                                             ${clients.map((client) => $h`
-                                                <option value='${client["@id"]}'>${client.firstname} ${client.lastname}</option>
+                                                <option value='${client.id}'>${client.firstname} ${client.lastname}</option>
                                             `)}
                                         </select>
                                     </div>

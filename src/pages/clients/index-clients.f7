@@ -34,7 +34,7 @@
                     </div>
                 </div>
                 <div class="card-footer d-flex justify-content-end">
-                    <a href="/client/"${item['@id'].split('/').pop()}>
+                    <a href="/client/"${idClient(item)}>
                         <i class="f7-icons">eye_fill</i>
                     </a>
                 </div>
@@ -53,6 +53,7 @@
         const clients = await getClientsByUser($f7)
         let clientsByUser = clients.reverse()
 
+        const idClient = (client) => client.hasOwnProperty('@id') ? client['@id'].split('/').pop() : client.id
         $on('pageInit', function (page) {
             loadTabbar('index-client', $f7);
         })

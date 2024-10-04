@@ -16,7 +16,7 @@ async function getWorkByUser($f7) {
         return checkDataToGetOfAResponseCached(url)
     }
 
-    return callAPI(URL_WORK_BY_USER, $f7)
+    return callAPI(url, $f7)
 }
 
 async function findWorkById(id, $f7)
@@ -159,7 +159,7 @@ function getBodyWork(form)
         progression: form.progression,
         equipements: form.equipements,
         user: urlAPiUser,
-        client: form.client,
+        client: `/api/clients/${form.client}`,
         totalAmount: parseFloat(form.totalAmount)
     })
 }

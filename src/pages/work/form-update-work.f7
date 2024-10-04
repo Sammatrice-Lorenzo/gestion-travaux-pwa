@@ -44,7 +44,7 @@
                                     <div class="item-input-wrap">
                                         <select name="client">
                                             ${clients.map((client) => $h`
-                                                <option value='${client["@id"]}'>${client.firstname} ${client.lastname}</option>
+                                                <option value='${client.id}'>${client.firstname} ${client.lastname}</option>
                                             `)}
                                         </select>
                                     </div>
@@ -140,7 +140,7 @@
         const formWork = {
             name: work.name,
             city: work.city,
-            client: work.client['@id'],
+            client: work.client.id,
             progression: work.progression,
             start: work.start.split('+').shift(),
             end: work.end.split('+').shift(),
@@ -156,7 +156,7 @@
         }
 
         $on('pageBeforeIn', function (page) {
-            $f7.form.fillFromData('#form-work',formWork)
+            $f7.form.fillFromData('#form-work', formWork)
             btnComponent.getInputEquipementUpdateForm(work.equipements)
         })
 

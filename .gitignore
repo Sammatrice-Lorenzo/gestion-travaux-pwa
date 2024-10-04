@@ -43,4 +43,6 @@ Thumbs.db
 www/
 
 config/ssl-prod
+config/ssl/cert-local.pem
+config/ssl/key-local.pem
 config/jwt/

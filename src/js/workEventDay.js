@@ -1,6 +1,6 @@
 import { apiRequest, callAPI, deleteAPI, fetchFileAPI } from './api'
 import { getUrlByUser, getUrlUser, getUrl, getUrlById} from './urlGenerator'
-import { checkDataToGetOfAResponseCached, responseIsCached, stockResponseInCache } from './cache'
+import { checkDataToGetOfAResponseCached, responseIsCached } from './cache'
 import { RouteDTO } from './dto/RouteDTO.js'
 import Framework7DTO from './Framework7DTO.js'
 
@@ -16,7 +16,7 @@ async function getWorkEventDayByUser($f7) {
         return checkDataToGetOfAResponseCached(url)
     }
 
-    return callAPI(URL_WORK_EVENT_DAY_BY_USER, $f7)
+    return callAPI(url, $f7)
 }
 
 function createWorkEventDay(form, $f7)
@@ -85,7 +85,7 @@ const getBody = (body) => {
         endDate: endDate,
         color: body.color,
         user: urlUser,
-        client: body.client !== '' ? body.client : null
+        client: body.client !== '' ? `api/clients/${body.client}` : null
     }
 
     return JSON.stringify(json)
@@ -121,6 +121,7 @@ function downloadCalendarEvents(calendar, $f7) {
     const currentMonth = calendar.currentMonth
     const currentYear = calendar.currentYear
     const date = new Date(currentYear, currentMonth).toLocaleDateString()
+    const url = getUrl('/api/work-event-day/file')
 
     const body = JSON.stringify({
         date: date,
@@ -128,7 +129,7 @@ function downloadCalendarEvents(calendar, $f7) {
 
     const routeDTO = new RouteDTO()
         .setApp($f7)
-        .setUrlAPI('/api/work-event-day/file')
+        .setUrlAPI(url)
         .setBody(body)
 
     fetchFileAPI(routeDTO, `prestations_${date}.pdf`)
