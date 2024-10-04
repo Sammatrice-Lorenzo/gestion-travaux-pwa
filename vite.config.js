@@ -11,8 +11,8 @@ const PUBLIC_DIR = path.resolve(__dirname, './public');
 // const BUILD_DIR = path.resolve(__dirname, './www',);
 const BUILD_DIR = path.resolve(__dirname, './src/www',);
 const JWT_DIR = path.resolve(__dirname, './config/jwt/public.pem',);
-const KEY_SSL = path.resolve(__dirname, './config/ssl/key-local.pem',);
-const CERT_SSL = path.resolve(__dirname, './config/ssl/cert-local.pem',);
+const KEY_SSL = path.resolve(__dirname, './config/ssl/key.pem',);
+const CERT_SSL = path.resolve(__dirname, './config/ssl/cert.pem',);
 const ENV_LOCAL = path.resolve(__dirname, './.env.local',);
 
 import fs from 'fs';
