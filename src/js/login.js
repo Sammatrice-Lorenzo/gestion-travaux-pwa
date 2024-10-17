@@ -1,7 +1,7 @@
 import * as messages from './messages'
 import * as cache from './cache'
 
-export function login(username, password, $f7) {
+export async function login(username, password, $f7) {
     const preloader = $f7.preloader
 
     const url = new URL('/api/login', API_URL);
@@ -9,6 +9,7 @@ export function login(username, password, $f7) {
     if (!checkInputFormLogin(username, password, $f7)) return
     preloader.show()
 
+    await cache.checkAndClearCache()
     // Récupération de la réponse depuis le cache
     getCacheLogin(url)
         .then(async function (response) {
@@ -40,8 +41,7 @@ export function login(username, password, $f7) {
 
 async function getCacheLogin(url) {
     return caches.open('v1').then(async function (cache) {
-        // Récupération de la requête depuis le cache
-        return cache.match(url).then(function (response) {
+        return cache.match(url).then(async function (response) {
             if (response) {
                 // Utilisation de la réponse en cache
                 return response;

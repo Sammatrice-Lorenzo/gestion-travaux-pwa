@@ -1,3 +1,4 @@
+import { monthsEnum } from "../../enum/monthEnum"
 import Framework7DTO from "../../Framework7DTO"
 
 /**
@@ -7,6 +8,7 @@ import Framework7DTO from "../../Framework7DTO"
 function createCalendar(framework7DTO, date, updateToolbar) {
     const $ = framework7DTO.getSelector()
     const $f7 = framework7DTO.getApp()
+    const months = monthsEnum.getMonths()
 
     $f7.calendar.create({
         inputEl: '#calendar-input-product-invoice-file',
@@ -24,12 +26,28 @@ function createCalendar(framework7DTO, date, updateToolbar) {
             monthYearChangeStart: function (calendar) {
                 updateToolbar(calendar, framework7DTO)
             },
-            open: function () {
+            open: function (calendar) {
+                const selector = $('#calendar-input-product-invoice-file')[0]
+                if ($(selector).attr('month')) {
+                    const selectorMonth = $('.current-month-value')[0]
+                    const selectorYear = $('.current-year-value')[0]
+                    calendar.setValue([new Date($(selector).attr('year'), months.indexOf($(selector).attr('month')), 15)])
+
+                    $(selectorMonth).text($(selector).attr('month').toLowerCase())
+                    $(selectorYear).text($(selector).attr('year'))
+
+                    $(calendar).find('.calendar-next-month-button').on('click', function () {
+                        console.log(calendar.currentMonth);
+                        calendar.currentMonth = months.indexOf($(selector).attr('month')) - 1
+                        console.log(calendar.currentMonth);
+                        
+                    })
+                }
                 hideMonthDaysInCalendar($)
-            }
+            },
         },
-        monthPicker: true,
-        yearPicker: true,
+        // monthPicker: true,
+        // yearPicker: true,
     })
 }
 

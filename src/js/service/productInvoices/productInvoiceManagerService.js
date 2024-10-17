@@ -1,23 +1,23 @@
-import Framework7DTO from "../../Framework7DTO"
 import { CONFIRMATION_TO_DELETE } from "../../messages"
 import { deleteProductInvoice, downloadFileProductInvoice, downloadZIP } from "../../productInvoice"
 import { getIdOfElementClicked } from '../../helper/domElementClick'
 import { getAmountWithoutTVA } from "../../helper/priceWorkHelper"
 import { tvaEnum } from "../../enum/tvaEnum"
+import Framework7DTO from "../../Framework7DTO"
 
 /**
  * @param { HTMLElement } element 
  * @param { Framework7DTO } framework7DTO 
- * @param { CallableFunction } $update 
  */
-const openConfirm = (element, framework7DTO, $update) => {
+const handleDeleteProductInvoice = async (element, framework7DTO, productInvoicesByUser) => {
     const $f7 = framework7DTO.getApp()
+    const invoiceId = getIdOfElementClicked(framework7DTO.getSelector(), element)
 
-    $f7.dialog.confirm(CONFIRMATION_TO_DELETE, function () {
-        const invoiceId = getIdOfElementClicked(framework7DTO.getSelector(), element)
-        deleteProductInvoice($f7, invoiceId)
+    return $f7.dialog.confirm(CONFIRMATION_TO_DELETE, async function () {
+        await deleteProductInvoice($f7, invoiceId)
 
-        $update
+        productInvoicesByUser = productInvoicesByUser.filter(product => product.id !== invoiceId)
+        framework7DTO.updateView()
     })
 }
 
@@ -53,9 +53,9 @@ const downloadSelectedInvoices = (selectedInvoices, $f7, date) => {
 
 const totalAmountProductInvoices = (productInvoicesByUser) => {
     return productInvoicesByUser.length >= 1
-        ? productInvoicesByUser
+        ? (productInvoicesByUser
             .map(invoice => invoice.totalAmount)
-            .reduce((accumulator, current) => accumulator + current)
+            .reduce((accumulator, current) => accumulator + current)).toFixed(2)
         : 0
 }
 
@@ -66,7 +66,7 @@ const getTVAOfTotalAmountProductInvoiceFiles = (productInvoicesByUser) => {
 }
 
 export {
-    openConfirm,
+    handleDeleteProductInvoice,
     downloadPDF,
     downloadSelectedInvoices,
     totalAmountProductInvoices,
