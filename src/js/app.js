@@ -35,9 +35,9 @@ const app = new Framework7({
 
 askUserPermissionForSendANotificationPush()
 setupServicesWorkers()
-(async () => {
-    await checkAndClearCache();
-})();
 reloadPage(app, '/prestation/')
+async () => {
+    await checkAndClearCache();
+};
 
 export default app

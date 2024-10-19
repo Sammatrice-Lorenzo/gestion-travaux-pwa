@@ -163,13 +163,12 @@
 
     export default async (props, { $, $on, $f7 }) => {
         $on('pageInit', () => {
-            $('.btn-login').on('click', function () {
+            $('.btn-login').on('click', async function () {
                 const formData = $f7.form.convertToData('#form-login');
-                login(formData.username, formData.password, $f7)
+                await login(formData.username, formData.password, $f7)
             });
         });
 
         return $render;
     }
-
 </script>

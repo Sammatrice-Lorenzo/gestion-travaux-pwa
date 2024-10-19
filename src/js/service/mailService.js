@@ -2,7 +2,7 @@ import { getMontYear } from "../date"
 import { getDecodedToken } from "../token"
 
 /**
- * @param { Date } date 
+ * @param { Date } date
  */
 function sendEmail(date) {
     const token = getDecodedToken()
@@ -11,14 +11,7 @@ function sendEmail(date) {
     const email = "example@domain.com"
     const subject = `Factures ${getMontYear(date)}`
     const greetings = (new Date()).getHours() < 20 ? 'Bonjour' : 'Bonsoir' 
-    const body = `
-    ${greetings},
-    
-    Veuillez trouver ci-jointes les factures pour ${getMontYear(date)}.
-    
-    Cordialement,
-    ${user}
-    `
+    const body = `\n${greetings},\n\nVeuillez trouver ci-jointes les factures pour ${getMontYear(date)}.\n\nCordialement,\n${user}`
     window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
 }
 

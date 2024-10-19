@@ -1,3 +1,11 @@
+import Framework7DTO from "../Framework7DTO";
+
+/**
+ * @param { Date } date 
+ * @param { Framework7DTO } framework7DTO 
+ * @param { CallableFunction } sendFiles 
+ * @returns 
+ */
 const createSheet = (date, framework7DTO, sendFiles) => {
 
     return framework7DTO.getApp().sheet.create({
@@ -38,6 +46,9 @@ const createSheet = (date, framework7DTO, sendFiles) => {
         `,
         on: {
             open: function () {
+                const $ = framework7DTO.getSelector()
+                $('#files').val('')
+
                 document.getElementById('btn-product-invoices').addEventListener('click', (event) => {
                     event.preventDefault()
                     sendFiles(date, framework7DTO)

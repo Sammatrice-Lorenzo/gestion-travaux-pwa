@@ -96,7 +96,7 @@
                                             <i class="icon f7-icons if-not-md">download_circle</i>
                                             <i class="icon material-icons md-only">download</i>
                                         </a>
-                                        <a id='${invoice.id}' class="link icon-only" @click="${(e) => openConfirm(e, framework7DTO, $update())}">
+                                        <a id='${invoice.id}' class="link icon-only" @click="${deleteProduct}">
                                             <i class="icon f7-icons if-not-md">trash</i>
                                             <i class="icon material-icons md-only">delete</i>
                                         </a>
@@ -110,7 +110,7 @@
 
             <div style="margin-top: 2%; width: 90%; justify-content: center; margin-left: 5%;">
                 <p>
-                    Le montant total de vos facture est ${totalAmountProductInvoices(productInvoicesByUser)} TTC €
+                    Le montant total de vos factures est ${totalAmountProductInvoices(productInvoicesByUser)} TTC €
                 </p>
                 <p>
                     ${getTVAOfTotalAmountProductInvoiceFiles(productInvoicesByUser)} de TVA €
@@ -135,7 +135,7 @@
      } from '../../js/productInvoice.js'
     import { getInvoiceSelected,  getAllInvoicesSelected } from '../../js/service/productInvoices/dataTableProductInvoiceService'
     import {
-        openConfirm,
+        handleDeleteProductInvoice,
         downloadPDF,
         downloadSelectedInvoices,
         totalAmountProductInvoices,
@@ -155,14 +155,17 @@
         let date = new Date()
         let productInvoicesByUser = await getProductsInvoicesByUser($f7, date)
         async function updateToolbar(calendar) {
-            const monthNames = monthsEnum .getMonths()
+            const monthNames = monthsEnum.getMonths()
             const currentMonth = monthNames[calendar.currentMonth]
             const currentYear = calendar.currentYear
 
             if (currentMonth !== undefined) {
                 const selectorCalendar = $('#calendar-input-product-invoice-file')[0]
-                
+                const selectorMonth = $('.current-month-value')[0]
+    
                 $(selectorCalendar).val(`${currentMonth} ${currentYear}`)
+                $(selectorCalendar).attr('month', currentMonth)
+                $(selectorCalendar).attr('year', currentYear)
                 date = new Date(currentYear, calendar.currentMonth, 15)
                 productInvoicesByUser = await getProductsInvoicesByUser($f7, date)
                 $update()
@@ -193,6 +196,17 @@
 
         function selectAllInvoices(event) {
             selectedInvoices = getAllInvoicesSelected(event, productInvoicesByUser, $)
+        }
+
+        const deleteProduct = async (e) => {
+            const invoiceId = getIdOfElementClicked($, e)
+            
+            $f7.dialog.confirm(CONFIRMATION_TO_DELETE, async function () {
+                await deleteProductInvoice($f7, invoiceId)
+
+                productInvoicesByUser = productInvoicesByUser.filter(product => product.id !== parseInt(invoiceId))
+                $update()
+            })
         }
 
         const sendFiles = async (date, framework7DTO) => {
