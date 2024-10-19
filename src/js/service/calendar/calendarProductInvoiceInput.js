@@ -46,8 +46,6 @@ function createCalendar(framework7DTO, date, updateToolbar) {
                 hideMonthDaysInCalendar($)
             },
         },
-        // monthPicker: true,
-        // yearPicker: true,
     })
 }
 
