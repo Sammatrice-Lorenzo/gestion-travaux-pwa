@@ -1,5 +1,5 @@
 const getIdOfElementClicked = ($, element) => {
-    const elementClicked = $(element.originalTarget)
+    const elementClicked = $(element.currentTarget)
     const invoice = $(elementClicked).hasClass('icon') ? $(elementClicked).parent() : $(elementClicked)
 
     return $(invoice).attr('id')

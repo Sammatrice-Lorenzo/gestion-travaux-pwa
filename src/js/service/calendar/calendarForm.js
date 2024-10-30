@@ -61,7 +61,7 @@ const getEventSelected = (id, eventItems, framework7DTO) => {
         startHour: event.startTime,
         endHour: event.endTime,
         color: event.color,
-        client: client ? client['@id'] : ""
+        client: client ? client.id : ''
     }
 
     $('#form-calendar').addClass('edit')

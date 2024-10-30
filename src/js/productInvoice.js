@@ -36,7 +36,7 @@ async function createProductInvoices(date, framework7DTO) {
     if (!isValidForm(framework7DTO, files)) {
         return
     }
-    
+
     const formattedDate = date.toISOString().slice(0, 10)
     const url = getUrl(URL_PRODUCT_INVOICE_SEND_FILES)
     const body = getBody(files, formattedDate)
@@ -95,7 +95,7 @@ function downloadZIP($f7, ids, date) {
 
 function updateProductInvoice($f7, id, form) {
     const url = getUrlById(URL_PRODUCT_INVOICE_UPDATE, id)
-    const body = JSON.stringify({date: form.date, totalAmount: parseFloat(form['total-amount'])})
+    const body = JSON.stringify({name: form.name, date: form.date, totalAmount: parseFloat(form['total-amount'])})
 
     const routeDTO = new RouteDTO()
         .setApp($f7)

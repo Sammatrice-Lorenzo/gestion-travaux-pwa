@@ -3,15 +3,14 @@ import * as cache from './cache'
 
 export async function login(username, password, $f7) {
     const preloader = $f7.preloader
-
     const url = new URL('/api/login', API_URL);
-    
+
     if (!checkInputFormLogin(username, password, $f7)) return
     preloader.show()
 
     await cache.checkAndClearCache()
     // Récupération de la réponse depuis le cache
-    getCacheLogin(url)
+    await getCacheLogin(url)
         .then(async function (response) {
             if (response) {
                 // Utilisation de la réponse en cache
@@ -53,6 +52,12 @@ async function getCacheLogin(url) {
     });
 }
 
+/**
+ * @param { string } username 
+ * @param { string } password 
+ * @param {*} $f7 
+ * @returns { boolean }
+ */
 function checkInputFormLogin(username, password, $f7) {
     let returnedValue = false
 
@@ -70,12 +75,25 @@ function checkInputFormLogin(username, password, $f7) {
 
 }
 
+/**
+ * @param { string } token 
+ * @param {*} $f7
+ * 
+ * @returns { void }
+ */
 function successLogin(token, $f7) {
     localStorage.setItem('token', token.token);
     $f7.preloader.hide()
     $f7.views.main.router.navigate('/prestation/');
 }
 
+/**
+ * @param { Response } response 
+ * @param {*} $f7 
+ * @param { URL } url
+ * 
+ * @returns { void }
+ */
 function handleLogin(response, $f7, url) {
     response.clone().json().then(function (token) {
         if ('code' in token && token.code === 401) {

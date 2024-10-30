@@ -7,6 +7,7 @@ import Framework7DTO from "../Framework7DTO";
  * @returns 
  */
 const createSheet = (date, framework7DTO, sendFiles) => {
+    let isListenerAdded = false
 
     return framework7DTO.getApp().sheet.create({
         content: `
@@ -49,10 +50,14 @@ const createSheet = (date, framework7DTO, sendFiles) => {
                 const $ = framework7DTO.getSelector()
                 $('#files').val('')
 
-                document.getElementById('btn-product-invoices').addEventListener('click', (event) => {
-                    event.preventDefault()
-                    sendFiles(date, framework7DTO)
-                })
+                if (!isListenerAdded) {
+                    document.getElementById('btn-product-invoices').addEventListener('click', (event) => {
+                        event.preventDefault()
+                        sendFiles(date, framework7DTO)
+                    })
+
+                    isListenerAdded = true
+                }
             }
         }
     })

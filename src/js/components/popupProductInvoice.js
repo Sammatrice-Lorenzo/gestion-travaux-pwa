@@ -30,6 +30,19 @@ const createPopup = (framework7DTO, formProductInvoice) => {
                                         <li>
                                             <div class="item-content item-input">
                                                 <div class="item-inner">
+                                                    <div class="item-title item-label">Nom facture</div>
+                                                    <div class="item-input-wrap">
+                                                        <input name='name' type="text"
+                                                            placeholder="Nom de la facture" 
+                                                            required validate 
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="item-content item-input">
+                                                <div class="item-inner">
                                                     <div class="item-title item-label">Date de la facture</div>
                                                     <div class="item-input-wrap">
                                                         <input name='date' type="date"
