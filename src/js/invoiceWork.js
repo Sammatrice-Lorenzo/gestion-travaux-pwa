@@ -1,5 +1,6 @@
 import { fetchFileAPI } from './api'
 import { RouteDTO } from './dto/RouteDTO'
+import { getUrl } from './urlGenerator.js'
 import { addInvoiceLineForUpdate } from './work/component/invoiceLineComponent.js'
 
 /**
