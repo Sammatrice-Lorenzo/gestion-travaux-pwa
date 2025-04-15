@@ -5326,6 +5326,11 @@ safe-regex-test@^1.1.0:
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
 
+sass-migrator@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/sass-migrator/-/sass-migrator-2.3.1.tgz#c71e0988d153175450d23156a8c39612b9a7b013"
+  integrity sha512-JXXLZfzrnxtUWz/TS4xnbJq4g709wqYFgUb2s32FTDsEQSgPThRWrwT49vxfQK+eUbavJUzoQZ/tR5lq7fFnyA==
+
 sass@^1.62.0:
   version "1.86.3"
   resolved "https://registry.yarnpkg.com/sass/-/sass-1.86.3.tgz#0a0d9ea97cb6665e73f409639f8533ce057464c9"
