@@ -1,10 +1,10 @@
-@import "work";
-@import "invoice_file";
-@import "calendar";
-@import "input_color";
-@import "form_calendar";
-@import "input_calendar_product_invoice";
-@import "product_invoice";
+@use "work";
+@use "invoice_file";
+@use "calendar";
+@use "input_color";
+@use "form_calendar";
+@use "input_calendar_product_invoice";
+@use "product_invoice";
 
 .center-login {
     margin-top: 5%;
