@@ -1,15 +1,13 @@
 import { RouteDTO } from './dto/RouteDTO'
-import * as messages from './messages'
-import { apiRequest, callAPI, createAPI, deleteAPI } from './api'
+import { apiRequest, callAPI, fetchCreate, deleteAPI } from './api'
 import { checkDataToGetOfAResponseCached, responseIsCached } from './cache'
-import { getUrlByUser, getUrlUser, getUrl, getUrlById} from './urlGenerator'
+import { getUrlUser, getUrl, getUrlById} from './urlGenerator'
 
 const URL_WORK = '/api/works/'
-const URL_WORK_BY_USER = '/api/worksByUser/'
 const URL_TO_REDIRECT = '/prestation/'
 
 async function getWorkByUser($f7) {
-    const url = getUrlByUser(URL_WORK_BY_USER)
+    const url = getUrl(URL_WORK)
 
     const cache = await responseIsCached(url)
     if (cache) {
@@ -22,41 +20,9 @@ async function getWorkByUser($f7) {
 async function findWorkById(id, $f7)
 {
     const url = getUrlById(URL_WORK, id)
-    let work = {}
+    const response = await callAPI(url, $f7)
 
-    await fetch(url, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            // 'Authorization': `Bearer ${token}`
-        },
-    }).then(response =>
-        response
-            .json()
-            .then(function (data) {
-                work = {
-                    id: data.id,
-                    name: data.name,
-                    city: data.city,
-                    start: data.start,
-                    end: data.end,
-                    progression: data.progression,
-                    equipements: data.equipements,
-                    user: data.user,
-                    client: data.client,
-                    invoice: data.invoice,
-                    totalAmount: data.totalAmount
-                }
-
-                return work
-            })
-    )
-        .catch(error => {
-            console.log(error)
-            $f7.dialog.alert(messages.ERROR_SERVER)
-        })
-
-    return work
+    return response[0]
 }
 
 function createWork(form, $f7)
@@ -74,7 +40,7 @@ function createWork(form, $f7)
         .setUrlAPI(url)
         .setBody(body)
 
-    createAPI(routeDTO)
+    fetchCreate(routeDTO)
 }
 
 function deleteWork(idWork, $f7)
@@ -160,7 +126,7 @@ function getBodyWork(form)
         equipements: form.equipements,
         user: urlAPiUser,
         client: `/api/clients/${form.client}`,
-        totalAmount: parseFloat(form.totalAmount)
+        totalAmount: Number.parseFloat(form.totalAmount)
     })
 }
 

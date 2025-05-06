@@ -1,15 +1,14 @@
-import * as messages from './messages'
 import { RouteDTO } from './dto/RouteDTO'
-import { apiRequest, callAPI, createAPI, deleteAPI } from './api'
+import { apiRequest, callAPI, fetchCreate, deleteAPI } from './api'
 import { responseIsCached, checkDataToGetOfAResponseCached } from './cache'
-import { getUrlByUser, getUrlUser, getUrl, getUrlById } from './urlGenerator'
+import { getUrl, getUrlById } from './urlGenerator'
 
-const URL_CLIENTS_BY_USER = '/api/clientsByUser/' 
 const URL_CLIENTS = '/api/clients/'
 const URL_TO_REDIRECT = '/clients/'
 
 async function getClientsByUser($f7) {
-    const url = getUrlByUser(URL_CLIENTS_BY_USER)
+    const urlWorkEventDay = URL_CLIENTS.slice(0, -1)
+    const url = getUrl(urlWorkEventDay)
 
     const cache = await responseIsCached(url)
     if (cache) {
@@ -25,7 +24,7 @@ function createClient(form, $f7)
         return
     }
 
-    const url = getUrl('/api/clients')
+    const url = getUrl(URL_CLIENTS.slice(0, -1))
     const body = getBodyClient(form)
 
     const routeDTO = new RouteDTO()
@@ -34,7 +33,7 @@ function createClient(form, $f7)
         .setUrlAPI(url)
         .setBody(body)
 
-    createAPI(routeDTO)
+    fetchCreate(routeDTO)
 }
 
 function updateClient(form, idClient, $f7)
@@ -69,50 +68,20 @@ function deleteClient(idClient, $f7)
 
 async function findClientById(id, $f7) {
     const url = getUrlById(URL_CLIENTS, id)
-    let client = {}
 
-    await fetch(url, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            // 'Authorization': `Bearer ${token}`
-        },
-    }).then(response =>
-        response
-            .json()
-            .then(function (data) {
-                client = {
-                    firstname: data.firstname,
-                    lastname: data.lastname,
-                    city: data.city,
-                    phoneNumber: data.phoneNumber,
-                    postalCode: data.postalCode,
-                    streetAddress: data.streetAddress,
-                    user: data.user,
-                }
+    const response = await callAPI(url, $f7)
 
-                return client
-            })
-    )
-        .catch(error => {
-            console.log(error)
-            $f7.dialog.alert(messages.ERROR_SERVER)
-        })
-
-    return client
+    return response[0]
 }
 
 function getBodyClient(form) {
-    const urlAPiUser = getUrlUser()
-
     return JSON.stringify({
         firstname: form.firstname,
         lastname: form.lastname,
         city: form.city,
-        phoneNumber: getNumberPhoneInString(form.phoneNumber),
+        phoneNumber: getPhoneNumberInString(form.phoneNumber),
         postalCode: form.postalCode,
         streetAddress: form.streetAddress,
-        user: urlAPiUser,
     })
 }
 
@@ -128,7 +97,7 @@ function customValidation(form, $f7) {
         { field: form.postalCode, message: 'Veuillez saisir le code postal' },
         { field: form.phoneNumber, message: 'Veuillez saisir le numéro de téléphone' },
     ]
-  
+
     for (const field of fields) {
         if (field.field === '') {
             $f7.dialog.alert(field.message)
@@ -151,11 +120,11 @@ function customValidation(form, $f7) {
 
 /**
  * En format 06.01.02.03.04
- * @param { String } numberPhone
+ * @param { String } phoneNumber
  * @returns { String }
  */
-function getNumberPhoneInString(numberPhone) {
-    return numberPhone.length <= 10 ? numberPhone.match(/.{1,2}/g).join('.') : numberPhone
+function getPhoneNumberInString(phoneNumber) {
+    return phoneNumber.length <= 10 ? phoneNumber.match(/.{1,2}/g).join('.') : phoneNumber
 }
 
 export {
@@ -164,7 +133,6 @@ export {
     updateClient,
     deleteClient,
     findClientById,
-    getNumberPhoneInString,
-    URL_CLIENTS_BY_USER,
+    getPhoneNumberInString,
     URL_CLIENTS
 }

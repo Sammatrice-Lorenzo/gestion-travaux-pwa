@@ -1,13 +1,18 @@
 import Framework7DTO from "../../Framework7DTO"
 
 const getWorkDayCalendar = (form, date) => {
+    const [id, name] = form.client.split('.')
+    
     return {
         date: date,
         startHours: form.startHour,
         endHours: form.endHour,
         title: form.title,
         color: form.color,
-        client: form.client
+        client: {
+            id,
+            name
+        }
     }
 }
 
@@ -61,7 +66,7 @@ const getEventSelected = (id, eventItems, framework7DTO) => {
         startHour: event.startTime,
         endHour: event.endTime,
         color: event.color,
-        client: client ? client.id : ''
+        client: client ? `${client.id}.${client.name}` : ''
     }
 
     $('#form-calendar').addClass('edit')
@@ -77,7 +82,7 @@ const getEventSelected = (id, eventItems, framework7DTO) => {
 const getMaxId = (events) => {
     return events.reduce((maxId, event) => {
         return event.id > maxId ? event.id : maxId
-    }, -Infinity)
+    }, Number.NEGATIVE_INFINITY)
 }
 
 export { getWorkDayCalendar, getElementEdit, handleEditClassForm, getEventSelected, getMaxId }

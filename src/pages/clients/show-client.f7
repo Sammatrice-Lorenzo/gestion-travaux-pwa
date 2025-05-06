@@ -18,11 +18,11 @@
                 <div class="card-content card-content-padding ">
                     <div class="list simple-list no-hairlines-between">
                         <ul>
-                            <li>${client.lastname} ${client.firstname}</li>
+                            <li>${client.name}</li>
                             <li>Rue : ${client.streetAddress}</li>
                             <li>Ville : ${client.city}</li>
                             <li>Code Postal : ${client.postalCode}</li>
-                            <li>Numéro de téléphone : ${getNumberPhoneInString(client.phoneNumber)}</li>
+                            <li>Numéro de téléphone : ${getPhoneNumberInString(client.phoneNumber)}</li>
                         </ul>
                     </div>
                 </div>
@@ -42,7 +42,7 @@
     import Framework7 from 'framework7/bundle';
     import Dom7 from 'dom7';
 
-    import { findClientById, deleteClient, getNumberPhoneInString } from '../../js/client.js'
+    import { findClientById, deleteClient, getPhoneNumberInString } from '../../js/client.js'
     import { CONFIRMATION_TO_DELETE } from '../../js/messages.js'
     import { loadTabbar } from '../../js/components/tabbar.js'
 

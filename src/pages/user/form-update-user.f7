@@ -63,7 +63,7 @@
     import { showUser, updateUser } from '../../js/user.js'
 
     export default async (props, {$, $on, $f7, $onBeforeUnmount } ) => {
-        const user = await showUser()
+        const user = await showUser($f7)
 
         const formUser = {
             firstname: user.firstname,

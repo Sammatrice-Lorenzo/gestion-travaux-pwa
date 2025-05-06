@@ -1,8 +1,5 @@
-import { URL_CLIENTS, URL_CLIENTS_BY_USER } from "../../client"
-import { getUrlById } from "../../urlGenerator"
-
 const getEventsFiltered = (events, currentTime) => {
-    return events.filter(function (event) {
+    return events.filter((event) => {
         const timeEvent = new Date(event.date).getTime()
 
         return (
@@ -15,16 +12,13 @@ const getEventsFiltered = (events, currentTime) => {
 const buildEvent = async (currentEvents) => {
     return await Promise.all(
         currentEvents.map(async (event) => {
-            const eventClient = event.client
-            const hasClientEventDay = typeof eventClient === 'string' && eventClient.length > 0
-
             return {
                 id: event.id,
                 title: event.title,
                 startTime: event.startHours,
                 endTime: event.endHours,
                 color: event.color,
-                client: hasClientEventDay ? await findClient(event.client) : eventClient
+                client: event.client
             }
         })
     )
@@ -34,33 +28,18 @@ const renderEventsCalendar = async (calendar, events, eventItems) => {
     const currentDate = calendar.value[0]
     const currentEvents = getEventsFiltered(events, currentDate.getTime())
 
-    eventItems = []
+    let newEventItems = eventItems
     if (currentEvents.length) {
-        eventItems = await buildEvent(currentEvents)
+        newEventItems = await buildEvent(currentEvents)
     }
 
-    return eventItems
+    return newEventItems
 }
 
-async function findClient(route) {
-    const routeSplit = route.split('/')
-    const id = routeSplit.pop()
-    const url = getUrlById(URL_CLIENTS, id)
+const showNameEvent = (event) => {
+    const client = event.client !== null ? `(${event.client.name})` : ''
 
-    const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    })
-    
-    const data = await response.json()
-
-    return {
-        "@id": `${URL_CLIENTS_BY_USER}${id}`,
-        "name": data.name,
-        "@type": data['@type']
-    }
+    return `${event.title} ${client}`
 }
 
-export { renderEventsCalendar }
+export { renderEventsCalendar, showNameEvent }
