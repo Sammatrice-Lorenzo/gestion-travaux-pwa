@@ -21,7 +21,7 @@ const getTime = (date) => {
     const adjustedDate = new Date(date)
     adjustedDate.setHours(adjustedDate.getHours() - 2)
 
-    const hours = adjustedDate.getHours() < 10 ?  '0' + adjustedDate.getHours() : adjustedDate.getHours()
+    const hours = adjustedDate.getHours() < 10 ?  `0${adjustedDate.getHours()}` : adjustedDate.getHours()
 
     return `${hours}:${adjustedDate.getMinutes().toString().padStart(2, '0')}`
 }

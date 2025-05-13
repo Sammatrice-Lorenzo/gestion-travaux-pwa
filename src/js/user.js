@@ -3,38 +3,15 @@ import { getUrlById, getUrl, getUrlUser } from './urlGenerator.js'
 import { getToken } from './token.js'
 import { clearCache } from './cache'
 import Dom7 from 'dom7'
+import { callAPI } from './api.js'
 
-export async function showUser()
+export async function showUser($f7)
 {
-    const token = getToken()
     const url = getUrlUser()
-    let user = {}
 
-    await fetch(url, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-    }).then(response =>
-        response
-            .json()
-            .then(function (data) {
-                user = {
-                    firstname: data.firstname,
-                    lastname: data.lastname,
-                    email: data.email,
-                }
+    const response = await callAPI(url, $f7)
 
-                return user
-            })
-    )
-        .catch(error => {
-            console.log(error)
-            $f7.dialog.alert(messages.ERROR_SERVER)
-        })
-
-    return user
+    return response[0]
 }
 
 export function createUser(form, $f7)
@@ -77,7 +54,7 @@ export function createUser(form, $f7)
 export function updateUser(form, idUser, $f7)
 {
     const token = getToken()
-    const url = getUrlById('/api/user/edit/', idUser)
+    const url = getUrlById('/api/users', idUser)
     const message = messages.getTypeMessageByMethodAPI('PUT')
 
     const body = getBodyUser(form, false)
@@ -95,7 +72,7 @@ export function updateUser(form, idUser, $f7)
     }).then(response =>
         response
             .json()
-            .then(function (data) {
+            .then((data) => {
                 clearCache()
                 localStorage.removeItem('token')
                 localStorage.setItem('token', data.token)
@@ -120,7 +97,7 @@ function customValidation(form, $f7)
     const formSelector = $$('form#form-user')
     const inputs = $$(formSelector).find('input')
 
-    inputs.forEach(function(input) {
+    for (const input of inputs) {
         const divParent = $$(input).closest('.item-inner')
         if (input.value.trim() === '') {
             isFormValid = false
@@ -130,7 +107,7 @@ function customValidation(form, $f7)
         } else {
             $$(divParent).removeClass('input-error')
         }
-    })
+    }
 
     if (form.password !== form.confirmPassword) {
         isFormValid = false

@@ -1,16 +1,4 @@
-import { getDecodedToken } from './token'
-
 const URL_USER = '/api/user/'
-
-/**
- * @param { String } url 
- * @returns { URL }
- */
-function getUrlByUser(url) {
-    const tokenDecoded = getDecodedToken()
-
-    return new URL(url + tokenDecoded.id, API_URL)
-}
 
 /**
  * @param { String } url 
@@ -24,7 +12,7 @@ function getUrl(url)
 /**
  * @param { String } url 
  * @param { String | Number } id 
- * @returns {URL}
+ * @returns { URL }
  */
 function getUrlById(url, id)
 {
@@ -36,7 +24,7 @@ function getUrlById(url, id)
  */
 function getUrlUser()
 {
-    return getUrlByUser(URL_USER)
+    return new URL(URL_USER, API_URL)
 }
 
 /**
@@ -45,25 +33,25 @@ function getUrlUser()
  * @returns { URL }
  */
 function getUrlWithParameters(url, parameters) {
-    let route = url + '?'
+    let route = `${url}?`
 
-    Object.keys(parameters).forEach((key) => {
+    const searchParams = new URLSearchParams()
+    for (const key of Object.keys(parameters)) {
         if (Array.isArray(parameters[key])) {
-            parameters[key].forEach((value) => {
-                route += key + `[]=${value}&`
-            })
+            for (const value of parameters[key]) {
+                searchParams.append(`${key}[]`, value);
+            }
         } else {
-            route += key + `=${parameters[key]}&`
+            searchParams.set(key, parameters[key]);
         }
-    })
+    }
 
-    route = route.slice(0, -1)
+    route = route + searchParams.toString()
 
     return new URL(route, API_URL)
 }
 
 export {
-    getUrlByUser,
     getUrl,
     getUrlById,
     getUrlUser,

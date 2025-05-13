@@ -31,7 +31,7 @@
     import { loadTabbar } from '../../js/components/tabbar.js'
 
     export default async (props, { $, $on, $f7 }) => {
-        const user = await showUser()
+        const user = await showUser($f7)
         const idUser = getDecodedToken().id
 
         $on('pageInit', function (page) {

@@ -20,13 +20,13 @@ function createCalendar(framework7DTO, date, updateToolbar) {
         value: [date],
         toolbarTemplate: () => getTemplateCalendar(),
         on: {
-            init: function (calendar) {
+            init: (calendar) => {
                 handleActionCalendar(calendar, framework7DTO, updateToolbar)
             },
-            monthYearChangeStart: function (calendar) {
+            monthYearChangeStart: (calendar) => {
                 updateToolbar(calendar, framework7DTO)
             },
-            open: function (calendar) {
+            open: (calendar) => {
                 const selector = $('#calendar-input-product-invoice-file')[0]
                 if ($(selector).attr('month')) {
                     const selectorMonth = $('.current-month-value')[0]
@@ -36,11 +36,8 @@ function createCalendar(framework7DTO, date, updateToolbar) {
                     $(selectorMonth).text($(selector).attr('month').toLowerCase())
                     $(selectorYear).text($(selector).attr('year'))
 
-                    $(calendar).find('.calendar-next-month-button').on('click', function () {
-                        console.log(calendar.currentMonth);
+                    $(calendar).find('.calendar-next-month-button').on('click', () => {
                         calendar.currentMonth = months.indexOf($(selector).attr('month')) - 1
-                        console.log(calendar.currentMonth);
-                        
                     })
                 }
                 hideMonthDaysInCalendar($)
@@ -58,10 +55,10 @@ const hideMonthDaysInCalendar = ($) => {
 const handleActionCalendar = (calendar, framework7DTO, updateToolbar) => {
     updateToolbar(calendar, framework7DTO)
     const $ = framework7DTO.getSelector()
-    $(calendar).find('.calendar-custom-toolbar .left').on('click', function () {
+    $(calendar).find('.calendar-custom-toolbar .left').on('click', () => {
         calendar.prevYear()
     })
-    $(calendar).find('.calendar-custom-toolbar .right').on('click', function () {
+    $(calendar).find('.calendar-custom-toolbar .right').on('click', () => {
         calendar.nextYear()
     })
 }

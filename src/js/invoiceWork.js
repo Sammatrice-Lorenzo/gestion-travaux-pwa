@@ -14,14 +14,15 @@ function isValidForm($$, $f7) {
 
     let isValid = true
 
-    inputs.forEach(function(input) {
+    for (const input of inputs) {
         const divParent = $$(input).closest('.item-inner')
         if (input.value.trim() === '' && !input.name.startsWith('localisation')) {
             isValid = false
             const label = $$(divParent).find('.item-title').text()
             $f7.dialog.alert(`${label} ne peut pas être vide.`)
         }
-    })
+
+    }
 
     return isValid
 }
@@ -62,6 +63,7 @@ function createInvoiceWork(form, $f7, props)
         .setApp($f7)
         .setUrlAPI(url)
         .setBody(body)
+        .setMethod('POST')
 
     fetchFileAPI(routeDTO, 'facture_prestation.pdf')
 }

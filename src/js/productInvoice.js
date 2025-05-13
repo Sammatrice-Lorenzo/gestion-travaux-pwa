@@ -1,17 +1,12 @@
-import Framework7 from "framework7"
-import { apiRequest, callAPI, deleteAPI, fetchFileAPI, sendFilesAPI } from "./api"
-import { checkDataToGetOfAResponseCached, responseIsCached } from "./cache"
-import { RouteDTO } from "./dto/RouteDTO"
-import { getUrl, getUrlById, getUrlWithParameters } from "./urlGenerator"
-import Framework7DTO from "./Framework7DTO"
-import { getMontYear } from "./date"
+import Framework7 from 'framework7'
+import { apiRequest, callAPI, deleteAPI, fetchFileAPI, fetchCreate } from './api'
+import { checkDataToGetOfAResponseCached, responseIsCached } from './cache'
+import { RouteDTO } from './dto/RouteDTO'
+import { getUrl, getUrlById, getUrlWithParameters } from './urlGenerator'
+import Framework7DTO from './Framework7DTO'
+import { getMontYear } from './date'
 
-const URL_PRODUCT_INVOICE_BY_USER = '/api/product_invoice/month'
-const URL_PRODUCT_INVOICE_DELETE = '/api/product_invoice_delete/'
-const URL_PRODUCT_INVOICE_DOWNLOAD_PDF = '/api/product_invoice_download/'
-const URL_PRODUCT_INVOICE_DOWNLOAD_ZIP = '/api/product_invoice_download_zip'
-const URL_PRODUCT_INVOICE_SEND_FILES = '/api/product_invoice_files'
-const URL_PRODUCT_INVOICE_UPDATE = '/api/product_invoice_update/'
+const URL_PRODUCT_INVOICE = '/api/product_invoice_files'
 const URL_TO_REDIRECT = '/product/invoices/'
 
 /**
@@ -21,7 +16,7 @@ const URL_TO_REDIRECT = '/product/invoices/'
  */
 async function getProductsInvoicesByUser($f7, date) {
     const formattedDate = date.toISOString().slice(0, 10)
-    const url = getUrlWithParameters(URL_PRODUCT_INVOICE_BY_USER, {date: formattedDate})
+    const url = getUrlWithParameters(URL_PRODUCT_INVOICE, {date: formattedDate})
 
     const cache = await responseIsCached(url)
     if (cache) {
@@ -38,7 +33,8 @@ async function createProductInvoices(date, framework7DTO) {
     }
 
     const formattedDate = date.toISOString().slice(0, 10)
-    const url = getUrl(URL_PRODUCT_INVOICE_SEND_FILES)
+
+    const url = getUrl(URL_PRODUCT_INVOICE)
     const body = getBody(files, formattedDate)
 
     const routeDTO = new RouteDTO()
@@ -48,7 +44,7 @@ async function createProductInvoices(date, framework7DTO) {
         .setBody(body)
         .setMethod('POST')
 
-    sendFilesAPI(routeDTO)
+    fetchCreate(routeDTO, 'formData')
 }
 
 /**
@@ -61,18 +57,18 @@ async function deleteProductInvoice($f7, id) {
         .setApp($f7)
         .setIdElement(id)
         .setRoute(URL_TO_REDIRECT)
-        .setUrlAPI(URL_PRODUCT_INVOICE_DELETE)
+        .setUrlAPI(`${URL_PRODUCT_INVOICE}/`)
 
-    deleteAPI(routeDTO, true)
+    deleteAPI(routeDTO)
 }
 
 function downloadFileProductInvoice($f7, productInvoice) {
-    const url = getUrlById(URL_PRODUCT_INVOICE_DOWNLOAD_PDF, productInvoice.id)
+    const url = getUrl(`${URL_PRODUCT_INVOICE}/${productInvoice.id}/download`)
 
     const routeDTO = new RouteDTO()
         .setApp($f7)
         .setUrlAPI(url)
-        .setBody({})
+        .setMethod('GET')
 
     const productInvoiceNameSplitted = productInvoice.name.split('.').pop()
     const nameFile = productInvoiceNameSplitted === 'pdf' ? productInvoice.name : `${productInvoice.name}.pdf`
@@ -81,7 +77,7 @@ function downloadFileProductInvoice($f7, productInvoice) {
 }
 
 function downloadZIP($f7, ids, date) {
-    const url = getUrl(URL_PRODUCT_INVOICE_DOWNLOAD_ZIP)
+    const url = getUrl(`${URL_PRODUCT_INVOICE}_download_zip`)
     let formattedDate = getMontYear(date)
     formattedDate = formattedDate.replace(' ', '_')
 
@@ -89,13 +85,18 @@ function downloadZIP($f7, ids, date) {
         .setApp($f7)
         .setUrlAPI(url)
         .setBody(JSON.stringify({ids: ids}))
+        .setMethod('POST')
 
     fetchFileAPI(routeDTO, `Factures_${formattedDate}.zip`)
 }
 
 function updateProductInvoice($f7, id, form) {
-    const url = getUrlById(URL_PRODUCT_INVOICE_UPDATE, id)
-    const body = JSON.stringify({name: form.name, date: form.date, totalAmount: parseFloat(form['total-amount'])})
+    const url = getUrlById(`${URL_PRODUCT_INVOICE}/`, id)
+    const body = JSON.stringify({
+        name: form.name,
+        date: form.date,
+        totalAmount: Number.parseFloat(form['total-amount'])
+    })
 
     const routeDTO = new RouteDTO()
         .setApp($f7)
@@ -104,7 +105,7 @@ function updateProductInvoice($f7, id, form) {
         .setBody(body)
         .setMethod('PUT')
 
-    apiRequest(routeDTO, true)
+    apiRequest(routeDTO)
 }
 
 /**
@@ -113,11 +114,10 @@ function updateProductInvoice($f7, id, form) {
  */
 const getBody = (files, date) => {
     const formData = new FormData()
-    for (let i = 0; i < files.length; i++) {
-        formData.append(`file${i}`, files[i])
-    }
-
     formData.append('date', date)
+    for (let i = 0; i < files.length; i++) {
+        formData.append('files[]', files[i])
+    }
 
     return formData
 }
@@ -138,7 +138,7 @@ function isValidForm(framework7DTO, files) {
 
     if (input.value.trim() === '') {
         isValid = false
-        $f7.dialog.alert(`Aucun fichier sélectionné.`)
+        $f7.dialog.alert('Aucun fichier sélectionné.')
     }
 
     for (const file of files) {

@@ -1,5 +1,5 @@
 import { getToken } from "../../token"
-import { getUrlById } from "../../urlGenerator"
+import { getUrl } from "../../urlGenerator"
 
 let scale = 1
 let pdfDoc = null
@@ -13,12 +13,12 @@ const getScaleViewport = (page, pdfContainer) => {
 }
 
 async function openPdfPreviewFromUrl(framework7DTO, id, pdfPreviewPopup) {
-    const url = getUrlById('/api/product_invoice_download/', id)
+    const url = getUrl(`/api/product_invoice_files/${id}/download/`)
     const token = getToken()
 
     try {
         const response = await fetch(url, {
-            method: 'POST',
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/pdf', 
                 'Authorization': `Bearer ${token}`,
