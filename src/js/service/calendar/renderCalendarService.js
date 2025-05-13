@@ -37,8 +37,8 @@ const renderEventsCalendar = async (calendar, events, eventItems) => {
 }
 
 const showNameEvent = (event) => {
-    const client = event.client !== null ? `(${event.client.name})` : ''
-
+    const client = event.client && event.client.id !== '' ? `(${event.client.name})` : ''
+    
     return `${event.title} ${client}`
 }
 
