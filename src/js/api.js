@@ -62,7 +62,7 @@ function fetchCreate(routeDTO, type = null) {
             'Authorization': headers.Authorization
         }
     }
-    
+
     fetch(routeDTO.getUrlAPI(), {
         method: 'POST',
         headers: headers,
@@ -95,15 +95,10 @@ function fetchCreate(routeDTO, type = null) {
 function deleteAPI(routeDTO) {
     const url = getUrlById(routeDTO.getUrlAPI(), routeDTO.getIdElement())
     const $f7 = routeDTO.getApp()
-    const token = getToken()
 
-    const headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-    }
     fetch(url, {
         method: 'DELETE',
-        headers: headers,
+        headers: getHeaders(),
     }).then(async (response) => {
         await clearCache()
         if (response.status === 204) {
@@ -124,14 +119,10 @@ function deleteAPI(routeDTO) {
  */
 function fetchFileAPI(routeDTO, nameFile) {
     const $f7 = routeDTO.getApp()
-    const token = getToken()
 
     fetch(routeDTO.getUrlAPI(), {
         method: routeDTO.getMethod(),
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
+        headers: getHeaders(),
         body: routeDTO.getBody()
     }).then((response) => {
         if (response.status === 200) {
@@ -159,16 +150,12 @@ function fetchFileAPI(routeDTO, nameFile) {
  */
 async function callAPI(url, $f7) {
     const responses = []
-    const token = getToken()
     const preloader = $f7.preloader
     preloader.show()
     
     await fetch(url, {
         method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
+        headers: getHeaders(),
     }).then(response =>
         response
             .clone() // Cloner la réponse pour stockResponseInCache

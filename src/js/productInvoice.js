@@ -1,10 +1,10 @@
-import Framework7 from "framework7"
-import { apiRequest, callAPI, deleteAPI, fetchFileAPI, fetchCreate } from "./api"
-import { checkDataToGetOfAResponseCached, responseIsCached } from "./cache"
-import { RouteDTO } from "./dto/RouteDTO"
-import { getUrl, getUrlById, getUrlWithParameters } from "./urlGenerator"
-import Framework7DTO from "./Framework7DTO"
-import { getMontYear } from "./date"
+import Framework7 from 'framework7'
+import { apiRequest, callAPI, deleteAPI, fetchFileAPI, fetchCreate } from './api'
+import { checkDataToGetOfAResponseCached, responseIsCached } from './cache'
+import { RouteDTO } from './dto/RouteDTO'
+import { getUrl, getUrlById, getUrlWithParameters } from './urlGenerator'
+import Framework7DTO from './Framework7DTO'
+import { getMontYear } from './date'
 
 const URL_PRODUCT_INVOICE = '/api/product_invoice_files'
 const URL_TO_REDIRECT = '/product/invoices/'
