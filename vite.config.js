@@ -1,28 +1,22 @@
-import path from 'path'
+import path from 'node:path'
 import framework7 from 'rollup-plugin-framework7'
 import replace from '@rollup/plugin-replace'
 import dotenv from 'dotenv'
-import fs from 'fs'
+import fs from 'node:fs'
 
-import https from 'https'
+import https from 'node:https'
 dotenv.config()
 
 const SRC_DIR = path.resolve(__dirname, './src')
 const PUBLIC_DIR = path.resolve(__dirname, './public')
 const BUILD_DIR = path.resolve(__dirname, './src/www')
 const JWT_DIR = path.resolve(__dirname, './config/jwt/public.pem')
-const KEY_SSL = path.resolve(__dirname, './config/ssl/key.pem')
-const CERT_SSL = path.resolve(__dirname, './config/ssl/cert.pem')
 const ENV_LOCAL = path.resolve(__dirname, './.env.local')
+const ENV_TEST_LOCAL = path.resolve(__dirname, './.env.test.local')
 
+const envPath = process.env.NODE_ENV === 'test' ? ENV_TEST_LOCAL : ENV_LOCAL
 const publicKey = fs.readFileSync(JWT_DIR, 'utf8')
-
-const options = {
-    key: fs.readFileSync(KEY_SSL, 'utf8'),
-    cert: fs.readFileSync(CERT_SSL, 'utf8')
-}
-
-const env = dotenv.config({ path: ENV_LOCAL }).parsed || dotenv.config().parsed
+const env = dotenv.config({ path: envPath }).parsed || dotenv.config().parsed
 
 const optionsServer = {
     host: true,
@@ -39,14 +33,12 @@ const optionsServer = {
 }
 
 if (process.env.NODE_ENV === 'development') {
-    optionsServer.https = https.createServer(options)
-}
-
-if (process.env.NODE_ENV === 'test') {
-    const ENV_TEST_LOCAL = path.resolve(__dirname, './.env.test.local')
-    const envTest = dotenv.config({ path: ENV_TEST_LOCAL }).parsed || dotenv.config().parsed
-
-    env.API_URL = envTest.API_URL
+    const key = path.resolve(__dirname, './config/ssl/key.pem')
+    const cert = path.resolve(__dirname, './config/ssl/cert.pem')
+    optionsServer.https = https.createServer({
+        key: fs.readFileSync(key, 'utf8'),
+        cert: fs.readFileSync(cert, 'utf8')
+    })
 }
 
 export default async () => {

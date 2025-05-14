@@ -13,7 +13,7 @@ import { defineConfig, devices } from '@playwright/test';
 // const PORT = process.env.PORT || 5173
 
 // Set webServer.url and use.baseURL with the location of the WebServer respecting the correct set port
-const baseURL: string = `http://localhost:5173`
+const baseURL: string = 'http://localhost:5173'
 // const baseURL: string = `http://localhost:4173`
 
 /**
@@ -36,6 +36,8 @@ export default defineConfig({
     command: 'yarn test-server',
     url: baseURL,
     reuseExistingServer: !process.env.CI,
+    stdout: 'pipe',
+    stderr: 'pipe',
   },
 
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
@@ -46,7 +48,9 @@ export default defineConfig({
     baseURL: baseURL,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
+    trace: 'retain-on-failure',
+    screenshot: "only-on-failure",
+    video: 'retain-on-failure',
   },
 
   /* Configure projects for major browsers */

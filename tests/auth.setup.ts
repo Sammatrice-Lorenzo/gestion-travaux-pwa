@@ -1,4 +1,4 @@
-import { test, expect, Page, BrowserContext } from '@playwright/test'
+import { test, expect, type Page, type BrowserContext } from '@playwright/test'
 import { goToHome } from './helper/homeHelper'
 
 test('authenticate', async ({ baseURL, browser }) => {
@@ -13,7 +13,6 @@ test('authenticate', async ({ baseURL, browser }) => {
 
   await page.locator('input[name=username]').fill('user@test.com')
   await page.locator('input[name=password]').fill('1234')
-//   await page.getByRole('link', { name: 'Connexion' }).click()
   await page.getByTestId('link-login').click();
 
   await goToHome(page)
