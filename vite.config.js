@@ -1,29 +1,54 @@
-import path from 'path';
-import framework7 from 'rollup-plugin-framework7';
-import replace from '@rollup/plugin-replace';
-import dotenv from 'dotenv';
+import path from 'path'
+import framework7 from 'rollup-plugin-framework7'
+import replace from '@rollup/plugin-replace'
+import dotenv from 'dotenv'
+import fs from 'fs'
 
-import https from 'https';
-dotenv.config();
+import https from 'https'
+dotenv.config()
 
-const SRC_DIR = path.resolve(__dirname, './src');
-const PUBLIC_DIR = path.resolve(__dirname, './public');
-// const BUILD_DIR = path.resolve(__dirname, './www',);
-const BUILD_DIR = path.resolve(__dirname, './src/www',);
-const JWT_DIR = path.resolve(__dirname, './config/jwt/public.pem',);
-const KEY_SSL = path.resolve(__dirname, './config/ssl/key.pem',);
-const CERT_SSL = path.resolve(__dirname, './config/ssl/cert.pem',);
-const ENV_LOCAL = path.resolve(__dirname, './.env.local',);
+const SRC_DIR = path.resolve(__dirname, './src')
+const PUBLIC_DIR = path.resolve(__dirname, './public')
+const BUILD_DIR = path.resolve(__dirname, './src/www')
+const JWT_DIR = path.resolve(__dirname, './config/jwt/public.pem')
+const KEY_SSL = path.resolve(__dirname, './config/ssl/key.pem')
+const CERT_SSL = path.resolve(__dirname, './config/ssl/cert.pem')
+const ENV_LOCAL = path.resolve(__dirname, './.env.local')
 
-import fs from 'fs';
-const publicKey = fs.readFileSync(JWT_DIR, 'utf8');
+const publicKey = fs.readFileSync(JWT_DIR, 'utf8')
 
 const options = {
     key: fs.readFileSync(KEY_SSL, 'utf8'),
     cert: fs.readFileSync(CERT_SSL, 'utf8')
-};
+}
 
-const env = dotenv.config({ path: ENV_LOCAL }).parsed || dotenv.config().parsed;
+const env = dotenv.config({ path: ENV_LOCAL }).parsed || dotenv.config().parsed
+
+const optionsServer = {
+    host: true,
+    hmr: {
+        overlay: true
+    },
+    proxy: {
+        '/api': {
+            target: env.API_URL,
+            changeOrigin: true,
+            cors: true
+        }
+    }
+}
+
+if (process.env.NODE_ENV === 'development') {
+    optionsServer.https = https.createServer(options)
+}
+
+if (process.env.NODE_ENV === 'test') {
+    const ENV_TEST_LOCAL = path.resolve(__dirname, './.env.test.local')
+    const envTest = dotenv.config({ path: ENV_TEST_LOCAL }).parsed || dotenv.config().parsed
+
+    env.API_URL = envTest.API_URL
+}
+
 export default async () => {
     return {
         plugins: [
@@ -69,20 +94,7 @@ export default async () => {
                 '@': SRC_DIR,
             },
         },
-        server: {
-            https: https.createServer(options),
-            host: true,
-            hmr: {
-                overlay: true
-            },
-            proxy: {
-                '/api': {
-                    target: env.API_URL,
-                    changeOrigin: true,
-                    cors: true
-                }
-            }
-        },
+        server: optionsServer,
         esbuild: {
             jsxFactory: '$jsx',
             jsxFragment: '"Fragment"',
@@ -101,5 +113,5 @@ export default async () => {
                 },
             ],
         },
-    };
-};
+    }
+}

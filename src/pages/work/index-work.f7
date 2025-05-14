@@ -2,7 +2,7 @@
     <div id="index-work" class="page">
         <div class="navbar">
             <div class="navbar-inner">
-                <div class="title">Mes prestations</div>
+                <div id="title-work" class="title">Mes prestations</div>
                 <div class="right">
                     <a class="link icon-only panel-open ripple-inset" data-panel="right">
                         <i class="icon material-icons md-only">menu</i>

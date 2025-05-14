@@ -32,7 +32,7 @@
                         <div class="list block" style="margin-top: 2rem;">
                             <ul>
                                 <li>
-                                    <a href="#" class="button button-fill button-round btn-login">
+                                    <a data-testid="link-login" href="#" class="button button-fill button-round btn-login">
                                         Connexion
                                     </a>
                                 </li>
