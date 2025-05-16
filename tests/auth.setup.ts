@@ -13,7 +13,7 @@ test('authenticate', async ({ baseURL, browser }) => {
 
   await page.locator('input[name=username]').fill('user@test.com')
   await page.locator('input[name=password]').fill('1234')
-  await page.getByTestId('link-login').click();
+  await page.getByTestId('link-login').click()
 
   await goToHome(page)
 

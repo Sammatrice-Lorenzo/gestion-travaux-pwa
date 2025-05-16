@@ -1,10 +1,10 @@
 const deleteInvoiceLine = (event) => {
-    const lineElement = event.target.closest('.new-line')
-    lineElement.parentNode.removeChild(lineElement)
+  const lineElement = event.target.closest('.new-line')
+  lineElement.parentNode.removeChild(lineElement)
 }
 
 const lineTemplate = (id) => {
-    return `<li>
+  return `<li>
         <div class="item-content item-input">
             <div class="item-inner">
                 <div class="item-title item-label">Localisation</div>
@@ -44,49 +44,49 @@ const lineTemplate = (id) => {
             </div>
         </div>
     </li>
-`}
+`
+}
 
 const addInvoiceLine = (event) => {
-    event.preventDefault()
-    const invoiceLinesContainer = document.getElementById('invoice-lines')
+  event.preventDefault()
+  const invoiceLinesContainer = document.getElementById('invoice-lines')
 
-    const deleteButtonElement = `
+  const deleteButtonElement = `
         <span class="display-flex justify-content-center">
             <a href="#" class="button button-small button-round button-fill color-red delete-line">
                 <i class="f7-icons">trash_circle</i>
             </a>
         </span>
     `
-        
-    const lineElement = document.createElement('ul')
 
-    const lastId = document.getElementsByClassName('new-line')?.length + 1
+  const lineElement = document.createElement('ul')
 
-    const buttonDeleteLine = document.createElement('div')
-    buttonDeleteLine.className = 'block'
-    buttonDeleteLine.innerHTML = deleteButtonElement
-    lineElement.innerHTML = lineTemplate(lastId)
-    lineElement.className = "new-line"
+  const lastId = document.getElementsByClassName('new-line')?.length + 1
 
-    buttonDeleteLine.addEventListener('click', deleteInvoiceLine)
+  const buttonDeleteLine = document.createElement('div')
+  buttonDeleteLine.className = 'block'
+  buttonDeleteLine.innerHTML = deleteButtonElement
+  lineElement.innerHTML = lineTemplate(lastId)
+  lineElement.className = 'new-line'
 
-    lineElement.appendChild(buttonDeleteLine)
-    invoiceLinesContainer.appendChild(lineElement)
+  buttonDeleteLine.addEventListener('click', deleteInvoiceLine)
+
+  lineElement.appendChild(buttonDeleteLine)
+  invoiceLinesContainer.appendChild(lineElement)
 }
 
 const addInvoiceLineForUpdate = (invoiceLines, $f7) => {
-    for (let i = 1; i < invoiceLines.length; i++) {
-        addInvoiceLine(new Event('click'))
-        const newLine = invoiceLines[i]
-        const newFormData = {
-            [`localisation${i}`]: newLine.localisation,
-            [`description${i}`]: newLine.description,
-            [`price_unitaire${i}`]: newLine.unitPrice,
-            [`total_line${i}`]: newLine.totalPriceLine
-        }
-        $f7.form.fillFromData('#form-work-invoice', newFormData)
+  for (let i = 1; i < invoiceLines.length; i++) {
+    addInvoiceLine(new Event('click'))
+    const newLine = invoiceLines[i]
+    const newFormData = {
+      [`localisation${i}`]: newLine.localisation,
+      [`description${i}`]: newLine.description,
+      [`price_unitaire${i}`]: newLine.unitPrice,
+      [`total_line${i}`]: newLine.totalPriceLine,
     }
+    $f7.form.fillFromData('#form-work-invoice', newFormData)
+  }
 }
-
 
 export { addInvoiceLine, addInvoiceLineForUpdate }

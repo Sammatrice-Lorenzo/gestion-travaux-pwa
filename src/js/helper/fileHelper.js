@@ -1,17 +1,15 @@
-import { clearCache } from "../cache"
+import { clearCache } from '../cache'
 
 const downloadFile = async (data, nameFile) => {
-    const blobUrl = window.URL.createObjectURL(data)
-        
-    const link = document.createElement('a')
-    link.href = blobUrl
-    link.download = nameFile
+  const blobUrl = window.URL.createObjectURL(data)
 
-    link.style.display = 'none'
-    link.click()
-    await clearCache()
+  const link = document.createElement('a')
+  link.href = blobUrl
+  link.download = nameFile
+
+  link.style.display = 'none'
+  link.click()
+  await clearCache()
 }
 
-export {
-    downloadFile
-}
+export { downloadFile }

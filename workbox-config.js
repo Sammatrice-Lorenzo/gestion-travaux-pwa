@@ -10,4 +10,4 @@ module.exports = {
   ignoreURLParametersMatching: [/^utm_/, /^fbclid$/],
   // swDest: 'www/service-worker.js',
   swDest: 'src/www/service-worker.js',
-};
+}

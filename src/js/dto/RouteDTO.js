@@ -1,128 +1,127 @@
 export class RouteDTO {
-    route = '/'
-    body = null
-    method = null
-    idElement = null
-    urlAPI = null
-    app = null
-    contentType = null
+  route = '/'
+  body = null
+  method = null
+  idElement = null
+  urlAPI = null
+  app = null
+  contentType = null
 
-    /**
-     * @param { String } route
-     * @returns { this }
-     */
-    setRoute(route) {
-        this.route = route
+  /**
+   * @param { String } route
+   * @returns { this }
+   */
+  setRoute(route) {
+    this.route = route
 
-        return this
-    }
+    return this
+  }
 
-    /**
-     * @returns { String }
-     */
-    getRoute() {
-        return this.route
-    }
+  /**
+   * @returns { String }
+   */
+  getRoute() {
+    return this.route
+  }
 
-    /**
-     * @param { number } id 
-     * @returns { this }
-     */
-    setIdElement(id) {
-        this.idElement = id
+  /**
+   * @param { number } id
+   * @returns { this }
+   */
+  setIdElement(id) {
+    this.idElement = id
 
-        return this
-    }
+    return this
+  }
 
-    /**
-     * @returns { ?number }
-     */
-    getIdElement() {
-        return this.idElement
-    }
+  /**
+   * @returns { ?number }
+   */
+  getIdElement() {
+    return this.idElement
+  }
 
-    /**
-     * @param {*} $f7 
-     * @returns { this }
-     */
-    setApp($f7) {
-        this.app = $f7
+  /**
+   * @param {*} $f7
+   * @returns { this }
+   */
+  setApp($f7) {
+    this.app = $f7
 
-        return this
-    }
+    return this
+  }
 
-    getApp() {
-        return this.app
-    }
+  getApp() {
+    return this.app
+  }
 
-    /**
-     * @param { String } body 
-     * @returns { this }
-     */
-    setBody(body) {
-        this.body = body
+  /**
+   * @param { String } body
+   * @returns { this }
+   */
+  setBody(body) {
+    this.body = body
 
-        return this
-    }
+    return this
+  }
 
-    /**
-     * @returns { ?String }
-     */
-    getBody() {
-        return this.body
-    }
+  /**
+   * @returns { ?String }
+   */
+  getBody() {
+    return this.body
+  }
 
+  /**
+   * @param { String } url
+   * @returns { this }
+   */
+  setUrlAPI(url) {
+    this.urlAPI = url
 
-    /**
-     * @param { String } url 
-     * @returns { this }
-     */
-    setUrlAPI(url) {
-        this.urlAPI = url
+    return this
+  }
 
-        return this
-    }
+  /**
+   * @returns { ?String }
+   */
+  getUrlAPI() {
+    return this.urlAPI
+  }
 
-    /**
-     * @returns { ?String }
-     */
-    getUrlAPI() {
-        return this.urlAPI
-    }
+  /**
+   * @param { String } method
+   * @returns { this }
+   */
+  setMethod(method) {
+    this.method = method
 
-    /**
-     * @param { String } method 
-     * @returns { this }
-     */
-    setMethod(method) {
-        this.method = method
+    return this
+  }
 
-        return this
-    }
+  /**
+   * @returns { ?String }
+   */
+  getMethod() {
+    return this.method
+  }
 
-    /**
-     * @returns { ?String }
-     */
-    getMethod() {
-        return this.method
-    }
+  /**
+   *
+   * @param { String } content
+   * @returns { this }
+   */
+  setContentType(content) {
+    this.contentType = content
 
-    /**
-     * 
-     * @param { String } content 
-     * @returns { this }
-     */
-    setContentType(content) {
-        this.contentType = content
+    return this
+  }
 
-        return this
-    }
-
-    /**
-     * 
-     * @returns { ?String }
-     */
-    getContentType() {
-        return this.contentType
-    }
+  /**
+   *
+   * @returns { ?String }
+   */
+  getContentType() {
+    return this.contentType
+  }
 }

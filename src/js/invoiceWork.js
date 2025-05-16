@@ -5,85 +5,83 @@ import { addInvoiceLineForUpdate } from './work/component/invoiceLineComponent.j
 
 /**
  * @param { Dom7 } $$
- * @param { any } $f7 
+ * @param { any } $f7
  * @returns { boolean }
  */
 function isValidForm($$, $f7) {
-    const form = $$('form#form-work-invoice')
-    const inputs = $$(form).find('input')
+  const form = $$('form#form-work-invoice')
+  const inputs = $$(form).find('input')
 
-    let isValid = true
+  let isValid = true
 
-    for (const input of inputs) {
-        const divParent = $$(input).closest('.item-inner')
-        if (input.value.trim() === '' && !input.name.startsWith('localisation')) {
-            isValid = false
-            const label = $$(divParent).find('.item-title').text()
-            $f7.dialog.alert(`${label} ne peut pas être vide.`)
-        }
-
+  for (const input of inputs) {
+    const divParent = $$(input).closest('.item-inner')
+    if (input.value.trim() === '' && !input.name.startsWith('localisation')) {
+      isValid = false
+      const label = $$(divParent).find('.item-title').text()
+      $f7.dialog.alert(`${label} ne peut pas être vide.`)
     }
+  }
 
-    return isValid
+  return isValid
 }
 
 /**
- * @param { Object } form 
- * @param { Object } props 
+ * @param { Object } form
+ * @param { Object } props
  */
 function getBody(form, props) {
-    const invoiceLines = Object.values(form)
-    const nameInvoice = invoiceLines.shift()
-    const work = JSON.parse(props.prestation)
+  const invoiceLines = Object.values(form)
+  const nameInvoice = invoiceLines.shift()
+  const work = JSON.parse(props.prestation)
 
-    const chunk = (arr, size) => 
-        Array.from({ length: Math.ceil(arr.length / size) }, (v, i) =>
-            arr.slice(i * size, i * size + size)
-        )
+  const chunk = (arr, size) =>
+    Array.from({ length: Math.ceil(arr.length / size) }, (v, i) =>
+      arr.slice(i * size, i * size + size),
+    )
 
-    return JSON.stringify({
-        nameInvoice: nameInvoice,
-        invoiceLines: chunk(invoiceLines, 4),
-        idClient: props.clientId,
-        idWork: work.id,
-    })
+  return JSON.stringify({
+    nameInvoice: nameInvoice,
+    invoiceLines: chunk(invoiceLines, 4),
+    idClient: props.clientId,
+    idWork: work.id,
+  })
 }
 
 /**
- * @param { FormData } form 
- * @param { any } $f7 
- * @param { Object } props 
+ * @param { FormData } form
+ * @param { any } $f7
+ * @param { Object } props
  */
-function createInvoiceWork(form, $f7, props)
-{
-    const body = getBody(form, props)
-    const url = getUrl('/api/invoice-file')
+function createInvoiceWork(form, $f7, props) {
+  const body = getBody(form, props)
+  const url = getUrl('/api/invoice-file')
 
-    const routeDTO = new RouteDTO()
-        .setApp($f7)
-        .setUrlAPI(url)
-        .setBody(body)
-        .setMethod('POST')
+  const routeDTO = new RouteDTO()
+    .setApp($f7)
+    .setUrlAPI(url)
+    .setBody(body)
+    .setMethod('POST')
 
-    fetchFileAPI(routeDTO, 'facture_prestation.pdf')
+  fetchFileAPI(routeDTO, 'facture_prestation.pdf')
 }
 
 function showInvoiceForUpdate(invoice, $f7) {
-    const firstInvoiceLine = invoice.invoiceLines[0]
+  const firstInvoiceLine = invoice.invoiceLines[0]
 
-    const formInvoice = {
-        name: invoice.title,
-        localisation: firstInvoiceLine.localisation,
-        description: firstInvoiceLine.description,
-        price_unitaire: firstInvoiceLine.unitPrice,
-        total_line: firstInvoiceLine.totalPriceLine
-    }
+  const formInvoice = {
+    name: invoice.title,
+    localisation: firstInvoiceLine.localisation,
+    description: firstInvoiceLine.description,
+    price_unitaire: firstInvoiceLine.unitPrice,
+    total_line: firstInvoiceLine.totalPriceLine,
+  }
 
-    $f7.form.fillFromData('#form-work-invoice', formInvoice)
+  $f7.form.fillFromData('#form-work-invoice', formInvoice)
 
-    if (invoice.invoiceLines.length > 1) {
-        addInvoiceLineForUpdate(invoice.invoiceLines, $f7)
-    }
+  if (invoice.invoiceLines.length > 1) {
+    addInvoiceLineForUpdate(invoice.invoiceLines, $f7)
+  }
 }
 
 export { createInvoiceWork, isValidForm, showInvoiceForUpdate }

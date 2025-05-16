@@ -1,4 +1,4 @@
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test'
 
 /**
  * Read environment variables from file.
@@ -49,7 +49,7 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'retain-on-failure',
-    screenshot: "only-on-failure",
+    screenshot: 'only-on-failure',
     video: 'retain-on-failure',
   },
 
@@ -61,7 +61,7 @@ export default defineConfig({
       use: {
         ...devices['Desktop Firefox'],
         storageState: './tests/auth.json',
-       },
+      },
       dependencies: ['setup'],
     },
     /* Test against mobile viewports. */
@@ -70,7 +70,7 @@ export default defineConfig({
       use: {
         ...devices['Pixel 5'],
         storageState: './tests/auth.json',
-       },
+      },
       dependencies: ['setup'],
     },
     // {
@@ -82,4 +82,4 @@ export default defineConfig({
     //   dependencies: ['setup'],
     // },
   ],
-});
+})

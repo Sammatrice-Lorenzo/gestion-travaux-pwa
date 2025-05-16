@@ -2,7 +2,6 @@ import { expect, type Locator, test } from '@playwright/test'
 import { describe } from 'node:test'
 import { goToHome } from './helper/homeHelper'
 
-
 describe('Work test', () => {
   test('show work', async ({ page, baseURL }) => {
     await page.goto(baseURL as string)
@@ -12,7 +11,7 @@ describe('Work test', () => {
 
     const divShowWork: Locator = page.locator('#show-work')
     await expect(divShowWork).toBeVisible({
-      timeout: 10000
+      timeout: 10000,
     })
   })
 })
