@@ -1,9 +1,6 @@
 {
   "cwd": "C:\\Users\\loren\\OneDrive\\Documents\\WebSeverPerso\\apps\\gestion-travaux-pwa",
-  "type": [
-    "pwa",
-    "web"
-  ],
+  "type": ["pwa", "web"],
   "name": "Gestion Travaux",
   "framework": "core",
   "template": "single-view",

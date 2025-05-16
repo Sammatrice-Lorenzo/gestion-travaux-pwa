@@ -1,16 +1,16 @@
-import Framework7DTO from "../Framework7DTO";
+import Framework7DTO from '../Framework7DTO'
 
 /**
- * @param { Date } date 
- * @param { Framework7DTO } framework7DTO 
- * @param { CallableFunction } sendFiles 
- * @returns 
+ * @param { Date } date
+ * @param { Framework7DTO } framework7DTO
+ * @param { CallableFunction } sendFiles
+ * @returns
  */
 const createSheet = (date, framework7DTO, sendFiles) => {
-    let isListenerAdded = false
+  let isListenerAdded = false
 
-    return framework7DTO.getApp().sheet.create({
-        content: `
+  return framework7DTO.getApp().sheet.create({
+    content: `
             <div class="sheet-modal">
                 <div class="toolbar bg-color-primary text-color-white">
                     <div class="toolbar-inner justify-content-space-between">
@@ -45,22 +45,24 @@ const createSheet = (date, framework7DTO, sendFiles) => {
                 </div>
             </div>
         `,
-        on: {
-            open: function () {
-                const $ = framework7DTO.getSelector()
-                $('#files').val('')
+    on: {
+      open: () => {
+        const $ = framework7DTO.getSelector()
+        $('#files').val('')
 
-                if (!isListenerAdded) {
-                    document.getElementById('btn-product-invoices').addEventListener('click', (event) => {
-                        event.preventDefault()
-                        sendFiles(date, framework7DTO)
-                    })
+        if (!isListenerAdded) {
+          document
+            .getElementById('btn-product-invoices')
+            .addEventListener('click', (event) => {
+              event.preventDefault()
+              sendFiles(date, framework7DTO)
+            })
 
-                    isListenerAdded = true
-                }
-            }
+          isListenerAdded = true
         }
-    })
+      },
+    },
+  })
 }
 
 export { createSheet }

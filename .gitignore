@@ -29,7 +29,7 @@ node_modules/
 
 # dotenv environment variables file
 .env
-.env.local
+.env.*
 
 # Misc
 .DS_Store
@@ -46,3 +46,10 @@ config/ssl-prod
 config/ssl/cert.pem
 config/ssl/key.pem
 config/jwt/
+
+# Playwright
+/tests/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/tests/auth.json

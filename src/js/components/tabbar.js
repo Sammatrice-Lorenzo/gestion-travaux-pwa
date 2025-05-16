@@ -1,7 +1,7 @@
 import { logout } from '../../js/token.js'
 
 const templateTabbar = (selector) => {
-    return `
+  return `
         <div class="toolbar-inner">
             <a href="/calendar/" class="tab-link">
                 <i class="f7-icons">calendar</i>
@@ -20,17 +20,17 @@ const templateTabbar = (selector) => {
 }
 
 const loadTabbar = (idSelector, $f7) => {
-    const selectorTemplate = document.querySelector(`#${idSelector}`)
-    
-    if (selectorTemplate) {
-        const tempElement = document.createElement('div')
-        tempElement.className = 'toolbar tabbar tabbar-icons toolbar-bottom'
-        tempElement.innerHTML = templateTabbar(idSelector)
-    
-        selectorTemplate.appendChild(tempElement)
-        const logoutLink = document.getElementById(`logout-link-${idSelector}`)
-        logoutLink.addEventListener('click', () => logout($f7))
-    }
+  const selectorTemplate = document.querySelector(`#${idSelector}`)
+
+  if (selectorTemplate) {
+    const tempElement = document.createElement('div')
+    tempElement.className = 'toolbar tabbar tabbar-icons toolbar-bottom'
+    tempElement.innerHTML = templateTabbar(idSelector)
+
+    selectorTemplate.appendChild(tempElement)
+    const logoutLink = document.getElementById(`logout-link-${idSelector}`)
+    logoutLink.addEventListener('click', () => logout($f7))
+  }
 }
 
 export { loadTabbar }

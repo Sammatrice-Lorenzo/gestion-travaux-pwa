@@ -1,31 +1,31 @@
-import { scale, updateZoom } from "../service/productInvoices/previewPdfService"
+import { scale, updateZoom } from '../service/productInvoices/previewPdfService'
 
 const handleZoomInMobile = (container) => {
-    container.addEventListener('gesturechange', (event) => {
-        event.preventDefault()
-        let newScale = event.scale * scale
-        newScale = Math.min(Math.max(0.5, newScale), 3)
-        updateZoom(newScale)
-    })
+  container.addEventListener('gesturechange', (event) => {
+    event.preventDefault()
+    let newScale = event.scale * scale
+    newScale = Math.min(Math.max(0.5, newScale), 3)
+    updateZoom(newScale)
+  })
 
-    container.addEventListener('gestureend', (event) => {
-        let newScale = Math.min(Math.max(0.10, event.scale), 5)
-        updateZoom(newScale)
-    })
+  container.addEventListener('gestureend', (event) => {
+    const newScale = Math.min(Math.max(0.1, event.scale), 5)
+    updateZoom(newScale)
+  })
 }
 
 const handleZoomMouse = (container) => {
-    container.addEventListener('wheel', (event) => {
-        event.preventDefault();
-        let newScale = scale + event.deltaY * -0.001
-        newScale = Math.min(Math.max(0.5, newScale), 5)
-        updateZoom(newScale);
-    })
+  container.addEventListener('wheel', (event) => {
+    event.preventDefault()
+    let newScale = scale + event.deltaY * -0.001
+    newScale = Math.min(Math.max(0.5, newScale), 5)
+    updateZoom(newScale)
+  })
 }
 
 const pdfPreviewPopup = (framework7DTO) => {
-    return framework7DTO.getApp().popup.create({
-        content: `
+  return framework7DTO.getApp().popup.create({
+    content: `
             <div class="popup">
                 <div class="view">
                     <div class="page">
@@ -48,14 +48,14 @@ const pdfPreviewPopup = (framework7DTO) => {
                 </div>
             </div>
         `,
-        on: {
-            opened: function () {
-                const container = document.getElementById('pdf-pages-container')
-                handleZoomMouse(container)
-                handleZoomInMobile(container)
-            }
-        }
-    })
+    on: {
+      opened: () => {
+        const container = document.getElementById('pdf-pages-container')
+        handleZoomMouse(container)
+        handleZoomInMobile(container)
+      },
+    },
+  })
 }
 
 export { pdfPreviewPopup }

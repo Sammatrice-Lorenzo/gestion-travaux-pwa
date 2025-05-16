@@ -1,0 +1,68 @@
+name: Playwright Tests
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [dev]
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+        ports:
+          - 3306:3306
+
+    steps:
+    - name: Checkout front
+      uses: actions/checkout@v4
+
+    - name: Checkout back
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ secrets.REPOSITORY_BACK }}
+        ref: dev
+        path: backend
+
+    - name: Setup and test backend
+      uses: ./backend/.github/actions/set-server-backend
+      with:
+        mysql_database: ${{ secrets.MYSQL_DATABASE }}
+        mysql_root_password: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+        backend_path: ${{ github.workspace }}/backend
+
+    - name: Run Backend
+      run: |
+        mkdir -p ${{ github.workspace }}/config/jwt
+        cp ${{ github.workspace }}/backend/config/jwt/public.pem ${{ github.workspace }}/config/jwt/public.pem
+        (cd ${{ github.workspace }}/backend && yarn test-front -d) 
+        (cd ${{ github.workspace }})
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+    - name: Install dependencies
+      run: npm install -g yarn && yarn
+    - name: Install Playwright Browsers
+      run: yarn playwright install --with-deps
+    - name: Check build before deploy in production
+      run: yarn build
+
+    - uses: ./.github/actions/set-env-vars
+    - name: Run Playwright tests
+      run: yarn test:e2e
+
+    - name: Upload Artifacts
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-report
+        path: |
+          playwright-report/
+          ./tests/test-results/
+        retention-days: 3

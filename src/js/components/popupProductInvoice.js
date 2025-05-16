@@ -1,12 +1,12 @@
-import { updateProductInvoice } from "../productInvoice"
+import { updateProductInvoice } from '../productInvoice'
 
 const ID_FORM = '#form-product-invoice-edit'
 
 const createPopup = (framework7DTO, formProductInvoice) => {
-    const $f7 = framework7DTO.getApp()
+  const $f7 = framework7DTO.getApp()
 
-    return $f7.popup.create({
-        content: `
+  return $f7.popup.create({
+    content: `
             <div class="popup">
                 <div class="page">
                     <div class="navbar">
@@ -79,25 +79,26 @@ const createPopup = (framework7DTO, formProductInvoice) => {
                 </div>
             </div>
         `,
-        push: true,
-        swipeToClose: true,
-        on: {
-            open: () => handleUpdateProductInvoice($f7, formProductInvoice),
-            close: () => $f7.views.main.router.refreshPage()
-        }
-    })
+    push: true,
+    swipeToClose: true,
+    on: {
+      open: () => handleUpdateProductInvoice($f7, formProductInvoice),
+      close: () => $f7.views.main.router.refreshPage(),
+    },
+  })
 }
 
 const handleUpdateProductInvoice = ($f7, formProductInvoice) => {
-    $f7.form.fillFromData(ID_FORM, formProductInvoice)
+  $f7.form.fillFromData(ID_FORM, formProductInvoice)
 
-    document.getElementById('btn-update-product-invoice').addEventListener('click', (event) => {
-        event.preventDefault()
-        const formData = $f7.form.convertToData(ID_FORM)
-        updateProductInvoice($f7, formProductInvoice.id, formData)
-        $f7.popup.close()
+  document
+    .getElementById('btn-update-product-invoice')
+    .addEventListener('click', (event) => {
+      event.preventDefault()
+      const formData = $f7.form.convertToData(ID_FORM)
+      updateProductInvoice($f7, formProductInvoice.id, formData)
+      $f7.popup.close()
     })
 }
-
 
 export { createPopup }

@@ -1,20 +1,20 @@
-import globals from "globals";
-import pluginJs from "@eslint/js";
+import pluginJs from '@eslint/js'
+import globals from 'globals'
 
 export default [
   {
-    files: ["**/src/js/*.js"], 
+    files: ['**/src/js/*.js'],
     languageOptions: {
-      sourceType: "module"
-    }
+      sourceType: 'module',
+    },
   },
   {
     languageOptions: {
-      globals: globals.browser
-    }
+      globals: globals.browser,
+    },
   },
   pluginJs.configs.recommended,
   {
-    ignorePatterns: ["src/www/**"]
-  }
-];
+    ignorePatterns: ['src/www/**'],
+  },
+]
