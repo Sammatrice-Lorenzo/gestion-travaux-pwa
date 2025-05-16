@@ -1,7 +1,6 @@
-import {} from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging.js'
-import {} from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js'
 import { initializeApp } from 'firebase/app'
-// import { getMessaging } from "firebase/messaging"
+import 'https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging.js'
+import 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js'
 
 const firebaseConfig = {
   apiKey: FIREBASE_API_KEY,

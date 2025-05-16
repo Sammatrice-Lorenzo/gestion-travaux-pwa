@@ -1,6 +1,6 @@
+import { apiRequest, callAPI, deleteAPI, fetchCreate } from './api'
+import { checkDataToGetOfAResponseCached, responseIsCached } from './cache'
 import { RouteDTO } from './dto/RouteDTO'
-import { apiRequest, callAPI, fetchCreate, deleteAPI } from './api'
-import { responseIsCached, checkDataToGetOfAResponseCached } from './cache'
 import { getUrl, getUrlById } from './urlGenerator'
 
 const URL_CLIENTS = '/api/clients/'

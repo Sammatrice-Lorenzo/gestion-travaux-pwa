@@ -1,5 +1,5 @@
-import * as messages from './messages'
 import * as cache from './cache'
+import * as messages from './messages'
 
 export async function login(username, password, $f7) {
   const preloader = $f7.preloader
@@ -41,12 +41,14 @@ export async function login(username, password, $f7) {
 async function getCacheLogin(url) {
   return caches
     .open('v1')
-    .then(async (cache) => cache.match(url).then(async (response) => {
+    .then(async (cache) =>
+      cache.match(url).then(async (response) => {
         if (response) {
           // Utilisation de la réponse en cache
           return response
         }
-      }))
+      }),
+    )
     .catch((error) => {
       // Gestion des erreurs
       console.error('Error in fetch handler:', error)
@@ -60,17 +62,15 @@ async function getCacheLogin(url) {
  * @returns { boolean }
  */
 function checkInputFormLogin(username, password, $f7) {
-  let returnedValue = false
+  let returnedValue = true
 
   if (!username) {
     $f7.dialog.alert("Veuillez renseigner votre nom d'utilisateur!")
-    return returnedValue
+    returnedValue = false
   } else if (!password) {
     $f7.dialog.alert('Veuillez renseigner votre mot de passe!')
-    return returnedValue
+    returnedValue = false
   }
-
-  returnedValue = true
 
   return returnedValue
 }

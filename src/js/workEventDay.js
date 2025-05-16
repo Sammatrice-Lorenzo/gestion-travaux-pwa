@@ -1,8 +1,8 @@
+import Framework7DTO from './Framework7DTO.js'
 import { apiRequest, callAPI, deleteAPI, fetchFileAPI } from './api'
-import { getUrl, getUrlById } from './urlGenerator'
 import { checkDataToGetOfAResponseCached, responseIsCached } from './cache'
 import { RouteDTO } from './dto/RouteDTO.js'
-import Framework7DTO from './Framework7DTO.js'
+import { getUrl, getUrlById } from './urlGenerator'
 
 const URL_WORK_EVENT_DAY = '/api/work_event_days/'
 const URL_TO_REDIRECT = '/calendar/'

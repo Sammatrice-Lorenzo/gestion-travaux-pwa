@@ -1,5 +1,5 @@
-import { expect, type Locator, test } from '@playwright/test'
 import { describe } from 'node:test'
+import { type Locator, expect, test } from '@playwright/test'
 import { goToHome } from './helper/homeHelper'
 
 describe('Work test', () => {

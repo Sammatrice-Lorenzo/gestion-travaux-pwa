@@ -1,9 +1,9 @@
 import { clearCache, stockResponseInCache } from './cache'
 import { RouteDTO } from './dto/RouteDTO'
-import { getUrlById } from './urlGenerator'
+import { downloadFile } from './helper/fileHelper'
 import * as messages from './messages'
 import { getToken } from './token'
-import { downloadFile } from './helper/fileHelper'
+import { getUrlById } from './urlGenerator'
 
 const getHeaders = () => {
   const token = getToken()

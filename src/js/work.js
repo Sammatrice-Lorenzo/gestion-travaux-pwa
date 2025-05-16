@@ -1,7 +1,7 @@
-import { RouteDTO } from './dto/RouteDTO'
-import { apiRequest, callAPI, fetchCreate, deleteAPI } from './api'
+import { apiRequest, callAPI, deleteAPI, fetchCreate } from './api'
 import { checkDataToGetOfAResponseCached, responseIsCached } from './cache'
-import { getUrlUser, getUrl, getUrlById } from './urlGenerator'
+import { RouteDTO } from './dto/RouteDTO'
+import { getUrl, getUrlById, getUrlUser } from './urlGenerator'
 
 const URL_WORK = '/api/works/'
 const URL_TO_REDIRECT = '/prestation/'

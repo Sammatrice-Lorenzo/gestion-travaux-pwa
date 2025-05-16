@@ -1,5 +1,5 @@
-import { monthsEnum } from '../../enum/monthEnum'
 import Framework7DTO from '../../Framework7DTO'
+import { monthsEnum } from '../../enum/monthEnum'
 
 /**
  * @param { Framework7DTO } framework7DTO

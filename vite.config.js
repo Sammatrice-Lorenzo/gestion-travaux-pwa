@@ -1,8 +1,8 @@
+import fs from 'node:fs'
 import path from 'node:path'
-import framework7 from 'rollup-plugin-framework7'
 import replace from '@rollup/plugin-replace'
 import dotenv from 'dotenv'
-import fs from 'node:fs'
+import framework7 from 'rollup-plugin-framework7'
 
 import https from 'node:https'
 dotenv.config()

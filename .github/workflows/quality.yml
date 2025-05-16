@@ -28,11 +28,16 @@ jobs:
         uses: biomejs/setup-biome@v2
         with:
           version: latest
+
       - name: Run Biome
         run: biome ci ${{ steps.changed-files.outputs.all_changed_files }}
         continue-on-error: true
 
-      - uses: mongolyy/reviewdog-action-biome@v1
+      - name: Run Biome with reviewdog
+        uses: mongolyy/reviewdog-action-biome@v1
         with:
-          github_token: ${{ secrets.github_token }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-review
+          filter_mode: diff_context
+          level: error
+          biome_flags: ${{ steps.changed-files.outputs.all_changed_files }}

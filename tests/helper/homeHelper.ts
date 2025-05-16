@@ -1,4 +1,4 @@
-import { expect, type Locator, type Page } from '@playwright/test'
+import { type Locator, type Page, expect } from '@playwright/test'
 
 const goToHome = async (page: Page): Promise<void> => {
   const titlePageWork: Locator = page.locator('#title-work')

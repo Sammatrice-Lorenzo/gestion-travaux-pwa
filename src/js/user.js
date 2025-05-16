@@ -1,9 +1,9 @@
-import * as messages from './messages'
-import { getUrlById, getUrl, getUrlUser } from './urlGenerator.js'
-import { getToken } from './token.js'
-import { clearCache } from './cache'
 import Dom7 from 'dom7'
 import { callAPI } from './api.js'
+import { clearCache } from './cache'
+import * as messages from './messages'
+import { getToken } from './token.js'
+import { getUrl, getUrlById, getUrlUser } from './urlGenerator.js'
 
 export async function showUser($f7) {
   const url = getUrlUser()

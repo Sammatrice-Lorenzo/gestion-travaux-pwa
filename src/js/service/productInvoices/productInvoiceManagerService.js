@@ -1,13 +1,13 @@
+import Framework7DTO from '../../Framework7DTO'
+import { tvaEnum } from '../../enum/tvaEnum'
+import { getIdOfElementClicked } from '../../helper/domElementClick'
+import { getAmountWithoutTVA } from '../../helper/priceWorkHelper'
 import { CONFIRMATION_TO_DELETE } from '../../messages'
 import {
   deleteProductInvoice,
   downloadFileProductInvoice,
   downloadZIP,
 } from '../../productInvoice'
-import { getIdOfElementClicked } from '../../helper/domElementClick'
-import { getAmountWithoutTVA } from '../../helper/priceWorkHelper'
-import { tvaEnum } from '../../enum/tvaEnum'
-import Framework7DTO from '../../Framework7DTO'
 
 /**
  * @param { HTMLElement } element

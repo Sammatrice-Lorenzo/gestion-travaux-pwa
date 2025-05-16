@@ -13,10 +13,10 @@ import '../css/icons.css'
 import '../css/app.scss'
 
 import App from '../app.f7'
-import routes from './routes.js'
-import { reloadPage } from './helper/routerHelper.js'
-import { setupServicesWorkers } from './serviceWorker.js'
 import { checkAndClearCache } from './cache.js'
+import { reloadPage } from './helper/routerHelper.js'
+import routes from './routes.js'
+import { setupServicesWorkers } from './serviceWorker.js'
 
 const app = new Framework7({
   name: 'Gestion Travaux', // App name

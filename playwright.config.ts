@@ -12,9 +12,7 @@ import { defineConfig, devices } from '@playwright/test'
 // Use process.env.PORT by default and fallback to port 3000
 // const PORT = process.env.PORT || 5173
 
-// Set webServer.url and use.baseURL with the location of the WebServer respecting the correct set port
 const baseURL: string = 'http://localhost:5173'
-// const baseURL: string = `http://localhost:4173`
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -73,13 +71,5 @@ export default defineConfig({
       },
       dependencies: ['setup'],
     },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: {
-    //     ...devices['iPhone 12'],
-    //     storageState: './tests/auth.json',
-    //    },
-    //   dependencies: ['setup'],
-    // },
   ],
 })

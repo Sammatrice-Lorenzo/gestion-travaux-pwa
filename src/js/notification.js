@@ -1,5 +1,5 @@
-import { firebase } from './firebase'
 import { getMessaging, getToken, onMessage } from 'firebase/messaging'
+import { firebase } from './firebase'
 
 export const messaging = getMessaging(firebase)
 export function askUserPermissionForSendANotificationPush() {

@@ -26,7 +26,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: ${{ secrets.REPOSITORY_BACK }}
-        ref: setup-ci-front
+        ref: dev
         path: backend
 
     - name: Setup and test backend

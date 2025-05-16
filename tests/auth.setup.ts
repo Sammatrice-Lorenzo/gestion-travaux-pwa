@@ -1,4 +1,4 @@
-import { test, expect, type Page, type BrowserContext } from '@playwright/test'
+import { type BrowserContext, type Page, expect, test } from '@playwright/test'
 import { goToHome } from './helper/homeHelper'
 
 test('authenticate', async ({ baseURL, browser }) => {
