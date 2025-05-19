@@ -2,62 +2,62 @@
     <div id="index-client" class="page">
         <div class="navbar">
             <div class="navbar-inner">
-                <div class="title">Mes clients</div>
-                <div class="right">
-                    <a class="link icon-only panel-open ripple-inset" data-panel="right">
-                        <i class="icon material-icons md-only">menu</i>
-                        <i class="icon f7-icons if-not-md">menu</i>
-                    </a>
-                </div>
+              <div class="title">Mes clients</div>
+              <div class="right">
+                <a class="link icon-only panel-open ripple-inset" data-panel="right">
+                    <i class="icon material-icons md-only">menu</i>
+                    <i class="icon f7-icons if-not-md">menu</i>
+                </a>
+              </div>
             </div>
-        </div>
-        <div class="page-content">
-            <div class="block-title">
-                <div class="col-6 display-flex justify-content-center">
-                    <span>Informations sur les clients</span>
-                    <span>
-                        <a href="/form-client/">
-                            <i class="f7-icons">plus_app_fill</i>
-                        </a>
-                    </span>
-                </div>
-            </div>
-            ${clientsByUser.map((item) => $h`
-            <div class="card color-card">
-                <div class="card-header">${item.name}</div>
-                <div class="card-content card-content-padding display-flex align-content-center">
-                    <div class="col">
-                        <div class="row"> Rue : ${item.streetAddress}</div>
-                        <div class="row"> Ville : ${item.city}</div>
-                        <div class="row"> Code Postal : ${item.postalCode}</div>
-                        <div class="row"> Numéro de téléphone : ${getPhoneNumberInString(item.phoneNumber)}</div>
+          </div>
+          <div class="page-content">
+            <div class="block-title display-flex justify-content-space-between align-items-center">
+                <span class="text-lg font-bold">Mes clients</span>
+                <a href="/form-client/" class="button-small button-outline">
+                  <span class="ml-5">Ajouter</span>
+                  <i class="icon f7-icons">plus_app_fill</i>
+                </a>
+              </div>
+            <div class="list list-strong-ios list-outline-ios list-dividers-ios media-list">
+              <ul>
+                ${clientsByUser.map((client) => $h`
+                <li>
+                  <a class="item-link item-content" href="/client/${client.id}}/">
+                    <div class="item-media">
+                      <i class="icon f7-icons color-primary">person_fill</i>
                     </div>
-                </div>
-                <div class="card-footer d-flex justify-content-end">
-                    <a href="/client/"${idClient(item)}>
-                        <i class="f7-icons">eye_fill</i>
-                    </a>
-                </div>
+                    <div class="item-inner">
+                      <div class="item-title-row">
+                        <div class="item-title font-medium">${client.name}</div>
+                      </div>
+                      <div class="item-text text-color-gray">
+                        <i class="icon f7-icons color-red">placemark_fill</i>
+                        ${client.city}
+                      </div>
+                    </div>
+                  </a>
+                </li>
+                `)}
+              </ul>
             </div>
-            `)}
-        </div>
+          </div>
     </div>
 </template>
 <script>
-    import Framework7 from 'framework7/bundle';
+  import Framework7 from 'framework7/bundle'
 
-    import { getClientsByUser, getPhoneNumberInString } from '../../js/client.js'
-    import { loadTabbar } from '../../js/components/tabbar.js'
+  import { getClientsByUser, getPhoneNumberInString } from '../../js/client/client.js'
+  import { loadTabbar } from '../../js/components/tabbar.js'
 
-    export default async (props, { $, $on, $f7 }) => {
-        const clients = await getClientsByUser($f7)
-        let clientsByUser = clients.reverse()
+  export default async (props, { $, $on, $f7 }) => {
+    const clients = await getClientsByUser($f7)
+    let clientsByUser = clients.reverse()
 
-        const idClient = (client) => client.hasOwnProperty('@id') ? client['@id'].split('/').pop() : client.id
-        $on('pageInit', function (page) {
-            loadTabbar('index-client', $f7);
-        })
+    $on('pageInit', function (page) {
+      loadTabbar('index-client', $f7)
+    })
 
-        return $render;
-    }
+    return $render;
+  }
 </script>

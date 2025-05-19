@@ -1,7 +1,7 @@
-import { apiRequest, callAPI, deleteAPI, fetchCreate } from './api'
-import { checkDataToGetOfAResponseCached, responseIsCached } from './cache'
-import { RouteDTO } from './dto/RouteDTO'
-import { getUrl, getUrlById } from './urlGenerator'
+import { apiRequest, callAPI, deleteAPI, fetchCreate } from '../api'
+import { checkDataToGetOfAResponseCached, responseIsCached } from '../cache'
+import { RouteDTO } from '../dto/RouteDTO'
+import { getUrl, getUrlById } from '../urlGenerator'
 
 const URL_CLIENTS = '/api/clients/'
 const URL_TO_REDIRECT = '/clients/'
@@ -79,6 +79,7 @@ function getBodyClient(form) {
     phoneNumber: getPhoneNumberInString(form.phoneNumber),
     postalCode: form.postalCode,
     streetAddress: form.streetAddress,
+    email: form.email
   })
 }
 

@@ -127,7 +127,7 @@
     import Framework7 from 'framework7/bundle'
     import Dom7 from 'dom7'
 
-    import { getClientsByUser } from '../../js/client.js'
+    import { getClientsByUser } from '../../js/client/client.js'
     import { updateWork } from '../../js/work.js'
     import { findWorkById } from '../../js/work.js'
 

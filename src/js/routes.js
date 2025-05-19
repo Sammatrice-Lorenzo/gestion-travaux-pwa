@@ -1,7 +1,6 @@
 import NotFoundPage from '../pages/404.f7'
 import ShowCalendar from '../pages/calendar/show-calendar.f7'
 import FormClient from '../pages/clients/form-client.f7'
-import FormUpdateClient from '../pages/clients/form-update-client.f7'
 import ClientsIndex from '../pages/clients/index-clients.f7'
 import ShowClient from '../pages/clients/show-client.f7'
 import HomePage from '../pages/home.f7'
@@ -66,7 +65,7 @@ const routes = [
   },
   {
     path: '/form-client/update/:clientId',
-    component: FormUpdateClient,
+    component: FormClient,
   },
   {
     path: '/calendar/',
