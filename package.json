@@ -38,7 +38,8 @@
     "swiper": "^9.2.3",
     "vite-plugin-pwa": "^0.14.7",
     "workbox-build": "^6.6.0",
-    "workbox-window": "^6.6.0"
+    "workbox-window": "^6.6.0",
+    "zod": "^3.24.4"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
