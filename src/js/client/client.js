@@ -1,7 +1,7 @@
 import { apiRequest, callAPI, deleteAPI, fetchCreate } from '../api'
 import { checkDataToGetOfAResponseCached, responseIsCached } from '../cache'
 import { RouteDTO } from '../dto/RouteDTO'
-import { handleSubmitForm } from '../service/client/ClientFormService'
+import { handleSubmitForm } from '../service/client/clientFormService'
 import { getUrl, getUrlById } from '../urlGenerator'
 
 const URL_CLIENTS = '/api/clients/'
@@ -80,10 +80,9 @@ function getBodyClient(form) {
     phoneNumber: getPhoneNumberInString(form.phoneNumber),
     postalCode: form.postalCode,
     streetAddress: form.streetAddress,
-    email: form.email
+    email: form.email,
   })
 }
-
 
 /**
  * En format 06.01.02.03.04
