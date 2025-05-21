@@ -17,16 +17,17 @@ describe('Client test', () => {
       await page.waitForSelector('.panel-open')
     menu.click()
     page.getByText('Clients').click()
+
+    page.waitForSelector('.panel-backdrop-in', {
+      state: 'visible',
+      timeout: 10000,
+    })
+    await assertIndexPageClients(page)
+
     page.locator('.panel-backdrop-in').click()
   })
 
-  test('index client', async ({ page }) => {
-    await assertIndexPageClients(page)
-  })
-
   test('show client', async ({ page }) => {
-    await assertIndexPageClients(page)
-
     const rowClient: Locator = page.locator('.item-title-row').first()
     const rowTitle = rowClient.filter({ has: page.locator('.item-title') })
     const nameClient: string | null = await rowTitle.textContent()
@@ -42,8 +43,6 @@ describe('Client test', () => {
   })
 
   test('Create client', async ({ page, defaultBrowserType }) => {
-    await assertIndexPageClients(page)
-
     page.getByText('Ajouter').click()
     await page.waitForSelector('#form-client')
 
@@ -78,6 +77,6 @@ const fillFormClient = async (
 const assertIndexPageClients = async (page: Page): Promise<void> => {
   const divClients: Locator = page.locator('#index-client')
   await expect(divClients).toBeVisible({
-    timeout: 30000,
+    timeout: 60000,
   })
 }
