@@ -23,7 +23,7 @@
         <ul>
           ${clientsByUser.map((client) => $h`
           <li>
-            <a class="item-link item-content" href="/client/${client.id}}/">
+            <a class="item-link item-content" href="/client/${client.id}/">
               <div class="item-media">
                 <i class="icon f7-icons color-primary">person_fill</i>
               </div>
