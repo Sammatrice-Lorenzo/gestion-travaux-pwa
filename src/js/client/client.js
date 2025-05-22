@@ -1,7 +1,8 @@
-import { apiRequest, callAPI, deleteAPI, fetchCreate } from './api'
-import { checkDataToGetOfAResponseCached, responseIsCached } from './cache'
-import { RouteDTO } from './dto/RouteDTO'
-import { getUrl, getUrlById } from './urlGenerator'
+import { apiRequest, callAPI, deleteAPI, fetchCreate } from '../api'
+import { checkDataToGetOfAResponseCached, responseIsCached } from '../cache'
+import { RouteDTO } from '../dto/RouteDTO'
+import { handleSubmitForm } from '../service/client/clientFormService'
+import { getUrl, getUrlById } from '../urlGenerator'
 
 const URL_CLIENTS = '/api/clients/'
 const URL_TO_REDIRECT = '/clients/'
@@ -10,8 +11,8 @@ async function getClientsByUser($f7) {
   const urlWorkEventDay = URL_CLIENTS.slice(0, -1)
   const url = getUrl(urlWorkEventDay)
 
-  const cache = await responseIsCached(url)
-  if (cache) {
+  const hasCache = await responseIsCached(url)
+  if (hasCache) {
     return checkDataToGetOfAResponseCached(url)
   }
 
@@ -19,7 +20,7 @@ async function getClientsByUser($f7) {
 }
 
 function createClient(form, $f7) {
-  if (!customValidation(form, $f7)) {
+  if (!handleSubmitForm(form)) {
     return
   }
 
@@ -39,7 +40,7 @@ function updateClient(form, idClient, $f7) {
   const url = getUrlById(URL_CLIENTS, idClient)
   const body = getBodyClient(form)
 
-  if (!customValidation(form, $f7)) {
+  if (!handleSubmitForm(form)) {
     return
   }
 
@@ -79,43 +80,8 @@ function getBodyClient(form) {
     phoneNumber: getPhoneNumberInString(form.phoneNumber),
     postalCode: form.postalCode,
     streetAddress: form.streetAddress,
+    email: form.email,
   })
-}
-
-function customValidation(form, $f7) {
-  const regexPostalCode = /^\d{5}$/
-  const regexPhoneNumber = /^(0|\+33|0033)[1-9](\d{2}){4}$/
-
-  const fields = [
-    { field: form.firstname, message: 'Veuillez saisir un prénom' },
-    { field: form.lastname, message: 'Veuillez saisir un nom' },
-    { field: form.streetAddress, message: 'Veuillez saisir le nom de la rue' },
-    { field: form.city, message: 'Veuillez saisir le nom de la ville' },
-    { field: form.postalCode, message: 'Veuillez saisir le code postal' },
-    {
-      field: form.phoneNumber,
-      message: 'Veuillez saisir le numéro de téléphone',
-    },
-  ]
-
-  for (const field of fields) {
-    if (field.field === '') {
-      $f7.dialog.alert(field.message)
-      return false
-    }
-  }
-
-  if (!regexPostalCode.test(form.postalCode)) {
-    $f7.dialog.alert('Veuillez saisir un code postal valide')
-    return false
-  }
-
-  if (!regexPhoneNumber.test(form.phoneNumber)) {
-    $f7.dialog.alert('Veuillez saisir un numéro de téléphone valide')
-    return false
-  }
-
-  return true
 }
 
 /**

@@ -178,7 +178,7 @@
     } from '../../js/workEventDay.js'
     import { getEventsFormatted } from '../../js/formatter/eventsFormatter.js'
     import Framework7DTO from '../../js/Framework7DTO.js'
-    import { getClientsByUser } from '../../js/client.js'
+    import { getClientsByUser } from '../../js/client/client.js'
 
 
     export default async (props, { $f7, $, $el, $update, $on, $onMounted }) => {

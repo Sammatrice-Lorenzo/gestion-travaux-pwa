@@ -1,65 +1,129 @@
 <template>
-    <div id="show-clients" class="page">
-        <div class="navbar">
-            <div class="navbar-bg"></div>
-            <div class="navbar-inner sliding">
-                <div class="left">
-                    <a href="#" class="link back">
-                        <i class="icon icon-back"></i>
-                        <span class="if-not-md">Retour</span>
-                    </a>
-                </div>
-                <div class="title">Client</div>
-            </div>
+  <div id="show-clients" class="page">
+    <div class="navbar">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner sliding">
+        <div class="left">
+          <a href="#" class="link back">
+            <i class="icon icon-back"></i>
+            <span class="if-not-md">Retour</span>
+          </a>
         </div>
-        <div class="page-content">
-            <div class="block-title card-header display-flex justify-content-space-between">Informations sur le client</div>
-            <div class="card card-outline">
-                <div class="card-content card-content-padding ">
-                    <div class="list simple-list no-hairlines-between">
-                        <ul>
-                            <li>${client.name}</li>
-                            <li>Rue : ${client.streetAddress}</li>
-                            <li>Ville : ${client.city}</li>
-                            <li>Code Postal : ${client.postalCode}</li>
-                            <li>Numéro de téléphone : ${getPhoneNumberInString(client.phoneNumber)}</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="card-footer display-flex justify-content-center">
-                    <a href="/form-client/update/${props.clientId}" class="link link-fill link-fill-primary link-fill-raised">
-                        <i class="f7-icons">square_pencil_fill</i>
-                    </a>
-                    <a id=${props.clientId} href="#" class="link link-fill link-fill-danger link-fill-raised delete" @click="${openConfirm}">
-                        <i class="f7-icons">trash_circle_fill</i>
-                    </a>
-                </div>
-            </div>
-        </div>
+        <div class="title">Fiche client</div>
+      </div>
     </div>
+
+    <div class="page-content">
+      <div class="block-title display-flex justify-content-space-between align-items-center">
+        <span class="text-lg font-bold">Informations client</span>
+        <div class="display-flex gap justify-content-end">
+          <a href="/form-client/update/${props.clientId}" class="link icon-only">
+            <i class="f7-icons">square_pencil_fill</i>
+          </a>
+          <a id="${props.clientId}" href="#" class="link icon-only color-red delete" @click="${openConfirm}">
+            <i class="f7-icons">trash_circle_fill</i>
+          </a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-content">
+          <div class="list inset">
+            <ul>
+              <li>
+                <div class="item-content">
+                  <div class="item-media">
+                    <i class="icon f7-icons">person_fill</i>
+                  </div>
+                  <div class="item-inner">
+                    <div data-testid="name-client" class="item-title">${client.name}</div>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="item-content">
+                  <div class="item-media">
+                    <i class="icon f7-icons">house_fill</i>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title">Rue</div>
+                    <div class="item-after">${client.streetAddress}</div>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="item-content">
+                  <div class="item-media">
+                    <i class="icon f7-icons">map_fill</i>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title">Ville</div>
+                    <div class="item-after">${client.city}</div>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="item-content">
+                  <div class="item-media">
+                    <i class="icon f7-icons">number_circle</i>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title">Code Postal</div>
+                    <div class="item-after">${client.postalCode}</div>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="item-content">
+                  <div class="item-media">
+                    <i class="icon f7-icons">phone_fill</i>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title">Téléphone</div>
+                    <div class="item-after">${getPhoneNumberInString(client.phoneNumber)}</div>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="item-content">
+                  <div class="item-media">
+                    <i class="icon f7-icons">envelope_fill</i>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title">Email</div>
+                    <div class="item-after">${client.email}</div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
-    import Framework7 from 'framework7/bundle';
-    import Dom7 from 'dom7';
+  import Framework7 from 'framework7/bundle';
+  import Dom7 from 'dom7';
 
-    import { findClientById, deleteClient, getPhoneNumberInString } from '../../js/client.js'
-    import { CONFIRMATION_TO_DELETE } from '../../js/messages.js'
-    import { loadTabbar } from '../../js/components/tabbar.js'
+  import { findClientById, deleteClient, getPhoneNumberInString } from '../../js/client/client.js'
+  import { CONFIRMATION_TO_DELETE } from '../../js/messages.js'
+  import { loadTabbar } from '../../js/components/tabbar.js'
 
-    export default async (props, { $, $on, $f7 }) => {
-        var $$ = Dom7
+  export default async (props, { $, $on, $f7 }) => {
+    const $$ = Dom7
 
-        const client = await findClientById(props.clientId, $f7)
-        $on('pageInit', function (page) {
-            loadTabbar('show-clients', $f7);
-        })
+    const client = await findClientById(props.clientId, $f7)
+    $on('pageInit', function (page) {
+      loadTabbar('show-clients', $f7)
+    })
 
-        const openConfirm = () => {
-            $f7.dialog.confirm(CONFIRMATION_TO_DELETE, function () {
-                deleteClient($$('.delete')[0].id, $f7)
-            })
-        }
-
-        return $render
+    const openConfirm = () => {
+      $f7.dialog.confirm(CONFIRMATION_TO_DELETE, function () {
+        deleteClient($$('.delete')[0].id, $f7)
+      })
     }
+
+    return $render
+  }
 </script>

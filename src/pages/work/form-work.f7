@@ -134,7 +134,7 @@
 
     import { formatDate, convertFrenchDate } from '../../js/date.js'
     import { createWork } from '../../js/work.js'
-    import { getClientsByUser } from '../../js/client.js'
+    import { getClientsByUser } from '../../js/client/client.js'
     import { addInputEquipement, getEquipementsInForm } from '../../js/work/component/btnComponent.js'
 
     export default async (props, {$, $on, $f7, $onBeforeUnmount } ) => {

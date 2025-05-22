@@ -1,105 +1,121 @@
 <template>
-    <div class="page" data-name="form">
-        <div class="navbar">
-            <div class="navbar-bg"></div>
-            <div class="navbar-inner sliding">
-                <div class="left">
-                    <a href="#" class="link back">
-                        <i class="icon icon-back"></i>
-                        <span class="if-not-md">Retour</span>
-                    </a>
-                </div>
-                <div class="title">Nouveau client</div>
-            </div>
+  <div class="page" data-name="form">
+    <div class="navbar">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner sliding">
+        <div class="left">
+          <a href="#" class="link back">
+            <i class="icon icon-back"></i>
+            <span class="if-not-md">Retour</span>
+          </a>
         </div>
-        <div class="page-content">
-            <form id="form-client">
-                <div class="block-title">Création d'un client</div>
-                <div class="list list-strong-ios list-dividers-ios list-outline-ios">
-                    <ul>
-                        <li>
-                            <div class="item-content item-input">
-                                <div class="item-inner">
-                                    <div class="item-title item-label">Nom : </div>
-                                    <div class="item-input-wrap">
-                                        <input name='lastname' type="text" placeholder="Nom de famille" required validate />
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="item-content item-input">
-                                <div class="item-inner">
-                                    <div class="item-title item-label">Prénom : </div>
-                                    <div class="item-input-wrap">
-                                        <input name='firstname' type="text" placeholder="Prénom" required validate />
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="item-content item-input">
-                                <div class="item-inner">
-                                    <div class="item-title item-label">Rue : </div>
-                                    <div class="item-input-wrap">
-                                        <input name='streetAddress' type="text" placeholder="Rue" required validate />
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="item-content item-input">
-                                <div class="item-inner">
-                                    <div class="item-title item-label">Ville : </div>
-                                    <div class="item-input-wrap">
-                                        <input name='city' type="text" placeholder="Paris" />
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="item-content item-input">
-                                <div class="item-inner">
-                                    <div class="item-title item-label"> Code Postal : </div>
-                                    <div class="item-input-wrap">
-                                        <input name='postalCode' pattern="[0-9]{5}" type="text" maxlength="5" placeholder="75000" required validate />
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="item-content item-input">
-                                <div class="item-inner">
-                                    <div class="item-title item-label"> Numéro de téléphone : </div>
-                                    <div class="item-input-wrap">
-                                        <input name='phoneNumber' pattern="0[1-9][0-9]{8}" type="tel" placeholder="06 78 54 23 45" required validate />
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </form>
-            <div class="block">
-                <button class="button button-small button-round button-fill" @click="${send}">Sauvegarder</button>
-            </div>
-        </div>
+        <div class="title">${initForm.titlePage}</div>
+      </div>
     </div>
-</template>
+    <div class="page-content">
+      <form id="form-client">
+        <div class="block-title">${initForm.blockTitle}</div>
+        <div class="list list-strong-ios list-dividers-ios list-outline-ios">
+          <ul>
+            <li>
+              <div class="item-content item-input">
+                <div class="item-inner">
+                  <div class="item-title item-label">Nom : </div>
+                  <div class="item-input-wrap">
+                    <input name='lastname' type="text" placeholder="Nom de famille" required validate />
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+                <div class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Prénom : </div>
+                    <div class="item-input-wrap">
+                      <input name='firstname' type="text" placeholder="Prénom" required validate />
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Rue : </div>
+                    <div class="item-input-wrap">
+                      <input name='streetAddress' type="text" placeholder="Rue" required validate />
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Ville : </div>
+                    <div class="item-input-wrap">
+                      <input name='city' type="text" placeholder="Paris" />
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label"> Code Postal : </div>
+                    <div class="item-input-wrap">
+                      <input name='postalCode' pattern="[0-9]{5}" type="text" maxlength="5" placeholder="75000" required validate />
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label"> Numéro de téléphone : </div>
+                    <div class="item-input-wrap">
+                      <input name='phoneNumber' pattern="0[1-9][0-9]{8}" type="tel" placeholder="06 78 54 23 45" required validate />
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label"> Email : </div>
+                    <div class="item-input-wrap">
+                      <input name='email' type="email" placeholder="jean.dupont@example.com" required validate />
+                    </div>
+                  </div>
+                </div>
+              </li>
+          </ul>
+        </div>
+      </form>
+      <div class="grid grid-cols-3 gap-4 justify-items-center items-center">
+        <button class="button button-small button-round button-tonal btn-save" @click="${initForm.send}">
+          <i class="icon f7-icons">checkmark</i>
+        </button>
+      </div>
+    </div>
+  </div>
+</template> 
 <script>
-    import Framework7 from 'framework7/bundle'
-    import Dom7 from 'dom7'
+  import Framework7 from 'framework7/bundle'
+  import Dom7 from 'dom7'
 
-    import { createClient } from '../../js/client.js'
+  import { createClient } from '../../js/client/client.js'
+  import initFormClientUpdate from '../../js/client/formClientUpdate.js'
+  import initFormClientCreate from '../../js/client/formClientCreate.js'
 
-    export default async (props, {$, $on, $f7, $onBeforeUnmount } ) => {
-
-        const send = () => {
-            const formData = $f7.form.convertToData('#form-client')
-            createClient(formData, $f7)
-        }
-
-        return $render
+  export default async (props, {$, $on, $f7, $onBeforeUnmount, page } ) => {
+    let initForm 
+    if (props && props.clientId) {
+      const clientId = props.clientId
+      initForm = await initFormClientUpdate({ $on, $f7, clientId });
+    } else {
+      initForm = await initFormClientCreate({ $, $f7 })
     }
+
+    return $render
+  }
 
 </script>
