@@ -23,11 +23,11 @@ const buildEvent = async (currentEvents) => {
   )
 }
 
-const renderEventsCalendar = async (calendar, events, eventItems) => {
+const renderEventsCalendar = async (calendar, events) => {
   const currentDate = calendar.value[0]
   const currentEvents = getEventsFiltered(events, currentDate.getTime())
 
-  let newEventItems = eventItems
+  let newEventItems = []
   if (currentEvents.length) {
     newEventItems = await buildEvent(currentEvents)
   }

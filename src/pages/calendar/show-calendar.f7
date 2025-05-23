@@ -183,10 +183,6 @@
 
     export default async (props, { $f7, $, $el, $update, $on, $onMounted }) => {
         const clients = await getClientsByUser($f7)
-        const date = new Date()
-        const year = date.getFullYear()
-        const month = date.getMonth()
-        const day = date.getDate()
 
         const selectorForm = '#form-calendar'
 
@@ -200,15 +196,18 @@
         let eventItems = []
         let indexOfEventToEdit
 
-        const today = new Date(year, month, day)
   
-        const renderEvents = async (calendar) => {
-            eventItems = await renderEventsCalendar(calendar, events, eventItems)
+        const renderEvents = async (calendar, isMonthUpdated = false) => {
+            if (isMonthUpdated) {
+                const eventsDay = await getWorkEventDayByUser($f7, calendar)
+                events = getEventsFormatted(eventsDay)
+            }
+            eventItems = await renderEventsCalendar(calendar, events)
             $update()
         }
 
         $on('pageInit', async () => {
-            calendar = await createCalendar(framework7DTO, today, renderEvents, events)
+            calendar = await createCalendar(framework7DTO, renderEvents, events)
             colorPickerSpectrum = createColorPickerForEventCalendar($f7)
         })
 
@@ -234,7 +233,7 @@
                 createWorkEventDay(workEventDay, $f7)
             }
 
-            eventItems = await renderEventsCalendar(calendar, events, eventItems)
+            eventItems = await renderEventsCalendar(calendar, events)
             $update()
             popupSwipe.close()
         }
