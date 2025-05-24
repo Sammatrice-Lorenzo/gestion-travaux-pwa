@@ -53,7 +53,7 @@
                                             <div class="item-inner">
                                                 <div class="item-title item-label">Heure de début : </div>
                                                 <div class="item-input-wrap">
-                                                    <input name='startHour' type="time" value="08:00" required validate/>
+                                                    <input name='startHours' type="time" value="08:00" required validate/>
                                                 </div>
                                             </div>
                                         </li>
@@ -61,7 +61,7 @@
                                             <div class="item-inner">
                                                 <div class="item-title item-label">Heure de fin : </div>
                                                 <div class="item-input-wrap">
-                                                    <input name='endHour' type="time" value="18:00" required validate/>
+                                                    <input name='endHours' type="time" value="18:00" required validate/>
                                                 </div>
                                             </div>
                                         </li>
@@ -134,7 +134,7 @@
                                 <a href="#" @click="${edit}">
                                     <i class="f7-icons">square_pencil</i>
                                 </a>
-                                <a class="swipeout-delete" @click="${removeEvent}">
+                                <a class="swipeout-delete" @click="${(e) => calendarWorkEventDayService.removeEvent(e, framework7DTO)}">
                                     <i class="f7-icons">trash</i>
                                 </a>
                             </div>
@@ -158,16 +158,11 @@
 </template>
 <script>
     import { monthsEnum } from '../../js/enum/monthEnum.js'
-    import { renderEventsCalendar, showNameEvent } from '../../js/service/calendar/renderCalendarService.js'
-    import { createCalendar } from '../../js/service/calendar/createCalendarService.js'
-    import {
-        getWorkDayCalendar,
-        getElementEdit,
-        handleEditClassForm,
-        getEventSelected,
-        getMaxId
-    } from '../../js/service/calendar/calendarForm.js'
-    import { createColorPickerForEventCalendar } from '../../js/service/calendar/colorPickerEventCalendar.js'
+    import { renderEventsCalendar, showNameEvent } from '../../js/service/calendar/renderCalendarService.ts'
+    import { CalendarWorkEventDayFormService } from '../../js/service/calendar/CalendarWorkEventDayFormService.ts'
+    import { createCalendar } from '../../js/service/calendar/createCalendarService.ts'
+    import { handleEditClassForm } from '../../js/service/calendar/calendarForm.ts'
+    import { createColorPickerForEventCalendar } from '../../js/service/calendar/colorPickerEventCalendar.ts'
     import {
         getWorkEventDayByUser,
         createWorkEventDay,
@@ -183,26 +178,23 @@
 
     export default async (props, { $f7, $, $el, $update, $on, $onMounted }) => {
         const clients = await getClientsByUser($f7)
-
-        const selectorForm = '#form-calendar'
-
         const workEventDays = await getWorkEventDayByUser($f7)
         let events = getEventsFormatted(workEventDays)
+        const calendarWorkEventDayService = new CalendarWorkEventDayFormService(events)
         const framework7DTO = new Framework7DTO($f7, $el, $)
 
         let calendar
         let popupSwipe
         let colorPickerSpectrum
         let eventItems = []
-        let indexOfEventToEdit
 
-  
         const renderEvents = async (calendar, isMonthUpdated = false) => {
             if (isMonthUpdated) {
                 const eventsDay = await getWorkEventDayByUser($f7, calendar)
                 events = getEventsFormatted(eventsDay)
             }
             eventItems = await renderEventsCalendar(calendar, events)
+            calendarWorkEventDayService.setEventItems(eventItems)
             $update()
         }
 
@@ -212,50 +204,15 @@
         })
 
         const send = async () => {
-            if (!isValidForm(framework7DTO)) {
-                return
-            }
-
-            let formData = $f7.form.convertToData(selectorForm)
-            const dateSelected = new Date($f7.calendar.get().value[0])
-
-            const workEventDay = getWorkDayCalendar(formData, dateSelected)
-            if ($(selectorForm).hasClass('edit')) {
-                const id = events[indexOfEventToEdit].id
-                workEventDay.id = id
-                events[indexOfEventToEdit] = workEventDay
-                updateWorkEventDay(workEventDay, id, $f7)
-                $(selectorForm).removeClass('edit')
-            } else {
-                const futureId = getMaxId(events) + 1
-                workEventDay.id = futureId
-                events.push(workEventDay)
-                createWorkEventDay(workEventDay, $f7)
-            }
-
-            eventItems = await renderEventsCalendar(calendar, events)
+            await calendarWorkEventDayService.send(framework7DTO, popupSwipe)
+            eventItems = await renderEventsCalendar(calendar, calendarWorkEventDayService.getEvents())
+            calendarWorkEventDayService.setEventItems(eventItems)
             $update()
-            popupSwipe.close()
         }
 
         const edit = (element) => {
-            const idElement = parseInt(getElementEdit(element))
-            const textUpdate = 'Modification événement'
-            indexOfEventToEdit = events.findIndex(event => event.id === idElement)
-
-            $(selectorForm).find('.block-title').children().text(textUpdate)
-            $('.title-popup').text(textUpdate)
-
-            const formCalendar = getEventSelected(idElement, eventItems, framework7DTO)
-            colorPickerSpectrum = createColorPickerForEventCalendar($f7, formCalendar.color)
-
+            calendarWorkEventDayService.edit(framework7DTO, element)
             popupSwipe.open()
-        }
-
-        const removeEvent = (element) => {
-            const idElement = parseInt(getElementEdit(element))
-
-            deleteWorkEventDay(idElement, $f7)
         }
 
         const downloadCalendar = () => downloadCalendarEvents(calendar, $f7)
