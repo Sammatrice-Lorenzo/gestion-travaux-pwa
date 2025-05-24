@@ -1,5 +1,5 @@
 <template>
-    <div class="page">
+    <div id="page-calendar-work-event-day" class="page">
         <div class="navbar no-shadow">
             <div class="navbar-bg"></div>
             <div class="navbar-inner sliding">
@@ -106,10 +106,10 @@
                                             </div>
                                         </li>
                                     </ul>
-                                    <div class="block display-flex justify-content-center">
-                                        <a href="#" class="button button-outline button-round" @click="${send}">
-                                            <i class="f7-icons">checkmark_circle</i>
-                                        </a>
+                                    <div class="grid grid-cols-3 gap-4 justify-items-center items-center">
+                                        <button id="btn-send" href="#" class="button button-small button-round button-tonal btn-save" @click="${send}">
+                                            <i class="icon f7-icons">checkmark</i>
+                                        </button>
                                     </div>
                                 </div>
                             </form>
@@ -131,7 +131,7 @@
                                 <div id="${item.id}" class="id-work-event-day"></div>
                             </div>
                             <div class="swipeout-actions-right">
-                                <a href="#" @click="${edit}">
+                                <a class="edit-event" href="#" @click="${edit}">
                                     <i class="f7-icons">square_pencil</i>
                                 </a>
                                 <a class="swipeout-delete" @click="${(e) => calendarWorkEventDayService.removeEvent(e, framework7DTO)}">
@@ -147,7 +147,7 @@
                             </div>
                         </li>
                     `}
-                    <a href="#" class="display-flex justify-content-center button-raised col popup-open" data-popup=".popup-swipe">
+                    <a data-testid="open-modal-work-event-day" href="#" class="display-flex justify-content-center button-raised col popup-open" data-popup=".popup-swipe">
                         <i class="f7-icons">calendar_badge_plus</i>
                     </a>
                 </ul>
@@ -203,7 +203,8 @@
             colorPickerSpectrum = createColorPickerForEventCalendar($f7)
         })
 
-        const send = async () => {
+        const send = async (e) => {
+            e.preventDefault()
             await calendarWorkEventDayService.send(framework7DTO, popupSwipe)
             eventItems = await renderEventsCalendar(calendar, calendarWorkEventDayService.getEvents())
             calendarWorkEventDayService.setEventItems(eventItems)
