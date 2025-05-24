@@ -1,5 +1,4 @@
-export interface ClientInterface {
-  id: number
+export interface ClientFormInteface {
   firstname: string
   lastname: string
   phoneNumber: string
@@ -7,8 +6,4 @@ export interface ClientInterface {
   city: string
   streetAddress: string
   email: string
-  user: {
-    id: number
-  }
-  name: string
 }

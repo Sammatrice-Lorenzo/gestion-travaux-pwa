@@ -103,8 +103,8 @@
   import Dom7 from 'dom7'
 
   import { createClient } from '../../js/client/client.js'
-  import initFormClientUpdate from '../../js/client/formClientUpdate.js'
-  import initFormClientCreate from '../../js/client/formClientCreate.js'
+  import initFormClientUpdate from '../../js/client/formClientUpdate.ts'
+  import initFormClientCreate from '../../js/client/formClientCreate.ts'
 
   export default async (props, {$, $on, $f7, $onBeforeUnmount, page } ) => {
     let initForm 
