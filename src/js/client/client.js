@@ -1,11 +1,13 @@
 import { apiRequest, callAPI, deleteAPI, fetchCreate } from '../api'
 import { checkDataToGetOfAResponseCached, responseIsCached } from '../cache'
 import { RouteDTO } from '../dto/RouteDTO'
-import { handleSubmitForm } from '../service/client/clientFormService'
+import { clientSchema } from '../service/client/clientSchema'
+import { handleSubmitForm } from '../service/form/formErrorInputs'
 import { getUrl, getUrlById } from '../urlGenerator'
 
 const URL_CLIENTS = '/api/clients/'
 const URL_TO_REDIRECT = '/clients/'
+const ID_FORM = 'form-client'
 
 async function getClientsByUser($f7) {
   const urlWorkEventDay = URL_CLIENTS.slice(0, -1)
@@ -20,7 +22,7 @@ async function getClientsByUser($f7) {
 }
 
 function createClient(form, $f7) {
-  if (!handleSubmitForm(form)) {
+  if (!handleSubmitForm(form, clientSchema, ID_FORM)) {
     return
   }
 
@@ -40,7 +42,7 @@ function updateClient(form, idClient, $f7) {
   const url = getUrlById(URL_CLIENTS, idClient)
   const body = getBodyClient(form)
 
-  if (!handleSubmitForm(form)) {
+  if (!handleSubmitForm(form, clientSchema, ID_FORM)) {
     return
   }
 

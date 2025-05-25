@@ -1,5 +1,5 @@
 <template>
-    <div class="page">
+    <div id="page-calendar-work-event-day" class="page">
         <div class="navbar no-shadow">
             <div class="navbar-bg"></div>
             <div class="navbar-inner sliding">
@@ -53,7 +53,7 @@
                                             <div class="item-inner">
                                                 <div class="item-title item-label">Heure de début : </div>
                                                 <div class="item-input-wrap">
-                                                    <input name='startHour' type="time" value="08:00" required validate/>
+                                                    <input name='startHours' type="time" value="08:00" required validate/>
                                                 </div>
                                             </div>
                                         </li>
@@ -61,7 +61,7 @@
                                             <div class="item-inner">
                                                 <div class="item-title item-label">Heure de fin : </div>
                                                 <div class="item-input-wrap">
-                                                    <input name='endHour' type="time" value="18:00" required validate/>
+                                                    <input name='endHours' type="time" value="18:00" required validate/>
                                                 </div>
                                             </div>
                                         </li>
@@ -106,10 +106,10 @@
                                             </div>
                                         </li>
                                     </ul>
-                                    <div class="block display-flex justify-content-center">
-                                        <a href="#" class="button button-outline button-round" @click="${send}">
-                                            <i class="f7-icons">checkmark_circle</i>
-                                        </a>
+                                    <div class="grid grid-cols-3 gap-4 justify-items-center items-center">
+                                        <button id="btn-send" href="#" class="button button-small button-round button-tonal btn-save" @click="${send}">
+                                            <i class="icon f7-icons">checkmark</i>
+                                        </button>
                                     </div>
                                 </div>
                             </form>
@@ -131,10 +131,10 @@
                                 <div id="${item.id}" class="id-work-event-day"></div>
                             </div>
                             <div class="swipeout-actions-right">
-                                <a href="#" @click="${edit}">
+                                <a class="edit-event" href="#" @click="${edit}">
                                     <i class="f7-icons">square_pencil</i>
                                 </a>
-                                <a class="swipeout-delete" @click="${removeEvent}">
+                                <a class="swipeout-delete" @click="${(e) => calendarWorkEventDayService.removeEvent(e, framework7DTO)}">
                                     <i class="f7-icons">trash</i>
                                 </a>
                             </div>
@@ -147,7 +147,7 @@
                             </div>
                         </li>
                     `}
-                    <a href="#" class="display-flex justify-content-center button-raised col popup-open" data-popup=".popup-swipe">
+                    <a data-testid="open-modal-work-event-day" href="#" class="display-flex justify-content-center button-raised col popup-open" data-popup=".popup-swipe">
                         <i class="f7-icons">calendar_badge_plus</i>
                     </a>
                 </ul>
@@ -158,16 +158,11 @@
 </template>
 <script>
     import { monthsEnum } from '../../js/enum/monthEnum.js'
-    import { renderEventsCalendar, showNameEvent } from '../../js/service/calendar/renderCalendarService.js'
-    import { createCalendar } from '../../js/service/calendar/createCalendarService.js'
-    import {
-        getWorkDayCalendar,
-        getElementEdit,
-        handleEditClassForm,
-        getEventSelected,
-        getMaxId
-    } from '../../js/service/calendar/calendarForm.js'
-    import { createColorPickerForEventCalendar } from '../../js/service/calendar/colorPickerEventCalendar.js'
+    import { renderEventsCalendar, showNameEvent } from '../../js/service/calendar/renderCalendarService.ts'
+    import { CalendarWorkEventDayFormService } from '../../js/service/calendar/CalendarWorkEventDayFormService.ts'
+    import { createCalendar } from '../../js/service/calendar/createCalendarService.ts'
+    import { handleEditClassForm } from '../../js/service/calendar/calendarForm.ts'
+    import { createColorPickerForEventCalendar } from '../../js/service/calendar/colorPickerEventCalendar.ts'
     import {
         getWorkEventDayByUser,
         createWorkEventDay,
@@ -183,80 +178,42 @@
 
     export default async (props, { $f7, $, $el, $update, $on, $onMounted }) => {
         const clients = await getClientsByUser($f7)
-        const date = new Date()
-        const year = date.getFullYear()
-        const month = date.getMonth()
-        const day = date.getDate()
-
-        const selectorForm = '#form-calendar'
-
         const workEventDays = await getWorkEventDayByUser($f7)
         let events = getEventsFormatted(workEventDays)
+        const calendarWorkEventDayService = new CalendarWorkEventDayFormService(events)
         const framework7DTO = new Framework7DTO($f7, $el, $)
 
         let calendar
         let popupSwipe
         let colorPickerSpectrum
         let eventItems = []
-        let indexOfEventToEdit
 
-        const today = new Date(year, month, day)
-  
-        const renderEvents = async (calendar) => {
-            eventItems = await renderEventsCalendar(calendar, events, eventItems)
+        const renderEvents = async (calendar, isMonthUpdated = false) => {
+            if (isMonthUpdated) {
+                const eventsDay = await getWorkEventDayByUser($f7, calendar)
+                events = getEventsFormatted(eventsDay)
+            }
+            eventItems = await renderEventsCalendar(calendar, events)
+            calendarWorkEventDayService.setEventItems(eventItems)
             $update()
         }
 
         $on('pageInit', async () => {
-            calendar = await createCalendar(framework7DTO, today, renderEvents, events)
+            calendar = await createCalendar(framework7DTO, renderEvents, events)
             colorPickerSpectrum = createColorPickerForEventCalendar($f7)
         })
 
-        const send = async () => {
-            if (!isValidForm(framework7DTO)) {
-                return
-            }
-
-            let formData = $f7.form.convertToData(selectorForm)
-            const dateSelected = new Date($f7.calendar.get().value[0])
-
-            const workEventDay = getWorkDayCalendar(formData, dateSelected)
-            if ($(selectorForm).hasClass('edit')) {
-                const id = events[indexOfEventToEdit].id
-                workEventDay.id = id
-                events[indexOfEventToEdit] = workEventDay
-                updateWorkEventDay(workEventDay, id, $f7)
-                $(selectorForm).removeClass('edit')
-            } else {
-                const futureId = getMaxId(events) + 1
-                workEventDay.id = futureId
-                events.push(workEventDay)
-                createWorkEventDay(workEventDay, $f7)
-            }
-
-            eventItems = await renderEventsCalendar(calendar, events, eventItems)
+        const send = async (e) => {
+            e.preventDefault()
+            await calendarWorkEventDayService.send(framework7DTO, popupSwipe)
+            eventItems = await renderEventsCalendar(calendar, calendarWorkEventDayService.getEvents())
+            calendarWorkEventDayService.setEventItems(eventItems)
             $update()
-            popupSwipe.close()
         }
 
         const edit = (element) => {
-            const idElement = parseInt(getElementEdit(element))
-            const textUpdate = 'Modification événement'
-            indexOfEventToEdit = events.findIndex(event => event.id === idElement)
-
-            $(selectorForm).find('.block-title').children().text(textUpdate)
-            $('.title-popup').text(textUpdate)
-
-            const formCalendar = getEventSelected(idElement, eventItems, framework7DTO)
-            colorPickerSpectrum = createColorPickerForEventCalendar($f7, formCalendar.color)
-
+            calendarWorkEventDayService.edit(framework7DTO, element)
             popupSwipe.open()
-        }
-
-        const removeEvent = (element) => {
-            const idElement = parseInt(getElementEdit(element))
-
-            deleteWorkEventDay(idElement, $f7)
         }
 
         const downloadCalendar = () => downloadCalendarEvents(calendar, $f7)

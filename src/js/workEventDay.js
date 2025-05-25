@@ -1,15 +1,24 @@
+import Framework7 from 'framework7'
 import Framework7DTO from './Framework7DTO.js'
 import { apiRequest, callAPI, deleteAPI, fetchFileAPI } from './api'
 import { checkDataToGetOfAResponseCached, responseIsCached } from './cache'
 import { RouteDTO } from './dto/RouteDTO.js'
-import { getUrl, getUrlById } from './urlGenerator'
+import { getDateCalendarDefaultFormat } from './service/calendar/calendarDateService.ts'
+import { getUrl, getUrlById, getUrlWithParameters } from './urlGenerator'
 
 const URL_WORK_EVENT_DAY = '/api/work_event_days/'
 const URL_TO_REDIRECT = '/calendar/'
 
-async function getWorkEventDayByUser($f7) {
+/**
+ * @param { Framework7 } $f7
+ * @param { import('framework7/components/calendar').Calendar.Calendar | null } calendar
+ */
+async function getWorkEventDayByUser($f7, calendar = null) {
+  const date = calendar
+    ? getDateCalendarDefaultFormat(calendar)
+    : new Date().toISOString().slice(0, 10)
   const urlWorkEventDay = URL_WORK_EVENT_DAY.slice(0, -1)
-  const url = getUrl(urlWorkEventDay)
+  const url = getUrlWithParameters(urlWorkEventDay, { date })
 
   const cache = await responseIsCached(url)
   if (cache) {
@@ -116,15 +125,16 @@ function isValidForm(framework7DTO) {
   return isValid
 }
 
+/**
+ * @param { import('framework7/components/calendar').Calendar.Calendar } calendar
+ * @param { Framework7 } $f7
+ */
 function downloadCalendarEvents(calendar, $f7) {
-  const currentMonth = calendar.currentMonth
-  const currentYear = calendar.currentYear
-  const date = new Date(currentYear, currentMonth).toLocaleDateString()
-  const url = getUrl(`${URL_WORK_EVENT_DAY}file_download`)
+  const date = getDateCalendarDefaultFormat(calendar)
 
-  const [day, month, year] = date.split('/')
+  const url = getUrl(`${URL_WORK_EVENT_DAY}file_download`)
   const body = JSON.stringify({
-    date: `${year}-${month}-${day}`,
+    date: date,
   })
 
   const routeDTO = new RouteDTO()
