@@ -192,6 +192,8 @@
             if (isMonthUpdated) {
                 const eventsDay = await getWorkEventDayByUser($f7, calendar)
                 events = getEventsFormatted(eventsDay)
+                calendar.params.events = events
+                calendar.update()
             }
             eventItems = await renderEventsCalendar(calendar, events)
             calendarWorkEventDayService.setEventItems(eventItems)
