@@ -1,0 +1,101 @@
+$primary: #0D2847;
+$secondary: #004074;
+$accent: #2870BD;
+$background: #0D1520;
+$surface: #111927;
+$text: #C2E6FF;
+$muted: #205D9E;
+$border: #205D9E;
+
+.page-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.login-screen-content {
+  width: 100%;
+  max-width: 42rem;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.card-login {
+  border: 1px solid $muted;
+  box-shadow: 0 4px 12px rgba(0, 71, 125, 0.2);
+  color: $text;
+  border-radius: 5%;
+}
+
+.card-login .card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, $secondary 0%, $accent 100%);
+  color: $text;
+  padding: 16px;
+  border-bottom: 1px solid $muted;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  text-align: center;
+}
+
+
+.page-login .item-input-wrap {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+}
+
+.page-login .item-input-wrap input {
+  border: none;
+  background: transparent;
+  flex: 1;
+  padding: 0.5rem;
+  font-size: 16px;
+}
+
+.page-login .item-input-wrap .icon {
+  margin-right: 10px;
+}
+
+
+.app-logo {
+  height: 6rem;
+}
+
+.app-name {
+  font-size: 1.5rem;
+  color: $text;
+  font-weight: bold;
+  opacity: 1;
+  animation: fadeIn 1.5s ease-out;
+}
+
+.button.btn-login {
+  background-color: $accent;
+  color: $text;
+  font-weight: 500;
+}
+
+#form-login i {
+  color: $primary;
+}
+
+.button.btn-login:hover {
+  background-color: lighten($accent, 10%);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

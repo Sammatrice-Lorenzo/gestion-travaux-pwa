@@ -1,5 +1,5 @@
 {
-  "cwd": "C:\\Users\\loren\\OneDrive\\Documents\\WebSeverPerso\\apps\\gestion-travaux-pwa",
+  "cwd": "",
   "type": ["pwa", "web"],
   "name": "Gestion Travaux",
   "framework": "core",
@@ -8,7 +8,7 @@
   "cssPreProcessor": "scss",
   "theming": {
     "customColor": true,
-    "color": "#0077B6",
+    "color": "#0D2847",
     "darkMode": true,
     "iconFonts": true
   },
