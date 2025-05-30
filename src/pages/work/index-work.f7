@@ -20,7 +20,7 @@
           </a>
         </div>
         ${worksByUser.map((item) => $h`
-        <div class="card card-prestation mb-3">
+        <div class="card card-work mb-3">
           <div class="card-header flex justify-between items-center">
             <h5 class="card-title m-0">${item.name}</h5>
             <span class="badge badge-status ${getProgressColor(item.progression)}">${item.progression}</span>
@@ -53,6 +53,11 @@
           </div>
         </div>
         `)}
+        <div class="pagination">
+          <button class="btn-prev" @click="${previousElement}">←</button>
+          <span class="pagination-links"></span>
+          <button class="btn-next" @click="${nextElement}">→</button>
+        </div>
     </div>
   </div>
 </template>
@@ -64,11 +69,13 @@
   import { sendNotificationPushForProgression } from '../../js/notification'
   import { loadTabbar } from '../../js/components/tabbar.js'
   import { totalAmountTVA, tvaOnAmount } from '../../js/helper/priceWorkHelper'
-  import { tvaEnum } from '../../js//enum/tvaEnum.js'
+  import { tvaEnum } from '../../js/enum/tvaEnum.js'
+  import Pagination from '../../js/service/Pagination.ts'
 
-  export default async (props, { $, $on, $f7 }) => {
-    const works = await getWorkByUser($f7)
-    const worksByUser = works.reverse()
+  export default async (props, { $, $on, $f7, $update }) => {
+    const response = await getWorkByUser($f7, 1)
+    let worksByUser = response.works.reverse()
+    const pagination = new Pagination(response.totalItems, 10)
 
     function getProgressColor(status) {
       switch (status.toLowerCase()) {
@@ -79,10 +86,29 @@
       }
     }
 
+    const updateWorks = async () => {
+      const response = await getWorkByUser($f7, pagination.currentPage)
+      worksByUser = response.works.reverse()
+      $update()
+      pagination.renderPageLinks(document.querySelector('.pagination-links'));
+    }
+
+    const nextElement = async () => {
+      pagination.nextElement($('.btn-prev'), $('.btn-next'))
+      await updateWorks()
+    }
+    const previousElement = async () => {
+      pagination.previousElement($('.btn-prev'), $('.btn-next'))
+      await updateWorks()
+    }
+
     const idPrestation = (prestation) => prestation.hasOwnProperty('@id') ? prestation['@id'].split('/').pop() : prestation.id
 
     $on('pageInit', function (page) {
-      loadTabbar('index-work', $f7);
+      loadTabbar('index-work', $f7)
+      pagination.renderPageLinks(document.querySelector('.pagination-links'))
+      pagination.updatePagination($('.btn-prev'), $('.btn-next'))
+      pagination.handleActionButtonsWithNumber($('.page-link'), $('.btn-prev'), $('.btn-next'))
     })
 
     setTimeout(() => {

@@ -1,0 +1,27 @@
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+
+  button {
+    background-color: transparent;
+    color: $text;
+    border: 1px solid $muted;
+    border-radius: 6px;
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: $accent;
+      color: white;
+    }
+
+    &.button-fill {
+      background-color: $accent;
+      color: white;
+      font-weight: bold;
+    }
+  }
+}

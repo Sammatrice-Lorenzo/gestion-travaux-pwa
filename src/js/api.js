@@ -1,3 +1,4 @@
+import Framework7 from 'framework7'
 import { clearCache, stockResponseInCache } from './cache'
 import { RouteDTO } from './dto/RouteDTO'
 import { downloadFile } from './helper/fileHelper'
@@ -144,7 +145,7 @@ function fetchFileAPI(routeDTO, nameFile) {
 
 /**
  * @param { URL } url
- * @param { any } $f7
+ * @param { Framework7 } $f7
  * @returns { Promise<any> }
  */
 async function callAPI(url, $f7) {
@@ -170,9 +171,8 @@ async function callAPI(url, $f7) {
             $f7.views.main.router.navigate('/')
           }
 
-          let dataResponse = data.hasOwnProperty('hydra:member')
-            ? data['hydra:member']
-            : data
+          let dataResponse =
+            'hydra:member' in data ? data['hydra:member'] : data
           dataResponse = Array.isArray(dataResponse)
             ? dataResponse
             : [dataResponse]

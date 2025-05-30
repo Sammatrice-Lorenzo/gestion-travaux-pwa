@@ -1,20 +1,36 @@
+import Framework7 from 'framework7'
 import { apiRequest, callAPI, deleteAPI, fetchCreate } from './api'
 import { checkDataToGetOfAResponseCached, responseIsCached } from './cache'
 import { RouteDTO } from './dto/RouteDTO'
-import { getUrl, getUrlById, getUrlUser } from './urlGenerator'
+import { ApiService } from './service/api/ApiService'
+import {
+  getUrl,
+  getUrlById,
+  getUrlUser,
+  getUrlWithParameters,
+} from './urlGenerator'
 
 const URL_WORK = '/api/works/'
 const URL_TO_REDIRECT = '/prestation/'
 
-async function getWorkByUser($f7) {
-  const url = getUrl(URL_WORK)
+/**
+ * @param { Framework7 } $f7
+ * @param { number } currentPage
+ */
+async function getWorkByUser($f7, currentPage) {
+  const url = getUrlWithParameters(URL_WORK, { page: currentPage })
 
   const cache = await responseIsCached(url)
   if (cache) {
     return checkDataToGetOfAResponseCached(url)
   }
 
-  return callAPI(url, $f7)
+  const apiService = new ApiService($f7)
+  const works = await apiService.call(url, 'application/ld+json')
+  return {
+    works,
+    totalItems: apiService.getTotalItemns(),
+  }
 }
 
 async function findWorkById(id, $f7) {
