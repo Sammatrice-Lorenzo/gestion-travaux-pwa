@@ -1,27 +1,51 @@
+@use 'sass:color';
+
+$accent: #2870BD;
+$surface: #111927;
+$text: #C2E6FF;
+$muted: #205D9E;
+
 .pagination {
   display: flex;
+  align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
   gap: 0.5rem;
-  margin-top: 1.5rem;
+  margin-top: 2rem;
 
-  button {
-    background-color: transparent;
+  .page-link {
+    background-color: $surface;
     color: $text;
     border: 1px solid $muted;
-    border-radius: 6px;
-    padding: 0.4rem 0.8rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s;
+    min-width: 2rem;
+    text-align: center;
+  }
 
-    &:hover {
-      background-color: $accent;
-      color: white;
-    }
+  .page-link:hover {
+    background-color: color.adjust($surface, $lightness: 5%);
+  }
 
-    &.button-fill {
-      background-color: $accent;
-      color: white;
-      font-weight: bold;
-    }
+  .page-link.active {
+    background-color: $accent;
+    color: white;
+    font-weight: bold;
+    border-color: $accent;
+  }
+
+  .btn-prev,
+  .btn-next {
+    font-weight: 500;
+    padding: 0.3rem 0.7rem;
+    font-size: 0.875rem;
+  }
+
+  .pagination-links {
+    display: flex;
+    gap: 0.3rem;
   }
 }

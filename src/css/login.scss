@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 $primary: #0D2847;
 $secondary: #004074;
 $accent: #2870BD;
@@ -26,7 +28,7 @@ $border: #205D9E;
   border: 1px solid $muted;
   box-shadow: 0 4px 12px rgba(0, 71, 125, 0.2);
   color: $text;
-  border-radius: 5%;
+  border-radius: 40px 40px 40px 40px;
 }
 
 .card-login .card-header {
@@ -41,6 +43,7 @@ $border: #205D9E;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
   text-align: center;
+  border-radius: 40px 40px 0px 0px;
 }
 
 
@@ -86,7 +89,7 @@ $border: #205D9E;
 }
 
 .button.btn-login:hover {
-  background-color: lighten($accent, 10%);
+  background-color: color.adjust($accent, $lightness: 10%);
 }
 
 @keyframes fadeIn {

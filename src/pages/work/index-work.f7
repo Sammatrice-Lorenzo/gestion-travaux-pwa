@@ -19,34 +19,34 @@
             <i class="icon f7-icons">plus_app_fill</i>
           </a>
         </div>
-        ${worksByUser.map((item) => $h`
+        ${worksByUser.map((work) => $h`
         <div class="card card-work mb-3">
           <div class="card-header flex justify-between items-center">
-            <h5 class="card-title m-0">${item.name}</h5>
-            <span class="badge badge-status ${getProgressColor(item.progression)}">${item.progression}</span>
+            <h5 class="card-title m-0">${work.name}</h5>
+            <span class="badge badge-status ${getProgressColor(work.progression)}">${work.progression}</span>
           </div>
           <div class="card-content card-content-padding">
             <ul class="data-list">
-              <li><i class="f7-icons icon-left">placemark</i><strong>Lieu :</strong> ${item.city}</li>
-              <li><i class="f7-icons icon-left">calendar_circle</i><strong>Début :</strong> ${formatDate(item.start)}</li>
-              <li><i class="f7-icons icon-left">calendar_circle</i><strong>Fin :</strong> ${formatDate(item.end)}</li>
-              <li><i class="f7-icons icon-left">hammer</i><strong>Équipements :</strong> ${getEquipementsInLine(item.equipements)}</li>
-              <li><i class="f7-icons icon-left">person_circle</i><strong>Client :</strong> ${item.client.name}</li>
+              <li><i class="f7-icons icon-left">placemark</i><strong>Lieu :</strong> ${work.city}</li>
+              <li><i class="f7-icons icon-left">calendar_circle</i><strong>Début :</strong> ${formatDate(work.start)}</li>
+              <li><i class="f7-icons icon-left">calendar_circle</i><strong>Fin :</strong> ${formatDate(work.end)}</li>
+              <li><i class="f7-icons icon-left">hammer</i><strong>Équipements :</strong> ${getEquipementsInLine(work.equipements)}</li>
+              <li><i class="f7-icons icon-left">person_circle</i><strong>Client :</strong> ${work.client.name}</li>
             </ul>
             <div class="total-section mt-2">
               <p>
-                <strong>HT :</strong> ${item.totalAmount.toFixed(2)} €
+                <strong>HT :</strong> ${work.totalAmount.toFixed(2)} €
               </p>
               <p>
-                <strong>TVA :</strong> ${tvaOnAmount(item.totalAmount, tvaEnum.TVA_MAINTENANCE_WORK).toFixed(2)} €
+                <strong>TVA :</strong> ${tvaOnAmount(work.totalAmount, tvaEnum.TVA_MAINTENANCE_WORK).toFixed(2)} €
               </p>
               <p class="final-total">
-                <strong><i class="f7-icons icon-left">money_euro_circle</i>TTC :</strong> ${totalAmountTVA(item.totalAmount, tvaEnum.TVA_MAINTENANCE_WORK).toFixed(2)} €
+                <strong><i class="f7-icons icon-left">money_euro_circle</i>TTC :</strong> ${totalAmountTVA(work.totalAmount, tvaEnum.TVA_MAINTENANCE_WORK).toFixed(2)} €
               </p>
             </div>
           </div>
           <div class="card-footer d-flex justify-content-end">
-            <a href="/prestation/${idPrestation(item)}" class="button button-small">
+            <a href="/prestation/${work.id}" class="button button-small">
               <i class="f7-icons">eye_fill</i>
               Détails
             </a>
@@ -54,9 +54,13 @@
         </div>
         `)}
         <div class="pagination">
-          <button class="btn-prev" @click="${previousElement}">←</button>
+          <a href="#" class="btn-prev" @click="${previousElement}">
+            <i class="f7-icons">chevron_left_circle_fill</i>
+          </a>
           <span class="pagination-links"></span>
-          <button class="btn-next" @click="${nextElement}">→</button>
+          <a href="#" class="btn-next" @click="${nextElement}">
+            <i class="f7-icons">chevron_right_circle_fill</i>
+          </a>
         </div>
     </div>
   </div>
@@ -65,6 +69,7 @@
   import Framework7 from 'framework7/bundle'
 
   import { formatDate } from '../../js/date.js'
+  import { getProgressColor } from '../../js/helper/statusHelper.ts'
   import { getWorkByUser, getEquipementsInLine } from '../../js/work.js'
   import { sendNotificationPushForProgression } from '../../js/notification'
   import { loadTabbar } from '../../js/components/tabbar.js'
@@ -77,20 +82,10 @@
     let worksByUser = response.works.reverse()
     const pagination = new Pagination(response.totalItems, 10)
 
-    function getProgressColor(status) {
-      switch (status.toLowerCase()) {
-        case 'en cours': return 'orange';
-        case 'terminé': return 'green';
-        case 'annulé': return 'red';
-        default: return 'gray';
-      }
-    }
-
     const updateWorks = async () => {
       const response = await getWorkByUser($f7, pagination.currentPage)
       worksByUser = response.works.reverse()
       $update()
-      pagination.renderPageLinks(document.querySelector('.pagination-links'));
     }
 
     const nextElement = async () => {
@@ -102,13 +97,11 @@
       await updateWorks()
     }
 
-    const idPrestation = (prestation) => prestation.hasOwnProperty('@id') ? prestation['@id'].split('/').pop() : prestation.id
-
     $on('pageInit', function (page) {
       loadTabbar('index-work', $f7)
       pagination.renderPageLinks(document.querySelector('.pagination-links'))
       pagination.updatePagination($('.btn-prev'), $('.btn-next'))
-      pagination.handleActionButtonsWithNumber($('.page-link'), $('.btn-prev'), $('.btn-next'))
+      pagination.handleActionButtonsWithNumber($('.btn-prev'), $('.btn-next'), updateWorks)
     })
 
     setTimeout(() => {

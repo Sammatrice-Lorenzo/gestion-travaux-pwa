@@ -42,7 +42,8 @@ export default class Pagination {
     prevButton.disabled = this.currentPage === 1
     nextButton.disabled = this.currentPage === this.getTotalPages()
 
-    const pageLinks = document.querySelectorAll('.page-links')
+    const pageLinks: NodeListOf<HTMLElement> =
+      document.querySelectorAll('.page-link')
     for (const pageLink of pageLinks) {
       const dataPage: string | null = pageLink.getAttribute('data-page')
       if (dataPage) {
@@ -73,19 +74,23 @@ export default class Pagination {
   }
 
   public handleActionButtonsWithNumber(
-    pageLinks: NodeListOf<HTMLElement>,
     prevButton: HTMLButtonElement,
     nextButton: HTMLButtonElement,
+    updateContent: CallableFunction,
   ): void {
+    const pageLinks: NodeListOf<HTMLElement> =
+      document.querySelectorAll('.page-link')
     for (const pageLink of pageLinks) {
-      pageLink.addEventListener('click', (e: MouseEvent) => {
+      pageLink.addEventListener('click', async (e: MouseEvent) => {
         e.preventDefault()
         const dataPage: string | null = pageLink.getAttribute('data-page')
         if (dataPage) {
           const page = Number.parseInt(dataPage)
+
           if (page !== this.currentPage) {
             this.currentPage = page
             this.updatePagination(prevButton, nextButton)
+            await updateContent()
           }
         }
       })
