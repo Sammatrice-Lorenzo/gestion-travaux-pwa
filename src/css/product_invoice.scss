@@ -1,8 +1,12 @@
 .information-product-invoice {
-    margin: 2% auto;
-    width: 90%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+  margin: 2% auto;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+#index-invoices .card {
+  border-radius: 15px 15px 15px 15px;
 }

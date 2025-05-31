@@ -25,25 +25,112 @@
             <h5 class="card-title m-0">${work.name}</h5>
             <span class="badge badge-status ${getProgressColor(work.progression)}">${work.progression}</span>
           </div>
-          <div class="card-content card-content-padding">
+          <div class="card-content card-content-padding list inset">
             <ul class="data-list">
-              <li><i class="f7-icons icon-left">placemark</i><strong>Lieu :</strong> ${work.city}</li>
-              <li><i class="f7-icons icon-left">calendar_circle</i><strong>Début :</strong> ${formatDate(work.start)}</li>
-              <li><i class="f7-icons icon-left">calendar_circle</i><strong>Fin :</strong> ${formatDate(work.end)}</li>
-              <li><i class="f7-icons icon-left">hammer</i><strong>Équipements :</strong> ${getEquipementsInLine(work.equipements)}</li>
-              <li><i class="f7-icons icon-left">person_circle</i><strong>Client :</strong> ${work.client.name}</li>
+              <li>
+                <div class="item-content">
+                  <div class="item-media">
+                    <i class="icon f7-icons">placemark</i>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title"><strong>Lieu :</strong></div>
+                    <div class="item-after"><strong>${work.city}</strong></div>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="item-content">
+                  <div class="item-media">
+                    <i class="icon f7-icons">calendar_circle</i>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title"><strong>Début :</strong></div>
+                    <div class="item-after"><strong>${formatDate(work.start)}</strong></div>
+                  </div>
+                </div>
+              </li>
+
+              <li>
+                <div class="item-content">
+                  <div class="item-media">
+                    <i class="icon f7-icons">calendar_circle</i>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title"><strong>Fin :</strong></div>
+                    <div class="item-after"><strong>${formatDate(work.end)}</strong></div>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="item-content">
+                  <div class="item-media">
+                    <i class="icon f7-icons">person_circle</i>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title"><strong>Client</strong></div>
+                    <div class="item-after"><strong>${work.client.name}</strong></div>
+                  </div>
+                </div>
+              </li>                
+              <li>
+                <div class="item-content">
+                  <div class="item-media">
+                    <i class="icon f7-icons">hammer</i>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title"><strong>Équipements :</strong></div>
+                  </div>
+                </div>
+              </li>
+              <ul>
+                <li>
+                  <div class="tags-container-work">
+                    ${work.equipements.map((equipement) => $h`
+                      <span class="tag-work">${equipement}</span>
+                    `)}
+                  </div>
+                </li>
+              </ul>
+              <div class="total-section mt-2">
+                <li>
+                  <div class="item-content">
+                    <div class="item-media">
+                      <i class="icon f7-icons">money_euro_circle</i>
+                    </div>
+                    <div class="item-inner">
+                      <div class="item-title"><strong>Total HT : </strong></div>
+                      <div class="item-after"><strong>${work.totalAmount.toFixed(2)} €</strong></div>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div class="item-content">
+                    <div class="item-media">
+                      <i class="icon f7-icons">chart_pie</i>
+                    </div>
+                    <div class="item-inner">
+                      <div class="item-title"><strong>TVA : </strong></div>
+                      <div class="item-after">
+                        <strong>${tvaOnAmount(work.totalAmount, tvaEnum.TVA_MAINTENANCE_WORK).toFixed(2)} €</strong>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div class="item-content">
+                    <div class="item-media final-total">
+                      <i class="icon f7-icons">money_euro_circle</i>
+                    </div>
+                    <div class="item-inner final-total">
+                      <div class="item-title"><strong class="final-total">Total TTC : </strong></div>
+                      <div class="item-after">
+                        <strong class="final-total">${totalAmountTVA(work.totalAmount, tvaEnum.TVA_MAINTENANCE_WORK).toFixed(2)} €</strong>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              </div>
             </ul>
-            <div class="total-section mt-2">
-              <p>
-                <strong>HT :</strong> ${work.totalAmount.toFixed(2)} €
-              </p>
-              <p>
-                <strong>TVA :</strong> ${tvaOnAmount(work.totalAmount, tvaEnum.TVA_MAINTENANCE_WORK).toFixed(2)} €
-              </p>
-              <p class="final-total">
-                <strong><i class="f7-icons icon-left">money_euro_circle</i>TTC :</strong> ${totalAmountTVA(work.totalAmount, tvaEnum.TVA_MAINTENANCE_WORK).toFixed(2)} €
-              </p>
-            </div>
           </div>
           <div class="card-footer d-flex justify-content-end">
             <a href="/prestation/${work.id}" class="button button-small">
@@ -57,7 +144,7 @@
           <a href="#" class="btn-prev" @click="${previousElement}">
             <i class="f7-icons">chevron_left_circle_fill</i>
           </a>
-          <span class="pagination-links"></span>
+          <div class="pagination-links"></div>
           <a href="#" class="btn-next" @click="${nextElement}">
             <i class="f7-icons">chevron_right_circle_fill</i>
           </a>
@@ -78,31 +165,37 @@
   import Pagination from '../../js/service/Pagination.ts'
 
   export default async (props, { $, $on, $f7, $update }) => {
+    let pagination
+
     const response = await getWorkByUser($f7, 1)
-    let worksByUser = response.works.reverse()
-    const pagination = new Pagination(response.totalItems, 10)
+    let worksByUser = response.works
 
     const updateWorks = async () => {
       const response = await getWorkByUser($f7, pagination.currentPage)
-      worksByUser = response.works.reverse()
+      worksByUser = response.works
       $update()
     }
 
+    $on('pageInit', async function (page) {
+      loadTabbar('index-work', $f7)
+      const response = await getWorkByUser($f7, 1)
+      worksByUser = response.works
+
+      pagination = new Pagination(
+        response.totalItems,
+        10,
+        document.querySelector('.pagination-links'), 
+      )
+      pagination.setUpdateContentCallBack(updateWorks)
+      pagination.updatePagination($('.btn-prev'), $('.btn-next'))
+    })
+
     const nextElement = async () => {
-      pagination.nextElement($('.btn-prev'), $('.btn-next'))
-      await updateWorks()
+      await pagination.nextElement($('.btn-prev'), $('.btn-next'))
     }
     const previousElement = async () => {
-      pagination.previousElement($('.btn-prev'), $('.btn-next'))
-      await updateWorks()
+      await pagination.previousElement($('.btn-prev'), $('.btn-next'))
     }
-
-    $on('pageInit', function (page) {
-      loadTabbar('index-work', $f7)
-      pagination.renderPageLinks(document.querySelector('.pagination-links'))
-      pagination.updatePagination($('.btn-prev'), $('.btn-next'))
-      pagination.handleActionButtonsWithNumber($('.btn-prev'), $('.btn-next'), updateWorks)
-    })
 
     setTimeout(() => {
       sendNotificationPushForProgression($f7)

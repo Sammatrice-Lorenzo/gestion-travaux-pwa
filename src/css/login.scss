@@ -84,12 +84,20 @@ $border: #205D9E;
   font-weight: 500;
 }
 
-#form-login i {
-  color: $primary;
+li.btn-register {
+  margin-top: 5%
+}
+
+#form-login i, .item-label {
+  color: $primary !important;
 }
 
 .button.btn-login:hover {
   background-color: color.adjust($accent, $lightness: 10%);
+}
+
+.center-login {
+  margin-top: 5%;
 }
 
 @keyframes fadeIn {

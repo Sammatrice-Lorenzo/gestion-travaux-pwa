@@ -1,67 +1,70 @@
 <template>
-    <div class="page center-login view-main page-login">
-        <div class="page-content login-screen-content">
-            <div class="card-login">
-                <div class="card-header">
-                <img src="/assets/logo.png" alt="Logo Gestion Travaux" class="app-logo" />
-                <div class="app-name">Gestion Travaux</div>
-            </div>
-                <div class="card-content">
-                    <form id="form-login">
-                        <div class="list list-strong-ios list-dividers-ios list-outline-ios list-login">
-                            <ul>
-                                <li class="item-content item-input">
-                                    <div class="item-inner">
-                                        <div class="item-title item-label">Username</div>
-                                        <div class="item-input-wrap">
-                                            <i class="icon f7-icons">person_fill</i>
-                                            <input type="text" name="username" placeholder="Votre email" />
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="item-content item-input">
-                                    <div class="item-inner">
-                                        <div class="item-title item-label">Password</div>
-                                        <div class="item-input-wrap">
-                                            <i class="icon f7-icons">lock_fill</i>
-                                            <input type="password" name="password" placeholder="Votre mot de passe" />
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="list block" style="margin-top: 2rem;">
-                            <ul>
-                                <li>
-                                    <a data-testid="link-login" href="#" class="button button-fill button-round btn-login">
-                                        Connexion
-                                    </a>
-                                </li>
-                                <li class="btn-register">
-                                    <a href="/register/" class="button button-tonal button-round">
-                                        S'enregistrer
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </form>
-                </div>
-            </div>
+  <div class="page center-login view-main page-login">
+    <div class="page-content login-screen-content">
+      <div class="card-login">
+        <div class="card-header">
+          <img src="/assets/logo.png" alt="Logo Gestion Travaux" class="app-logo" />
+          <div class="app-name">Gestion Travaux</div>
         </div>
+        <div class="card-content">
+          <form id="form-login">
+            <div class="list list-strong-ios list-dividers-ios list-outline-ios list-login">
+              <ul>
+                <li class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Username</div>
+                    <div class="item-input-wrap">
+                      <i class="icon f7-icons">person_fill</i>
+                      <input type="text" name="username" placeholder="Votre email" />
+                    </div>
+                  </div>
+                </li>
+                <li class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Password</div>
+                    <div class="item-input-wrap">
+                      <i class="icon f7-icons">lock_fill</i>
+                      <input type="password" name="password" placeholder="Votre mot de passe" />
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="list block" style="margin-top: 2rem;">
+              <ul>
+                <li>
+                  <a
+                    href="#"
+                    data-testid="link-login"
+                    class="button button-fill button-round btn-login"
+                    @click="${handleLogin}"
+                  >
+                    Connexion
+                  </a>
+                </li>
+                <li class="btn-register">
+                  <a href="/register/" class="button button-tonal button-round">
+                    S'enregistrer
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 <script>
-    import Framework7 from 'framework7/bundle';
-    import { login } from '../js/login.js';
+  import Framework7 from 'framework7/bundle';
+  import { login } from '../js/login.js';
 
-    export default async (props, { $, $on, $f7 }) => {
-        $on('pageInit', () => {
-            $('.btn-login').on('click', async function () {
-                const formData = $f7.form.convertToData('#form-login');
-                await login(formData.username, formData.password, $f7)
-            });
-        });
-
-        return $render;
+  export default async (props, { $, $on, $f7 }) => {
+    const handleLogin = async () => {
+      const formData = $f7.form.convertToData('#form-login')
+      await login(formData.username, formData.password, $f7)
     }
+
+    return $render;
+  }
 </script>

@@ -8,41 +8,31 @@
 @use "components/button.scss";
 @use "components/pagination.scss";
 @use "login.scss";
+@use "client.scss";
 
-.center-login {
-    margin-top: 5%;
+.ios .color-red,
+.ios.color-red,
+.ios .dark .color-red,
+.ios.dark.color-red {
+  --f7-theme-color: #d70015;
+  --f7-theme-color-rgb: 215, 0, 21;
+  --f7-theme-color-shade: #b40011;
+  --f7-theme-color-tint: #ff3b47;
 }
 
-li.btn-register {
-    margin-top: 5%
-}
-
-.equipements-container {
-    display: inline-block;
-    white-space: pre;
-    word-break: break-word;
-    max-width: 100%;
-    overflow: auto;
-}
-
-.equipements-wrapper {
-    overflow: hidden;
-    word-break: break-word;
-}
 
 .input-error {
-    border: 2px solid #ff3860;
-    border-radius: 4px;
-    box-shadow: 0 0 5px #ff3860;
+  border: 2px solid #ff3860;
+  border-radius: 4px;
+  box-shadow: 0 0 5px #ff3860;
 }
 
-
 .tabbar {
-    z-index: 1;
+  z-index: 1;
 }
 
 .page-content {
-    overflow-y: auto;
-    max-height: calc(100vh - 60px);
-    padding-bottom: 60px
+  overflow-y: auto;
+  max-height: calc(100vh - 60px);
+  padding-bottom: 60px;
 }

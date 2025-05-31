@@ -78,3 +78,69 @@ $border: #205D9E;
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
 }
+
+.section-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.info-list, .amount-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.info-list li, .amount-list li {
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.equipement-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr; 
+  gap: 8px;
+}
+
+.tags-container-work {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.tag-work {
+  background-color: $text;
+  border: 1px solid #d0d7de;
+  border-radius: 16px;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #333;
+  max-width: 100%;
+  white-space: normal;
+  word-break: break-word;
+}
+
+@media (min-width: 600px) {
+  #show-work .button-footer {
+    flex-direction: row;
+    justify-content: space-around;
+  }
+}
+
+#show-work .animate-fade-in {
+  animation: fadeIn 0.5s ease-in-out both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#show-work .actions {
+  gap: 25%
+}

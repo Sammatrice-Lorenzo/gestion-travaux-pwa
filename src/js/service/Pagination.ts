@@ -1,37 +1,48 @@
 export default class Pagination {
   public currentPage: number
-
   public totalItems: number
-
   public totalElementParPage: number
+  private _updateContentCallback: CallableFunction
+  private _paginationContainer: HTMLElement
 
-  public constructor(totalItems: number, totalElementParPage: number) {
+  constructor(
+    totalItems: number,
+    totalElementParPage: number,
+    paginationContainer: HTMLElement,
+  ) {
     this.currentPage = 1
     this.totalItems = totalItems
     this.totalElementParPage = totalElementParPage
+    this._paginationContainer = paginationContainer
+  }
+
+  public setUpdateContentCallBack(updateContent: CallableFunction): void {
+    this._updateContentCallback = updateContent
   }
 
   public getTotalPages(): number {
     return Math.ceil(this.totalItems / this.totalElementParPage)
   }
 
-  public nextElement(
+  public async nextElement(
     prevButton: HTMLButtonElement,
     nextButton: HTMLButtonElement,
-  ): void {
+  ): Promise<void> {
     if (this.currentPage < this.getTotalPages()) {
       this.currentPage++
       this.updatePagination(prevButton, nextButton)
+      await this._updateContentCallback()
     }
   }
 
-  public previousElement(
+  public async previousElement(
     prevButton: HTMLButtonElement,
     nextButton: HTMLButtonElement,
-  ): void {
+  ): Promise<void> {
     if (this.currentPage > 1) {
       this.currentPage--
       this.updatePagination(prevButton, nextButton)
+      await this._updateContentCallback()
     }
   }
 
@@ -42,23 +53,26 @@ export default class Pagination {
     prevButton.disabled = this.currentPage === 1
     nextButton.disabled = this.currentPage === this.getTotalPages()
 
-    const pageLinks: NodeListOf<HTMLElement> =
-      document.querySelectorAll('.page-link')
-    for (const pageLink of pageLinks) {
-      const dataPage: string | null = pageLink.getAttribute('data-page')
-      if (dataPage) {
-        pageLink.classList.toggle(
-          'active',
-          Number.parseInt(dataPage) === this.currentPage,
-        )
-      }
-    }
+    this.renderPageLinks(this._paginationContainer)
+    this.handleActionButtonsWithNumber(prevButton, nextButton)
   }
 
   public renderPageLinks(container: HTMLElement): void {
     container.innerHTML = ''
+    const maximumVisbleLinkPages: number = 4
+    const totalPages: number = this.getTotalPages()
 
-    for (let i = 1; i <= this.getTotalPages(); i++) {
+    let startPage: number = Math.max(
+      this.currentPage - Math.floor(maximumVisbleLinkPages / 2),
+      1,
+    )
+    let endPage: number = startPage + maximumVisbleLinkPages - 1
+    if (endPage > totalPages) {
+      endPage = totalPages
+      startPage = Math.max(endPage - maximumVisbleLinkPages + 1, 1)
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
       const a: HTMLAnchorElement = document.createElement('a')
       a.href = '#'
       a.classList.add('page-link')
@@ -73,27 +87,24 @@ export default class Pagination {
     }
   }
 
-  public handleActionButtonsWithNumber(
+  private handleActionButtonsWithNumber(
     prevButton: HTMLButtonElement,
     nextButton: HTMLButtonElement,
-    updateContent: CallableFunction,
   ): void {
-    const pageLinks: NodeListOf<HTMLElement> =
-      document.querySelectorAll('.page-link')
-    for (const pageLink of pageLinks) {
-      pageLink.addEventListener('click', async (e: MouseEvent) => {
+    this._paginationContainer.onclick = async (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      if (target.classList.contains('page-link')) {
         e.preventDefault()
-        const dataPage: string | null = pageLink.getAttribute('data-page')
+        const dataPage = target.getAttribute('data-page')
         if (dataPage) {
           const page = Number.parseInt(dataPage)
-
           if (page !== this.currentPage) {
             this.currentPage = page
             this.updatePagination(prevButton, nextButton)
-            await updateContent()
+            await this._updateContentCallback()
           }
         }
-      })
+      }
     }
   }
 }
