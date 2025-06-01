@@ -1,8 +1,9 @@
 import Framework7 from 'framework7'
 import Framework7DTO from './Framework7DTO.js'
-import { apiRequest, callAPI, deleteAPI, fetchFileAPI } from './api'
+import { apiRequest, deleteAPI, fetchFileAPI } from './api'
 import { checkDataToGetOfAResponseCached, responseIsCached } from './cache'
 import { RouteDTO } from './dto/RouteDTO.js'
+import { ApiService } from './service/api/ApiService.ts'
 import { getDateCalendarDefaultFormat } from './service/calendar/calendarDateService.ts'
 import { getUrl, getUrlById, getUrlWithParameters } from './urlGenerator'
 
@@ -25,7 +26,7 @@ async function getWorkEventDayByUser($f7, calendar = null) {
     return checkDataToGetOfAResponseCached(url)
   }
 
-  return callAPI(url, $f7)
+  return new ApiService($f7).call(url)
 }
 
 /**

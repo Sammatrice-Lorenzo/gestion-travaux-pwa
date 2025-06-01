@@ -1,157 +1,180 @@
 <template>
-    <div class="page" data-name="form">
-        <div class="navbar">
-            <div class="navbar-bg"></div>
-            <div class="navbar-inner sliding">
-                <div class="left">
-                    <a href="#" class="link back">
-                        <i class="icon icon-back"></i>
-                        <span class="if-not-md">Retour</span>
-                    </a>
-                </div>
-                <div class="title">Nouvelle prestation</div>
-            </div>
+  <div class="page" data-name="form">
+    <div class="navbar">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner sliding">
+        <div class="left">
+          <a href="#" class="link back">
+            <i class="icon icon-back"></i>
+            <span class="if-not-md">Retour</span>
+          </a>
         </div>
-        <div class="page-content">
-            <form id="form-work">
-                <div class="block-title">Création d'une prestation</div>
-                <div class="list list-strong-ios list-dividers-ios list-outline-ios">
-                    <ul>
-                        <li>
-                            <div class="item-content item-input">
-                                <div class="item-inner">
-                                    <div class="item-title item-label">Nom</div>
-                                    <div class="item-input-wrap">
-                                        <input name='name' type="text" placeholder="Nom prestation" required validate />
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="item-content item-input">
-                                <div class="item-inner">
-                                    <div class="item-title item-label">Ville</div>
-                                    <div class="item-input-wrap">
-                                        <input name='city' type="text" placeholder="Paris" required validate />
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="item-content item-input">
-                                <div class="item-inner">
-                                    <div class="item-title item-label">Client</div>
-                                    <div class="item-input-wrap">
-                                        <select name="client">
-                                            ${clients.map((client) => $h`
-                                                <option value='${client.id}'>${client.firstname} ${client.lastname}</option>
-                                            `)}
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="item-content item-input">
-                                <div class="item-inner">
-                                    <div class="item-title item-label">Progression</div>
-                                    <div class="item-input-wrap">
-                                        <select name="progression">
-                                            <option>Pas commencé</option>
-                                            <option>En cours</option>
-                                            <option>Terminé</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="item-content item-input">
-                                <div class="item-inner">
-                                    <div class="item-title item-label">Date de début</div>
-                                    <div class="item-input-wrap">
-                                        <input name='start' type="datetime-local"
-                                            placeholder="Date de début" 
-                                            value="${convertFrenchDate(now)}" required validate 
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="item-content item-input">
-                                <div class="item-inner">
-                                    <div class="item-title item-label">Date de fin</div>
-                                    <div class="item-input-wrap">
-                                        <input name='end' type="datetime-local"
-                                            placeholder="Date de fin"
-                                            value="${convertFrenchDate(now)}" required validate 
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li id="equipements-list">
-                            <div class="item-content item-input equipement">
-                                <div class="item-inner">
-                                    <div class="item-title item-label">Équipement</div>
-                                    <div class="item-input-wrap display-flex justify-content-end">
-                                        <input name='equipements' type="text" placeholder="Cables réseaux" />
-                                        <a href="#" @click="${addEquipement}" class="tooltip-init add-equipement"
-                                            data-tooltip="Ajouter d'autres équipements"
-                                        >
-                                            <i class="f7-icons">plus_app_fill</i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="item-content item-input">
-                                <div class="item-inner">
-                                    <div class="item-title item-label">Total prestation</div>
-                                    <div class="item-input-wrap">
-                                        <input name='totalAmount' type="number" min="0" step="0.01"
-                                            placeholder="150.50"
-                                            value="00.00" required validate 
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </form>
-            <div class="block">
-                <button class="button button-small button-round button-fill" @click="${send}">Sauvegarder</button>
-            </div>
-        </div>
+        <div class="title">${formService.getPageTitle()}</div>
+      </div>
     </div>
+    <div class="page-content">
+      <form id="form-work">
+        <div class="block-title">${formService.getBlockTitle()}</div>
+        <div class="list list-strong-ios list-dividers-ios list-outline-ios">
+          <ul>
+            <li>
+              <div class="item-content item-input">
+                <div class="item-inner">
+                  <div class="item-title item-label">Nom</div>
+                  <div class="item-input-wrap">
+                    <input name='name' type="text" placeholder="Nom prestation" required validate />
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="item-content item-input">
+                <div class="item-inner">
+                  <div class="item-title item-label">Ville</div>
+                  <div class="item-input-wrap">
+                    <input name='city' type="text" placeholder="Paris" required validate />
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="item-content item-input">
+                <div class="item-inner">
+                  <div class="item-title item-label">Client</div>
+                  <div class="item-input-wrap">
+                    <select name="client">
+                      ${clients.map((client) => $h`
+                        <option value='${client.id}'>${client.firstname} ${client.lastname}</option>
+                      `)}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </li>
+              <li>
+                <div class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Progression</div>
+                    <div class="item-input-wrap">
+                      <select name="progression">
+                        <option>Pas commencé</option>
+                        <option>En cours</option>
+                        <option>Terminé</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Date de début</div>
+                    <div class="item-input-wrap">
+                      <input
+                        name='start'
+                        type="datetime-local"
+                        placeholder="Date de début"
+                        value="${convertFrenchDate(now)}"
+                        required validate
+                      />
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Date de fin</div>
+                    <div class="item-input-wrap">
+                      <input
+                        name='end'
+                        type="datetime-local"
+                        placeholder="Date de fin"
+                        value="${convertFrenchDate(now)}"
+                        required validate
+                      />
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li id="equipements-list">
+                <div class="item-content item-input equipement">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Équipement</div>
+                    <div class="item-input-wrap display-flex justify-content-end">
+                      <input name='equipements' type="text" placeholder="Cables réseaux" />
+                        <a href="#" @click="${addEquipement}" class="tooltip-init add-equipement"
+                          data-tooltip="Ajouter d'autres équipements"
+                          >
+                            <i class="f7-icons">plus_app_fill</i>
+                        </a>
+                      </div>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Total prestation HT</div>
+                    <div class="item-input-wrap">
+                      <input
+                        name='totalAmount'
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        placeholder="150.50"
+                        value="00.00" required validate 
+                      />
+                    </div>
+                  </div>
+                </div>
+            </li>
+          </ul>
+        </div>
+      </form>
+      
+      <div class="grid grid-cols-3 gap-4 justify-items-center items-center margin-top">
+        <button
+          class="button button-small button-round button-tonal btn-save"
+          @click="${() => formService.send()}"
+        >
+          <i class="icon f7-icons">checkmark</i>
+        </button>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
-    import Framework7 from 'framework7/bundle'
-    import Dom7 from 'dom7'
+  import Framework7 from 'framework7/bundle'
+  import Dom7 from 'dom7'
 
-    import { formatDate, convertFrenchDate } from '../../js/date.js'
-    import { createWork } from '../../js/work.js'
-    import { getClientsByUser } from '../../js/client/client.js'
-    import { addInputEquipement, getEquipementsInForm } from '../../js/work/component/btnComponent.js'
+  import { convertFrenchDate } from '../../js/date.js'
 
-    export default async (props, {$, $on, $f7, $onBeforeUnmount } ) => {
+  import { getClientsByUser } from '../../js/client/client.js'
+  import { updateWork } from '../../js/work.js'
+  import { findWorkById } from '../../js/work.js'
+  import WorkUpdateService from '../../js/service/work/WorkUpdateService.ts'
+  import WorkCreateFormService from '../../js/service/work/WorkCreateFormService.ts'
 
-        const now = new Date().toLocaleString()
-        const clients = await getClientsByUser($f7)
-        const send = () => {
-            const equipements = getEquipementsInForm(Dom7)
-            const formData = $f7.form.convertToData('#form-work')
-            formData.equipements = equipements
+  import * as btnComponent from '../../js/work/component/btnComponent.js'
+  export default async (props, {$, $on, $f7, $onBeforeUnmount } ) => {
 
-            createWork(formData, $f7)
-        }
-
-        const addEquipement = () => addInputEquipement()
-
-        return $render
+    let formService
+    if (props && props.prestationId) {
+      const workId = props.prestationId
+      formService = new WorkUpdateService($f7, workId, 'form-work')
+    } else {
+      formService = new WorkCreateFormService($f7, 'form-work')
     }
 
+    const now = new Date().toLocaleString()
+    const clients = await getClientsByUser($f7)
+
+    $on('pageBeforeIn', () => {
+      formService.initForm()
+    })
+    const addEquipement = () => btnComponent.addInputEquipement()
+
+    return $render
+}
 </script>

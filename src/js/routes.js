@@ -9,7 +9,6 @@ import FormUpdateUser from '../pages/user/form-update-user.f7'
 import FormRegister from '../pages/user/form-user.f7'
 import ShowUser from '../pages/user/show-user.f7'
 import FormInvoiceWork from '../pages/work/form-invoice-work.f7'
-import FormUpdateWork from '../pages/work/form-update-work.f7'
 import FormWork from '../pages/work/form-work.f7'
 import WorkIndex from '../pages/work/index-work.f7'
 import ShowWork from '../pages/work/show-work.f7'
@@ -41,7 +40,7 @@ const routes = [
   },
   {
     path: '/form-work/update/:prestationId',
-    component: FormUpdateWork,
+    component: FormWork,
   },
   {
     path: '/form-work/invoice/:prestation/:clientId',

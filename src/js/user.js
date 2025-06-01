@@ -1,14 +1,15 @@
 import Dom7 from 'dom7'
-import { callAPI } from './api.js'
 import { clearCache } from './cache'
 import * as messages from './messages'
+import { ApiService } from './service/api/ApiService.ts'
 import { getToken } from './token.js'
 import { getUrl, getUrlById, getUrlUser } from './urlGenerator.js'
 
 export async function showUser($f7) {
   const url = getUrlUser()
+  const apiService = new ApiService($f7)
 
-  const response = await callAPI(url, $f7)
+  const response = await apiService.call(url)
 
   return response[0]
 }

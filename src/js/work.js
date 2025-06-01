@@ -1,5 +1,5 @@
 import Framework7 from 'framework7'
-import { apiRequest, callAPI, deleteAPI, fetchCreate } from './api'
+import { apiRequest, deleteAPI, fetchCreate } from './api'
 import { checkDataToGetOfAResponseCached, responseIsCached } from './cache'
 import { RouteDTO } from './dto/RouteDTO'
 import { ApiService } from './service/api/ApiService'
@@ -35,16 +35,13 @@ async function getWorkByUser($f7, currentPage) {
 
 async function findWorkById(id, $f7) {
   const url = getUrlById(URL_WORK, id)
-  const response = await callAPI(url, $f7)
+  const apiService = new ApiService($f7)
+  const works = await apiService.call(url)
 
-  return response[0]
+  return works[0]
 }
 
 function createWork(form, $f7) {
-  if (!customValidation(form, $f7)) {
-    return
-  }
-
   const url = getUrl('/api/works')
   const body = getBodyWork(form)
 
@@ -71,10 +68,6 @@ function updateWork(form, idWork, $f7) {
   const url = getUrlById(URL_WORK, idWork)
   const body = getBodyWork(form)
 
-  if (!customValidation(form, $f7)) {
-    return
-  }
-
   const routeDTO = new RouteDTO()
     .setApp($f7)
     .setRoute(URL_TO_REDIRECT)
@@ -83,42 +76,6 @@ function updateWork(form, idWork, $f7) {
     .setMethod('PUT')
 
   apiRequest(routeDTO)
-}
-
-function customValidation(form, $f7) {
-  let valueReturned = true
-
-  if (form.name === '') {
-    $f7.dialog.alert('Veuillez saisir un nom')
-    valueReturned = false
-  } else if (form.city === '') {
-    $f7.dialog.alert('Veuillez saisir le nom de la ville')
-    valueReturned = false
-  }
-
-  if (!form.client) {
-    $f7.dialog.alert(
-      'Veuillez rajouter des clients pour pouvoir créer des prestations',
-    )
-    valueReturned = false
-  }
-
-  for (const equipement of form.equipements) {
-    if (equipement === '') {
-      $f7.dialog.alert('Veuillez saisir un équipement')
-      valueReturned = false
-    }
-  }
-
-  return valueReturned
-}
-
-/**
- * @param { Array } equipements
- * @returns { String }
- */
-function getEquipementsInLine(equipements) {
-  return equipements.join(', ')
 }
 
 /**
@@ -141,11 +98,4 @@ function getBodyWork(form) {
   })
 }
 
-export {
-  getWorkByUser,
-  findWorkById,
-  createWork,
-  updateWork,
-  deleteWork,
-  getEquipementsInLine,
-}
+export { getWorkByUser, findWorkById, createWork, updateWork, deleteWork }

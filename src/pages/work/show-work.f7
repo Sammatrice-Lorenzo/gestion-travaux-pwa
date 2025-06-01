@@ -167,7 +167,7 @@
   import Dom7 from 'dom7'
 
   import { formatDate } from '../../js/date.js'
-  import { findWorkById, deleteWork, getEquipementsInLine } from '../../js/work.js'
+  import { findWorkById, deleteWork } from '../../js/work.js'
   import { CONFIRMATION_TO_DELETE } from '../../js/messages.js'
   import { loadTabbar } from '../../js/components/tabbar.js'
   import { totalAmountTVA, tvaOnAmount } from '../../js/helper/priceWorkHelper'

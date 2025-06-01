@@ -24,14 +24,21 @@ export default class Pagination {
     return Math.ceil(this.totalItems / this.totalElementParPage)
   }
 
+  private async handleUpdateElement(
+    prevButton: HTMLButtonElement,
+    nextButton: HTMLButtonElement,
+  ): Promise<void> {
+    this.updatePagination(prevButton, nextButton)
+    await this._updateContentCallback()
+  }
+
   public async nextElement(
     prevButton: HTMLButtonElement,
     nextButton: HTMLButtonElement,
   ): Promise<void> {
     if (this.currentPage < this.getTotalPages()) {
       this.currentPage++
-      this.updatePagination(prevButton, nextButton)
-      await this._updateContentCallback()
+      this.handleUpdateElement(prevButton, nextButton)
     }
   }
 
@@ -41,8 +48,7 @@ export default class Pagination {
   ): Promise<void> {
     if (this.currentPage > 1) {
       this.currentPage--
-      this.updatePagination(prevButton, nextButton)
-      await this._updateContentCallback()
+      this.handleUpdateElement(prevButton, nextButton)
     }
   }
 

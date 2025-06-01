@@ -44,7 +44,8 @@ const convertFrenchDate = (date) => {
   const [datePart, timePart] = date.split(' ')
   const [day, month, year] = datePart.split('/')
 
-  return `${year}-${month}-${day} ${timePart}`
+  const [hours, minutes] = timePart.split(':')
+  return `${year}-${month}-${day} ${hours}:${minutes}`
 }
 
 export { formatDate, convertFrenchDate, getTime, getMontYear }

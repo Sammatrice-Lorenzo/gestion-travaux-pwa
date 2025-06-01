@@ -27,7 +27,7 @@ export class ApiService {
     this._totalItems = 0
   }
 
-  private getHeaders(header: string | null) {
+  private getHeaders(header?: string) {
     const token = getToken()
     const type: string = header ?? 'application/json'
 
@@ -74,7 +74,7 @@ export class ApiService {
 
   async call<T = unknown>(
     url: string,
-    header: string | null,
+    header?: string,
   ): Promise<ApiResponse<T>> {
     this._preloader.show()
 

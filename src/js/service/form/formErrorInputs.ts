@@ -17,8 +17,8 @@ const addBoxError = (input: Element, text: string): void => {
 }
 
 const removeClassErrorInInputs = (form: HTMLElement): void => {
-  for (const input of form.querySelectorAll('input')) {
-    input.classList.remove('input-invalid')
+  for (const div of form.querySelectorAll('.item-input-error-message')) {
+    div.remove()
   }
 }
 
@@ -33,13 +33,20 @@ const handleSubmitForm = (
   removeClassErrorInInputs(form)
   if (!result.success) {
     const errors = result.error.flatten().fieldErrors
+    console.log(formData)
+    console.log(errors)
+
     for (const field in errors) {
       const input: Element | null = form.querySelector(`[name="${field}"]`)
       const itemContent: HTMLElement | null | undefined =
         input?.parentElement?.parentElement?.parentElement
       if (input && itemContent) {
-        itemContent.classList =
-          'item-content item-input item-input-with-error-message item-input-invalid'
+        itemContent.classList.add(
+          'item-content',
+          'item-input',
+          'item-input-with-error-message',
+          'item-input-invalid',
+        )
         input.classList.add('input-invalid')
 
         const text = errors[field]

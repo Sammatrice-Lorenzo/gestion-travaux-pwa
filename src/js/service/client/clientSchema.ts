@@ -18,6 +18,6 @@ export const clientSchema = z.object({
     .regex(regexPhoneNumber, 'Veuillez saisir un numéro valide'),
   email: z
     .string()
-    .min(1, "Veuillez saisir l`'email ")
+    .min(1, "Veuillez saisir l'email ")
     .email('Veuillez saisir un email valide !'),
 })

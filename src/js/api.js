@@ -1,5 +1,4 @@
-import Framework7 from 'framework7'
-import { clearCache, stockResponseInCache } from './cache'
+import { clearCache } from './cache'
 import { RouteDTO } from './dto/RouteDTO'
 import { downloadFile } from './helper/fileHelper'
 import * as messages from './messages'
@@ -143,54 +142,4 @@ function fetchFileAPI(routeDTO, nameFile) {
     })
 }
 
-/**
- * @param { URL } url
- * @param { Framework7 } $f7
- * @returns { Promise<any> }
- */
-async function callAPI(url, $f7) {
-  const responses = []
-  const preloader = $f7.preloader
-  preloader.show()
-
-  await fetch(url, {
-    method: 'GET',
-    headers: getHeaders(),
-  })
-    .then((response) =>
-      response
-        .clone() // Cloner la réponse pour stockResponseInCache
-        .json()
-        .then(async (data) => {
-          if (process.env.NODE_ENV === 'production') {
-            stockResponseInCache(url, response.clone()) // Utiliser la réponse clonée
-          }
-
-          if (data.code === 401) {
-            $f7.dialog.alert(messages.TOKEN_EXPIRED)
-            $f7.views.main.router.navigate('/')
-          }
-
-          let dataResponse =
-            'hydra:member' in data ? data['hydra:member'] : data
-          dataResponse = Array.isArray(dataResponse)
-            ? dataResponse
-            : [dataResponse]
-          for (const iterator of dataResponse) {
-            responses.push(iterator)
-          }
-
-          preloader.hide()
-
-          return responses
-        }),
-    )
-    .catch((error) => {
-      console.log(error)
-      preloader.hide()
-    })
-
-  return responses
-}
-
-export { apiRequest, deleteAPI, fetchFileAPI, callAPI, fetchCreate }
+export { apiRequest, deleteAPI, fetchFileAPI, fetchCreate }

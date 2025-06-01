@@ -157,7 +157,7 @@
 
   import { formatDate } from '../../js/date.js'
   import { getProgressColor } from '../../js/helper/statusHelper.ts'
-  import { getWorkByUser, getEquipementsInLine } from '../../js/work.js'
+  import { getWorkByUser } from '../../js/work.js'
   import { sendNotificationPushForProgression } from '../../js/notification'
   import { loadTabbar } from '../../js/components/tabbar.js'
   import { totalAmountTVA, tvaOnAmount } from '../../js/helper/priceWorkHelper'
