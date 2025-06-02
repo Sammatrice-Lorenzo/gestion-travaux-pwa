@@ -26,14 +26,7 @@ async function checkDataToGetOfAResponseCached(url) {
   const cachedResponse = await cache.match(url)
 
   if (cachedResponse) {
-    // Utilisation de la réponse en cache
-    const cachedData = await cachedResponse.json()
-    const dataResponse = cachedData.hasOwnProperty('hydra:member')
-      ? cachedData['hydra:member']
-      : cachedData
-    for (const iterator of dataResponse) {
-      responseInCache.push(iterator)
-    }
+    return await cachedResponse.json()
   }
 
   return responseInCache

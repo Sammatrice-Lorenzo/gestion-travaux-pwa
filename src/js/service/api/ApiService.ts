@@ -57,7 +57,7 @@ export class ApiService {
     return false
   }
 
-  private extractDataResponse<T>(data: ApiRawResponse<T>): ApiResponse<T> {
+  public extractDataResponse<T>(data: ApiRawResponse<T>): ApiResponse<T> {
     let items: T[]
 
     if ('hydra:member' in data) {
@@ -85,8 +85,7 @@ export class ApiService {
       })
 
       const data = await response.clone().json()
-
-      this.handleCache(url, data)
+      this.handleCache(url, response)
 
       const isUnauthorized = await this.redirectWhenUnathorized(data)
       if (isUnauthorized) return []
@@ -100,7 +99,7 @@ export class ApiService {
     }
   }
 
-  public getTotalItemns(): number {
+  public getTotalItems(): number {
     return this._totalItems
   }
 }

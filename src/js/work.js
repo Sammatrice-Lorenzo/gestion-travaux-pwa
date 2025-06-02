@@ -19,17 +19,20 @@ const URL_TO_REDIRECT = '/prestation/'
  */
 async function getWorkByUser($f7, currentPage) {
   const url = getUrlWithParameters(URL_WORK, { page: currentPage })
+  const apiService = new ApiService($f7)
 
-  const cache = await responseIsCached(url)
-  if (cache) {
-    return checkDataToGetOfAResponseCached(url)
+  const isCachedResponse = await responseIsCached(url)
+  let works
+  if (isCachedResponse) {
+    const responseCached = await checkDataToGetOfAResponseCached(url)
+    works = apiService.extractDataResponse(responseCached)
+  } else {
+    works = await apiService.call(url, 'application/ld+json')
   }
 
-  const apiService = new ApiService($f7)
-  const works = await apiService.call(url, 'application/ld+json')
   return {
     works,
-    totalItems: apiService.getTotalItemns(),
+    totalItems: apiService.getTotalItems(),
   }
 }
 
