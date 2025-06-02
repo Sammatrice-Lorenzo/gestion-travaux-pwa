@@ -3,7 +3,7 @@
     <div class="page-content login-screen-content">
       <div class="card-login">
         <div class="card-header">
-          <img src="/assets/logo.png" alt="Logo Gestion Travaux" class="app-logo" />
+          <img src="/logo.png" alt="Logo Gestion Travaux" class="app-logo" />
           <div class="app-name">Gestion Travaux</div>
         </div>
         <div class="card-content">
