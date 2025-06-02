@@ -15,16 +15,16 @@ describe('Client test', () => {
 
     const menu: ElementHandle<HTMLElement | SVGElement> =
       await page.waitForSelector('.panel-open')
-    menu.click()
-    page.getByText('Clients').click()
+    await menu.click()
+    await page.getByText('Clients').click()
 
-    page.waitForSelector('.panel-backdrop-in', {
+    await page.waitForSelector('.panel-backdrop-in', {
       state: 'visible',
-      timeout: 10000,
+      timeout: 60000,
     })
     await assertIndexPageClients(page)
 
-    page.locator('.panel-backdrop-in').click()
+    await page.locator('.panel-backdrop-in').click()
   })
 
   test('show client', async ({ page }) => {
@@ -32,18 +32,21 @@ describe('Client test', () => {
     const rowTitle = rowClient.filter({ has: page.locator('.item-title') })
     const nameClient: string | null = await rowTitle.textContent()
 
-    rowClient.click()
+    await rowClient.click()
     await expect(page.locator('#show-clients')).toBeVisible({
       timeout: 60000,
     })
 
-    await expect(nameClient).toEqual(
+    expect(nameClient).toEqual(
       await page.getByTestId('name-client').textContent(),
     )
   })
 
   test('Create client', async ({ page, defaultBrowserType }) => {
-    page.getByText('Ajouter').click()
+    await page
+      .locator('#index-client')
+      .getByRole('link', { name: 'Ajouter plus_app_fill' })
+      .click()
     await page.waitForSelector('#form-client')
 
     const firstname: string = 'John'
