@@ -33,8 +33,6 @@ const handleSubmitForm = (
   removeClassErrorInInputs(form)
   if (!result.success) {
     const errors = result.error.flatten().fieldErrors
-    console.log(formData)
-    console.log(errors)
 
     for (const field in errors) {
       const input: Element | null = form.querySelector(`[name="${field}"]`)

@@ -88,8 +88,8 @@ function getBodyWork(form) {
   return JSON.stringify({
     name: form.name,
     city: form.city,
-    start: form.start,
-    end: form.end,
+    start: new Date(form.start).toISOString(),
+    end: new Date(form.end).toISOString(),
     progression: form.progression,
     equipements: form.equipements,
     user: urlAPiUser,

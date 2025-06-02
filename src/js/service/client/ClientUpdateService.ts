@@ -9,7 +9,7 @@ import { clientSchema } from './clientSchema'
 export default class ClientUpdateService implements FormPageInteface {
   constructor(
     private _app: Framework7,
-    private clientId: number,
+    private _clientId: number,
     private _selectorForm: string,
   ) {}
 
@@ -23,7 +23,7 @@ export default class ClientUpdateService implements FormPageInteface {
 
   public async initForm(): Promise<void> {
     const client = (await findClientById(
-      this.clientId,
+      this._clientId,
       this._app,
     )) as ClientInterface
     const formClient: ClientFormInteface = {
@@ -47,6 +47,6 @@ export default class ClientUpdateService implements FormPageInteface {
       return
     }
 
-    updateClient(formData, this.clientId, this._app)
+    updateClient(formData, this._clientId, this._app)
   }
 }

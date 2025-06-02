@@ -24,8 +24,8 @@ export const formWorkSchema = z
     start: dateField,
     end: dateField,
     equipements: z
-      .array(z.string().min(1, 'Veuillez saisir un équipement'))
-      .min(1, 'Veuillez saisir au moins un équipement'),
+      .array(z.string().min(1, 'Veuillez saisir une ressoruce'))
+      .min(1, 'Veuillez saisir au moins une ressoruce'),
     totalAmount: z.preprocess(
       (val) => (typeof val === 'string' ? Number.parseFloat(val) : val),
       z.number().min(1, 'Montant invalide'),

@@ -68,7 +68,6 @@ export function getEquipementsInForm() {
   const equipementsInputs = document.querySelectorAll(
     'input[name="equipements"]',
   )
-  console.log(equipementsInputs)
 
   for (const equipement of equipementsInputs) {
     equipements.push(equipement.value)

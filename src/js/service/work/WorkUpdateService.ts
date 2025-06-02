@@ -2,6 +2,7 @@ import type Framework7 from 'framework7'
 import type { FormPageInteface } from '../../../intefaces/FormPageInteface'
 import type WorkFormInterface from '../../../intefaces/Work/WorkFormInterface'
 import type WorkInterface from '../../../intefaces/Work/WorkInterface'
+import { toDatetimeLocalString } from '../../helper/date'
 import { findWorkById, updateWork } from '../../work'
 import {
   getEquipementsInForm,
@@ -13,7 +14,7 @@ import { formWorkSchema } from './workSchema'
 export default class WorkUpdateService implements FormPageInteface {
   constructor(
     private _app: Framework7,
-    private workId: number,
+    private _workId: number,
     private _selectorForm: string,
   ) {}
 
@@ -26,14 +27,15 @@ export default class WorkUpdateService implements FormPageInteface {
   }
 
   public async initForm(): Promise<void> {
-    const work = (await findWorkById(this.workId, this._app)) as WorkInterface
+    const work = (await findWorkById(this._workId, this._app)) as WorkInterface
+
     const formWork: WorkFormInterface = {
       name: work.name,
       city: work.city,
       client: work.client.id,
       progression: work.progression,
-      start: work.start.split('+').shift(),
-      end: work.end.split('+').shift(),
+      start: toDatetimeLocalString(new Date(work.start)),
+      end: toDatetimeLocalString(new Date(work.end)),
       totalAmount: work.totalAmount,
       equipements: work.equipements,
     }
@@ -51,6 +53,6 @@ export default class WorkUpdateService implements FormPageInteface {
       return
     }
 
-    updateWork(formData, this.workId, this._app)
+    updateWork(formData, this._workId, this._app)
   }
 }

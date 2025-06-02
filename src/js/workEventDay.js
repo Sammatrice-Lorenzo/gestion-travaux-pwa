@@ -102,31 +102,6 @@ const getBody = (body) => {
 }
 
 /**
- * @param { Framework7DTO } framework7DTO
- * @returns { Boolean }
- */
-function isValidForm(framework7DTO) {
-  const $ = framework7DTO.getSelector()
-  const $f7 = framework7DTO.getApp()
-
-  const form = $('form#form-calendar')
-  const inputs = $(form).find('input')
-
-  let isValid = true
-
-  for (const input of inputs) {
-    const divParent = $(input).closest('.item-inner')
-    if (input.value.trim() === '') {
-      isValid = false
-      const label = $(divParent).find('.item-title').text()
-      $f7.dialog.alert(`${label} ne peut pas être vide.`)
-    }
-  }
-
-  return isValid
-}
-
-/**
  * @param { import('framework7/components/calendar').Calendar.Calendar } calendar
  * @param { Framework7 } $f7
  */
@@ -152,6 +127,5 @@ export {
   createWorkEventDay,
   updateWorkEventDay,
   deleteWorkEventDay,
-  isValidForm,
   downloadCalendarEvents,
 }

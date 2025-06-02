@@ -1,11 +1,11 @@
+import { ProgressionEnum } from '../enum/ProgressionEnum'
+
 const getProgressColor = (status: string): string => {
-  switch (status.toLowerCase()) {
-    case 'en cours':
+  switch (status) {
+    case ProgressionEnum.IN_PROGRESS:
       return 'orange'
-    case 'terminé':
+    case ProgressionEnum.DONE:
       return 'green'
-    case 'annulé':
-      return 'red'
     default:
       return 'gray'
   }

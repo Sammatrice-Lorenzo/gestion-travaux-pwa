@@ -17,6 +17,7 @@
         <span class="text-lg font-bold">Informations prestation</span>
         <div class="display-flex gap-5 justify-content-end actions">
           <a
+            id="form-work-edit"
             href="/form-work/update/${props.prestationId}"
             class="link icon-only color-primary"
           >
@@ -90,7 +91,7 @@
               <div class="item-content">
                 <div class="item-media"><i class="f7-icons">hammer</i></div>
                 <div class="item-inner">
-                  <div class="item-title"><strong>Équipements :</strong></div>
+                  <div class="item-title"><strong>Ressources utilisées :</strong></div>
                 </div>
               </div>
             </li>
@@ -166,7 +167,7 @@
   import Framework7 from 'framework7/bundle'
   import Dom7 from 'dom7'
 
-  import { formatDate } from '../../js/date.js'
+  import { formatDate } from '../../js/helper/date.ts'
   import { findWorkById, deleteWork } from '../../js/work.js'
   import { CONFIRMATION_TO_DELETE } from '../../js/messages.js'
   import { loadTabbar } from '../../js/components/tabbar.js'

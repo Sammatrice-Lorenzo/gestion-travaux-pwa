@@ -74,7 +74,7 @@
                         name='start'
                         type="datetime-local"
                         placeholder="Date de début"
-                        value="${convertFrenchDate(now)}"
+                        value="${now}"
                         required validate
                       />
                     </div>
@@ -90,7 +90,7 @@
                         name='end'
                         type="datetime-local"
                         placeholder="Date de fin"
-                        value="${convertFrenchDate(now)}"
+                        value="${now}"
                         required validate
                       />
                     </div>
@@ -100,11 +100,11 @@
               <li id="equipements-list">
                 <div class="item-content item-input equipement">
                   <div class="item-inner">
-                    <div class="item-title item-label">Équipement</div>
+                    <div class="item-title item-label">Ressource utilisé</div>
                     <div class="item-input-wrap display-flex justify-content-end">
-                      <input name='equipements' type="text" placeholder="Cables réseaux" />
+                      <input name='equipements' type="text" placeholder="Béton" />
                         <a href="#" @click="${addEquipement}" class="tooltip-init add-equipement"
-                          data-tooltip="Ajouter d'autres équipements"
+                          data-tooltip="Ajouter d'autres ressources"
                           >
                             <i class="f7-icons">plus_app_fill</i>
                         </a>
@@ -148,8 +148,6 @@
   import Framework7 from 'framework7/bundle'
   import Dom7 from 'dom7'
 
-  import { convertFrenchDate } from '../../js/date.js'
-
   import { getClientsByUser } from '../../js/client/client.js'
   import { updateWork } from '../../js/work.js'
   import { findWorkById } from '../../js/work.js'
@@ -167,7 +165,7 @@
       formService = new WorkCreateFormService($f7, 'form-work')
     }
 
-    const now = new Date().toLocaleString()
+    const now = new Date().toISOString().slice(0, 16)
     const clients = await getClientsByUser($f7)
 
     $on('pageBeforeIn', () => {

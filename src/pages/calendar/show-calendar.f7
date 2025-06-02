@@ -168,7 +168,6 @@
         createWorkEventDay,
         updateWorkEventDay,
         deleteWorkEventDay,
-        isValidForm,
         downloadCalendarEvents
     } from '../../js/workEventDay.js'
     import { getEventsFormatted } from '../../js/formatter/eventsFormatter.js'

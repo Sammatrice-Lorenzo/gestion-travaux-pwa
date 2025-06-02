@@ -78,7 +78,7 @@
                     <i class="icon f7-icons">hammer</i>
                   </div>
                   <div class="item-inner">
-                    <div class="item-title"><strong>Équipements :</strong></div>
+                    <div class="item-title"><strong>Ressources utilisées :</strong></div>
                   </div>
                 </div>
               </li>
@@ -155,7 +155,7 @@
 <script>
   import Framework7 from 'framework7/bundle'
 
-  import { formatDate } from '../../js/date.js'
+  import { formatDate } from '../../js/helper/date.ts'
   import { getProgressColor } from '../../js/helper/statusHelper.ts'
   import { getWorkByUser } from '../../js/work.js'
   import { sendNotificationPushForProgression } from '../../js/notification'

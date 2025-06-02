@@ -168,7 +168,7 @@
     import { createSheet } from '../../js/components/modalUploadFile.js'
     import { createPopup } from '../../js/components/popupProductInvoice.js'
     import { pdfPreviewPopup } from '../../js/components/pdfPreviewPopup.js'
-    import { getMontYear } from '../../js/date.js'
+    import { getMontYear } from '../../js/helper/date.ts'
     import { getIdOfElementClicked } from '../../js/helper/domElementClick'
     import Framework7DTO from '../../js/Framework7DTO.js'
     import { CONFIRMATION_TO_DELETE } from '../../js/messages.js'
