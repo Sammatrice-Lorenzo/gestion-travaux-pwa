@@ -1,13 +1,5 @@
 @use 'sass:color';
-
-$primary: #0D2847;
-$secondary: #004074;
-$accent: #2870BD;
-$background: #0D1520;
-$surface: #111927;
-$text: #C2E6FF;
-$muted: #205D9E;
-$border: #205D9E;
+@use 'variables';
 
 .page-login {
   display: flex;
@@ -25,9 +17,9 @@ $border: #205D9E;
 }
 
 .card-login {
-  border: 1px solid $muted;
+  border: 1px solid variables.$muted;
   box-shadow: 0 4px 12px rgba(0, 71, 125, 0.2);
-  color: $text;
+  color: variables.$text;
   border-radius: 40px 40px 40px 40px;
 }
 
@@ -36,10 +28,10 @@ $border: #205D9E;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, $secondary 0%, $accent 100%);
-  color: $text;
+  background: linear-gradient(135deg, variables.$secondary 0%, variables.$accent 100%);
+  color: variables.$text;
   padding: 16px;
-  border-bottom: 1px solid $muted;
+  border-bottom: 1px solid variables.$muted;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
   text-align: center;
@@ -65,22 +57,21 @@ $border: #205D9E;
   margin-right: 10px;
 }
 
-
 .app-logo {
   height: 6rem;
 }
 
 .app-name {
   font-size: 1.5rem;
-  color: $text;
+  color: variables.$text;
   font-weight: bold;
   opacity: 1;
   animation: fadeIn 1.5s ease-out;
 }
 
 .button.btn-login {
-  background-color: $accent;
-  color: $text;
+  background-color: variables.$accent;
+  color: variables.$text;
   font-weight: 500;
 }
 
@@ -89,11 +80,11 @@ li.btn-register {
 }
 
 #form-login i, .item-label {
-  color: $primary !important;
+  color: variables.$primary !important;
 }
 
 .button.btn-login:hover {
-  background-color: color.adjust($accent, $lightness: 10%);
+  background-color: color.adjust(variables.$accent, $lightness: 10%);
 }
 
 .center-login {
