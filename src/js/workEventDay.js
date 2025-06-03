@@ -1,8 +1,9 @@
 import Framework7 from 'framework7'
 import Framework7DTO from './Framework7DTO.js'
-import { apiRequest, callAPI, deleteAPI, fetchFileAPI } from './api'
+import { apiRequest, deleteAPI, fetchFileAPI } from './api'
 import { checkDataToGetOfAResponseCached, responseIsCached } from './cache'
 import { RouteDTO } from './dto/RouteDTO.js'
+import { ApiService } from './service/api/ApiService.ts'
 import { getDateCalendarDefaultFormat } from './service/calendar/calendarDateService.ts'
 import { getUrl, getUrlById, getUrlWithParameters } from './urlGenerator'
 
@@ -25,7 +26,7 @@ async function getWorkEventDayByUser($f7, calendar = null) {
     return checkDataToGetOfAResponseCached(url)
   }
 
-  return callAPI(url, $f7)
+  return new ApiService($f7).call(url)
 }
 
 /**
@@ -101,31 +102,6 @@ const getBody = (body) => {
 }
 
 /**
- * @param { Framework7DTO } framework7DTO
- * @returns { Boolean }
- */
-function isValidForm(framework7DTO) {
-  const $ = framework7DTO.getSelector()
-  const $f7 = framework7DTO.getApp()
-
-  const form = $('form#form-calendar')
-  const inputs = $(form).find('input')
-
-  let isValid = true
-
-  for (const input of inputs) {
-    const divParent = $(input).closest('.item-inner')
-    if (input.value.trim() === '') {
-      isValid = false
-      const label = $(divParent).find('.item-title').text()
-      $f7.dialog.alert(`${label} ne peut pas être vide.`)
-    }
-  }
-
-  return isValid
-}
-
-/**
  * @param { import('framework7/components/calendar').Calendar.Calendar } calendar
  * @param { Framework7 } $f7
  */
@@ -151,6 +127,5 @@ export {
   createWorkEventDay,
   updateWorkEventDay,
   deleteWorkEventDay,
-  isValidForm,
   downloadCalendarEvents,
 }

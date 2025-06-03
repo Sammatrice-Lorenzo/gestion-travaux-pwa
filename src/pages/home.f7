@@ -1,174 +1,70 @@
 <template>
-    <div class="page center-login view-main page-login">
-        <div class="page-content login-screen-content">
-            <div class="card-login">
-                <div class="card-header">
-                    <div class="login-screen-title">Page de connexion</div>
-                </div>
-                <div class="card-content">
-                    <form id="form-login">
-                        <div class="list list-strong-ios list-dividers-ios list-outline-ios list-login">
-                            <ul>
-                                <li class="item-content item-input">
-                                    <div class="item-inner">
-                                        <div class="item-title item-label">Username</div>
-                                        <div class="item-input-wrap">
-                                            <i class="icon f7-icons">person_fill</i>
-                                            <input type="text" name="username" placeholder="Votre email" />
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="item-content item-input">
-                                    <div class="item-inner">
-                                        <div class="item-title item-label">Password</div>
-                                        <div class="item-input-wrap">
-                                            <i class="icon f7-icons">lock_fill</i>
-                                            <input type="password" name="password" placeholder="Votre mot de passe" />
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="list block" style="margin-top: 2rem;">
-                            <ul>
-                                <li>
-                                    <a data-testid="link-login" href="#" class="button button-fill button-round btn-login">
-                                        Connexion
-                                    </a>
-                                </li>
-                                <li class="btn-register">
-                                    <a href="/register/" class="button button-fill button-round">
-                                        S'enregistrer
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </form>
-                </div>
-            </div>
+  <div class="page center-login view-main page-login">
+    <div class="page-content login-screen-content">
+      <div class="card-login">
+        <div class="card-header">
+          <img src="/logo.png" alt="Logo Gestion Travaux" class="app-logo" />
+          <div class="app-name">Gestion Travaux</div>
         </div>
+        <div class="card-content">
+          <form id="form-login">
+            <div class="list list-strong-ios list-dividers-ios list-outline-ios list-login">
+              <ul>
+                <li class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Username</div>
+                    <div class="item-input-wrap">
+                      <i class="icon f7-icons">person_fill</i>
+                      <input type="text" name="username" placeholder="Votre email" />
+                    </div>
+                  </div>
+                </li>
+                <li class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Password</div>
+                    <div class="item-input-wrap">
+                      <i class="icon f7-icons">lock_fill</i>
+                      <input type="password" name="password" placeholder="Votre mot de passe" />
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="list block" style="margin-top: 2rem;">
+              <ul>
+                <li>
+                  <a
+                    href="#"
+                    data-testid="link-login"
+                    class="button button-fill button-round btn-login"
+                    @click="${handleLogin}"
+                  >
+                    Connexion
+                  </a>
+                </li>
+                <li class="btn-register">
+                  <a href="/register/" class="button button-tonal button-round">
+                    S'enregistrer
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
-
-<style>
-
-.page-login {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    width: 100%;
-}
-
-#form-login .item-content {
-    margin-left: auto;
-}
-
-.login-screen-content {
-    width: 100%;
-    max-width: 42rem;
-    padding: 1rem;
-    box-sizing: border-box;
-}
-
-.card-login {
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.card-header {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.login-screen-title {
-    font-size: 24px;
-    font-weight: bold;
-    animation: fadeIn 1.5s ease-out;
-}
-
-.list, .list ul, .item-content {
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.item-input-wrap {
-    display: flex;
-    align-items: center;
-    background: #f0f0f0;
-    border-radius: 5px;
-    padding: 0.5rem;
-    margin-bottom: 15px;
-}
-
-.item-input-wrap input {
-    border: none;
-    background: transparent;
-    flex: 1;
-    padding: 0.5rem;
-    font-size: 16px;
-    box-sizing: border-box;
-}
-
-.item-input-wrap .icon {
-    margin-right: 10px;
-    color: #007aff;
-}
-
-.button, .btn-register a {
-    background: #007aff;
-    color: white;
-    font-size: 16px;
-    padding: 10px 0;
-    border-radius: 25px;
-    transition: background 0.3s, transform 0.3s;
-    width: 100%;
-    text-align: center;
-    box-sizing: border-box;
-}
-
-.button:hover {
-    background: #005bb5;
-    transform: scale(1.05);
-}
-
-.btn-register a {
-    background: #34c759;
-}
-
-.btn-register a:hover {
-    background: #28a745;
-    transform: scale(1.05);
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-</style>
-
 <script>
-    import Framework7 from 'framework7/bundle';
-    import { login } from '../js/login.js';
+  import Framework7 from 'framework7/bundle';
+  import { login } from '../js/login.js';
 
-    export default async (props, { $, $on, $f7 }) => {
-        $on('pageInit', () => {
-            $('.btn-login').on('click', async function () {
-                const formData = $f7.form.convertToData('#form-login');
-                await login(formData.username, formData.password, $f7)
-            });
-        });
-
-        return $render;
+  export default async (props, { $, $on, $f7 }) => {
+    const handleLogin = async () => {
+      const formData = $f7.form.convertToData('#form-login')
+      await login(formData.username, formData.password, $f7)
     }
+
+    return $render;
+  }
 </script>

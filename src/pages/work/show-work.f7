@@ -1,100 +1,201 @@
 <template>
-    <div id="show-work" class="page">
-        <div class="navbar">
-            <div class="navbar-inner">
-                <div class="title">Prestation</div>
-                <div class="right">
-                    <a class="link icon-only panel-open ripple-inset" data-panel="right">
-                        <i class="icon material-icons md-only">menu</i>
-                        <i class="icon f7-icons if-not-md">menu</i>
-                    </a>
-                </div>
-            </div>
+  <div id="show-work" class="page">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="title">Prestation</div>
+        <div class="right">
+          <a class="link icon-only panel-open ripple-inset" data-panel="right">
+            <i class="icon material-icons md-only">menu</i>
+            <i class="icon f7-icons if-not-md">menu</i>
+          </a>
         </div>
-        <div class="page-content">
-            <div class="card card-outline">
-                <div class="card-header display-flex justify-content-space-between">
-                    <div class="card-title">Informations sur la prestation</div>
-                </div>
-                <div class="card-content card-content-padding">
-                    <div class="list simple-list no-hairlines-between">
-                        <ul>
-                            <li>${work.name}</li>
-                            <li>Date de début : ${formatDate(work.start)}</li>
-                            <li>Date de fin : ${formatDate(work.end)}</li>
-                            <li>État : ${work.progression}</li>
-                            <li>Équipements utilisés :</li>
-                            <li class="equipements-wrapper">
-                                <div class="equipements-container">${getEquipementsInLine(work.equipements)}</div>
-                            </li>
-                            <li>Pour ${work.client.name}</li>
-                        </ul>
-                        <div class="total-section">
-                            <ul>
-                                <li>
-                                    <p class="card-text total-text"><strong>Total hors taxes :</strong> ${work.totalAmount.toFixed(2)} €</p>
-                                </li>
-                                <li>
-                                    <p class="card-text total-text"><strong>TVA :</strong> ${tvaOnAmount(work.totalAmount, tvaEnum.TVA_MAINTENANCE_WORK).toFixed(2)} €</p>
-                                </li>
-                                <li>
-                                    <p class="card-text total-text final-total"><strong>Total TTC :</strong> ${totalAmountTVA(work.totalAmount, tvaEnum.TVA_MAINTENANCE_WORK).toFixed(2)} €</p>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer display-flex justify-content-center">
-                    <a href="/form-work/update/${props.prestationId}" class="link link-fill link-fill-primary link-fill-raised">
-                        <i class="f7-icons">square_pencil_fill</i>
-                    </a>
-                    <a id="${props.prestationId}" href="#" class="link link-fill link-fill-danger link-fill-raised delete" @click="${openConfirm}">
-                        <i class="f7-icons">trash_circle_fill</i>
-                    </a>
-                </div>
-                <div class="card-footer display-flex justify-content-center">
-                    <a id="generate-invoice-link" href="/form-work/invoice/${workStringify}/${work.client.id}" class="link link-fill link-fill-secondary link-fill-raised">
-                        <i class="f7-icons">doc_text_fill</i>
-                        <span>Générer la facture</span>
-                    </a>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+
+    <div class="page-content">
+      <div class="block-title display-flex justify-content-space-between align-items-center">
+        <span class="text-lg font-bold">Informations prestation</span>
+        <div class="display-flex gap-5 justify-content-end actions">
+          <a
+            id="form-work-edit"
+            href="/form-work/update/${props.prestationId}"
+            class="link icon-only color-primary"
+          >
+            <i class="f7-icons">square_pencil_fill</i>
+          </a>
+            <a
+              href="#"
+              class="link icon-only color-red"
+              @click="${openConfirm}"
+            >
+              <i class="f7-icons">trash_circle_fill</i>
+          </a>
+        </div>
+      </div>
+      <div class="card card-outline animate-fade-in">
+        <div class="card-content card-content-padding list no-hairlines">
+          <ul class="info-list">
+            <li>
+              <div class="item-content">
+                <div class="item-media"><i class="f7-icons">info_circle</i></div>
+                <div class="item-inner">
+                  <div class="item-title"><strong>Nom :</strong></div>
+                  <div class="item-after"><strong>${work.name}</strong></div>
+                </div>
+              </div>
+            </li>
+
+            <li>
+              <div class="item-content">
+                <div class="item-media"><i class="f7-icons">calendar_circle</i></div>
+                <div class="item-inner">
+                  <div class="item-title"><strong>Date de début :</strong></div>
+                  <div class="item-after"><strong>${formatDate(work.start)}</strong></div>
+                </div>
+              </div>
+            </li>
+
+            <li>
+              <div class="item-content">
+                <div class="item-media"><i class="f7-icons">calendar_circle</i></div>
+                <div class="item-inner">
+                  <div class="item-title"><strong>Date de fin :</strong></div>
+                  <div class="item-after"><strong>${formatDate(work.end)}</strong></div>
+                </div>
+              </div>
+            </li>
+
+            <li>
+              <div class="item-content">
+                <div class="item-media"><i class="f7-icons">person_circle</i></div>
+                <div class="item-inner">
+                  <div class="item-title"><strong>Client :</strong></div>
+                  <div class="item-after"><strong>${work.client.name}</strong></div>
+                </div>
+              </div>
+            </li>
+
+            <li>
+              <div class="item-content">
+                <div class="item-media"><i class="f7-icons">status</i></div>
+                <div class="item-inner">
+                  <div class="item-title"><strong>État :</strong></div>
+                  <div class="item-after">
+                    <span class="badge badge-status ${getProgressColor(work.progression)}">${work.progression}</span>
+                  </div>
+                </div>
+              </div>
+            </li>
+
+            <li>
+              <div class="item-content">
+                <div class="item-media"><i class="f7-icons">hammer</i></div>
+                <div class="item-inner">
+                  <div class="item-title"><strong>Ressources utilisées :</strong></div>
+                </div>
+              </div>
+            </li>
+            <ul>
+              <li>
+                <div class="tags-container-work">
+                  ${work.equipements.map((equipement) => $h`
+                    <span class="tag-work">${equipement}</span>
+                  `)}
+                </div>
+              </li>
+            </ul>
+          </ul>
+
+          <hr />
+
+          <h2 class="section-title">Montant</h2>
+          <ul class="amount-list">
+            <li>
+              <div class="item-content">
+                <div class="item-media">
+                  <i class="icon f7-icons">money_euro_circle</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-title"><strong>Total HT : </strong></div>
+                  <div class="item-after"><strong>${work.totalAmount.toFixed(2)} €</strong></div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="item-content">
+                <div class="item-media">
+                  <i class="icon f7-icons">chart_pie</i>
+                </div>
+                <div class="item-inner">
+                  <div class="item-title"><strong>TVA : </strong></div>
+                  <div class="item-after">
+                    <strong>${tvaOnAmount(work.totalAmount, tvaEnum.TVA_MAINTENANCE_WORK).toFixed(2)} €</strong>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="item-content">
+                <div class="item-media final-total">
+                  <i class="icon f7-icons">money_euro_circle</i>
+                </div>
+                <div class="item-inner final-total">
+                  <div class="item-title"><strong class="final-total">Total TTC : </strong></div>
+                  <div class="item-after">
+                    <strong class="final-total">${totalAmountTVA(work.totalAmount, tvaEnum.TVA_MAINTENANCE_WORK).toFixed(2)} €</strong>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card-footer button-footer justify-content-center">
+          <a 
+            href="/form-work/invoice/${workStringify}/${work.client.id}"
+            class="button button-outline button-round button-raised color-secondary"
+          >
+            <i class="f7-icons">doc_text_fill</i>
+            <span>Générer la facture</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
-    import Framework7 from 'framework7/bundle';
-    import Dom7 from 'dom7';
+  import Framework7 from 'framework7/bundle'
+  import Dom7 from 'dom7'
 
-    import { formatDate } from '../../js/date.js'
-    import { findWorkById, deleteWork, getEquipementsInLine } from '../../js/work.js'
-    import { CONFIRMATION_TO_DELETE } from '../../js/messages.js'
-    import { loadTabbar } from '../../js/components/tabbar.js'
-    import { totalAmountTVA, tvaOnAmount } from '../../js/helper/priceWorkHelper'
-    import { tvaEnum } from '../../js//enum/tvaEnum.js'
+  import { formatDate } from '../../js/helper/date.ts'
+  import { findWorkById, deleteWork } from '../../js/work.js'
+  import { CONFIRMATION_TO_DELETE } from '../../js/messages.js'
+  import { loadTabbar } from '../../js/components/tabbar.js'
+  import { totalAmountTVA, tvaOnAmount } from '../../js/helper/priceWorkHelper'
+  import { tvaEnum } from '../../js//enum/tvaEnum.js'
+  import { getProgressColor } from '../../js/helper/statusHelper.ts'
+  export default async (props, { $, $on, $f7 }) => {
+    const $$ = Dom7
 
-    export default async (props, { $, $on, $f7 }) => {
-        var $$ = Dom7
+    let work = await findWorkById(props.prestationId, $f7)
+    let workStringify = encodeURIComponent(JSON.stringify(work))
 
-        let work = await findWorkById(props.prestationId, $f7)
-        let workStringify = encodeURIComponent(JSON.stringify(work))
-
-        const openConfirm = () => {
-            $f7.dialog.confirm(CONFIRMATION_TO_DELETE, function () {
-                deleteWork($$('.delete')[0].id, $f7)
-            })
-        }
-
-        $on('pageInit', function (page) {
-            loadTabbar('show-work', $f7)
-        })
-
-        $on('pageReinit', async function (page) {
-            work = await findWorkById(props.prestationId, $f7)
-            workStringify = encodeURIComponent(JSON.stringify(work))
-            $$('#generate-invoice-link').attr('href', `/form-work/invoice/${workStringify}/${work.client.id}`)
-        })
-
-        return $render
+    const openConfirm = () => {
+      $f7.dialog.confirm(CONFIRMATION_TO_DELETE, function () {
+        deleteWork($$('.delete')[0].id, $f7)
+      })
     }
+
+    $on('pageInit', function (page) {
+      loadTabbar('show-work', $f7)
+    })
+
+    $on('pageReinit', async function (page) {
+      work = await findWorkById(props.prestationId, $f7)
+      workStringify = encodeURIComponent(JSON.stringify(work))
+      $$('#generate-invoice-link').attr('href', `/form-work/invoice/${workStringify}/${work.client.id}`)
+    })
+
+    return $render
+  }
 </script>

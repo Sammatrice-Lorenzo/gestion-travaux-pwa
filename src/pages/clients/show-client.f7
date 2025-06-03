@@ -16,7 +16,7 @@
     <div class="page-content">
       <div class="block-title display-flex justify-content-space-between align-items-center">
         <span class="text-lg font-bold">Informations client</span>
-        <div class="display-flex gap justify-content-end">
+        <div class="display-flex gap justify-content-end actions">
           <a href="/form-client/update/${props.clientId}" class="link icon-only">
             <i class="f7-icons">square_pencil_fill</i>
           </a>

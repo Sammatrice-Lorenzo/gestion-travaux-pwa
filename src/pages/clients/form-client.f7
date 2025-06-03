@@ -9,12 +9,12 @@
             <span class="if-not-md">Retour</span>
           </a>
         </div>
-        <div class="title">${initForm.titlePage}</div>
+        <div class="title">${formService.getPageTitle()}</div>
       </div>
     </div>
     <div class="page-content">
       <form id="form-client">
-        <div class="block-title">${initForm.blockTitle}</div>
+        <div class="block-title">${formService.getBlockTitle()}</div>
         <div class="list list-strong-ios list-dividers-ios list-outline-ios">
           <ul>
             <li>
@@ -91,7 +91,7 @@
         </div>
       </form>
       <div class="grid grid-cols-3 gap-4 justify-items-center items-center">
-        <button class="button button-small button-round button-tonal btn-save" @click="${initForm.send}">
+        <button class="button button-small button-round button-tonal btn-save" @click="${() => formService.send()}">
           <i class="icon f7-icons">checkmark</i>
         </button>
       </div>
@@ -103,17 +103,21 @@
   import Dom7 from 'dom7'
 
   import { createClient } from '../../js/client/client.js'
-  import initFormClientUpdate from '../../js/client/formClientUpdate.ts'
-  import initFormClientCreate from '../../js/client/formClientCreate.ts'
+  import ClientUpdateService from '../../js/service/client/ClientUpdateService.ts'
+  import ClientCreateService from '../../js/service/client/ClientCreateService.ts'
 
   export default async (props, {$, $on, $f7, $onBeforeUnmount, page } ) => {
-    let initForm 
+    let formService 
     if (props && props.clientId) {
       const clientId = props.clientId
-      initForm = await initFormClientUpdate({ $on, $f7, clientId });
+      formService = new ClientUpdateService($f7, clientId, 'form-client')
     } else {
-      initForm = await initFormClientCreate({ $, $f7 })
+      formService = new ClientCreateService($f7, 'form-client')
     }
+
+    $on('pageBeforeIn', () => {
+      formService.initForm()
+    })
 
     return $render
   }

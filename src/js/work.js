@@ -1,34 +1,50 @@
-import { apiRequest, callAPI, deleteAPI, fetchCreate } from './api'
+import Framework7 from 'framework7'
+import { apiRequest, deleteAPI, fetchCreate } from './api'
 import { checkDataToGetOfAResponseCached, responseIsCached } from './cache'
 import { RouteDTO } from './dto/RouteDTO'
-import { getUrl, getUrlById, getUrlUser } from './urlGenerator'
+import { ApiService } from './service/api/ApiService'
+import {
+  getUrl,
+  getUrlById,
+  getUrlUser,
+  getUrlWithParameters,
+} from './urlGenerator'
 
 const URL_WORK = '/api/works/'
 const URL_TO_REDIRECT = '/prestation/'
 
-async function getWorkByUser($f7) {
-  const url = getUrl(URL_WORK)
+/**
+ * @param { Framework7 } $f7
+ * @param { number } currentPage
+ */
+async function getWorkByUser($f7, currentPage) {
+  const url = getUrlWithParameters(URL_WORK, { page: currentPage })
+  const apiService = new ApiService($f7)
 
-  const cache = await responseIsCached(url)
-  if (cache) {
-    return checkDataToGetOfAResponseCached(url)
+  const isCachedResponse = await responseIsCached(url)
+  let works
+  if (isCachedResponse) {
+    const responseCached = await checkDataToGetOfAResponseCached(url)
+    works = apiService.extractDataResponse(responseCached)
+  } else {
+    works = await apiService.call(url, 'application/ld+json')
   }
 
-  return callAPI(url, $f7)
+  return {
+    works,
+    totalItems: apiService.getTotalItems(),
+  }
 }
 
 async function findWorkById(id, $f7) {
   const url = getUrlById(URL_WORK, id)
-  const response = await callAPI(url, $f7)
+  const apiService = new ApiService($f7)
+  const works = await apiService.call(url)
 
-  return response[0]
+  return works[0]
 }
 
 function createWork(form, $f7) {
-  if (!customValidation(form, $f7)) {
-    return
-  }
-
   const url = getUrl('/api/works')
   const body = getBodyWork(form)
 
@@ -55,10 +71,6 @@ function updateWork(form, idWork, $f7) {
   const url = getUrlById(URL_WORK, idWork)
   const body = getBodyWork(form)
 
-  if (!customValidation(form, $f7)) {
-    return
-  }
-
   const routeDTO = new RouteDTO()
     .setApp($f7)
     .setRoute(URL_TO_REDIRECT)
@@ -67,42 +79,6 @@ function updateWork(form, idWork, $f7) {
     .setMethod('PUT')
 
   apiRequest(routeDTO)
-}
-
-function customValidation(form, $f7) {
-  let valueReturned = true
-
-  if (form.name === '') {
-    $f7.dialog.alert('Veuillez saisir un nom')
-    valueReturned = false
-  } else if (form.city === '') {
-    $f7.dialog.alert('Veuillez saisir le nom de la ville')
-    valueReturned = false
-  }
-
-  if (!form.client) {
-    $f7.dialog.alert(
-      'Veuillez rajouter des clients pour pouvoir créer des prestations',
-    )
-    valueReturned = false
-  }
-
-  for (const equipement of form.equipements) {
-    if (equipement === '') {
-      $f7.dialog.alert('Veuillez saisir un équipement')
-      valueReturned = false
-    }
-  }
-
-  return valueReturned
-}
-
-/**
- * @param { Array } equipements
- * @returns { String }
- */
-function getEquipementsInLine(equipements) {
-  return equipements.join(', ')
 }
 
 /**
@@ -115,8 +91,8 @@ function getBodyWork(form) {
   return JSON.stringify({
     name: form.name,
     city: form.city,
-    start: form.start,
-    end: form.end,
+    start: new Date(form.start).toISOString(),
+    end: new Date(form.end).toISOString(),
     progression: form.progression,
     equipements: form.equipements,
     user: urlAPiUser,
@@ -125,11 +101,4 @@ function getBodyWork(form) {
   })
 }
 
-export {
-  getWorkByUser,
-  findWorkById,
-  createWork,
-  updateWork,
-  deleteWork,
-  getEquipementsInLine,
-}
+export { getWorkByUser, findWorkById, createWork, updateWork, deleteWork }

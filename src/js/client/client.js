@@ -1,6 +1,7 @@
-import { apiRequest, callAPI, deleteAPI, fetchCreate } from '../api'
+import { apiRequest, deleteAPI, fetchCreate } from '../api'
 import { checkDataToGetOfAResponseCached, responseIsCached } from '../cache'
 import { RouteDTO } from '../dto/RouteDTO'
+import { ApiService } from '../service/api/ApiService'
 import { clientSchema } from '../service/client/clientSchema'
 import { handleSubmitForm } from '../service/form/formErrorInputs'
 import { getUrl, getUrlById } from '../urlGenerator'
@@ -18,7 +19,7 @@ async function getClientsByUser($f7) {
     return checkDataToGetOfAResponseCached(url)
   }
 
-  return callAPI(url, $f7)
+  return new ApiService($f7).call(url)
 }
 
 function createClient(form, $f7) {
@@ -69,7 +70,8 @@ function deleteClient(idClient, $f7) {
 async function findClientById(id, $f7) {
   const url = getUrlById(URL_CLIENTS, id)
 
-  const response = await callAPI(url, $f7)
+  const apiService = new ApiService($f7)
+  const response = await apiService.call(url)
 
   return response[0]
 }

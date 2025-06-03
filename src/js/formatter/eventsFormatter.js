@@ -1,4 +1,4 @@
-import { getTime } from '../date.js'
+import { getTime } from '../helper/date.ts'
 
 const getEventsFormatted = (workEventDays) => {
   return workEventDays.map((event) => {
@@ -7,8 +7,6 @@ const getEventsFormatted = (workEventDays) => {
     const month = date.getMonth()
     const day = date.getDate()
 
-    const client = event.hasOwnProperty('client') ? event.client : null
-
     return {
       id: event.id,
       date: new Date(year, month, day),
@@ -16,7 +14,7 @@ const getEventsFormatted = (workEventDays) => {
       startHours: getTime(event.startDate),
       endHours: getTime(event.endDate),
       color: event.color,
-      client: client,
+      client: 'client' in event ? event.client : null,
     }
   })
 }

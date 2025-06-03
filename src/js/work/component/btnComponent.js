@@ -15,6 +15,7 @@ export function addInputEquipement(valueInput = '') {
 
   const deleteButton = document.createElement('a')
   deleteButton.href = '#'
+  deleteButton.className = 'link icon-only color-red'
 
   deleteButton.innerHTML = '<i class="f7-icons">trash_circle</i>'
   deleteButton.addEventListener('click', deleteEquipement)
@@ -32,7 +33,7 @@ export function addInputEquipement(valueInput = '') {
  * @return {void}
  */
 export function getInputEquipementUpdateForm(valuesInputs) {
-  const [equipement, equipements] = getInputsEquipements()
+  const [equipement] = getInputsEquipements()
 
   equipement.querySelector('input[name="equipements"]').value = valuesInputs[0]
   valuesInputs.shift()
@@ -60,17 +61,17 @@ export function deleteEquipement(event) {
 }
 
 /**
- * @return {Array} equipements
+ * @return { string[] } equipements
  */
-export function getEquipementsInForm(Dom7) {
-  const $$ = Dom7
-
+export function getEquipementsInForm() {
   const equipements = []
-  const equipementsInputs = $$('input[name="equipements"]')
+  const equipementsInputs = document.querySelectorAll(
+    'input[name="equipements"]',
+  )
 
-  equipementsInputs.forEach((equipement) => {
-    equipements.push($$(equipement).val())
-  })
+  for (const equipement of equipementsInputs) {
+    equipements.push(equipement.value)
+  }
 
   return equipements
 }

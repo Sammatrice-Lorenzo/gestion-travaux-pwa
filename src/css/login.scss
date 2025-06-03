@@ -1,0 +1,103 @@
+@use 'sass:color';
+@use 'variables';
+
+.page-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.login-screen-content {
+  width: 100%;
+  max-width: 42rem;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.card-login {
+  border: 1px solid variables.$muted;
+  box-shadow: 0 4px 12px rgba(0, 71, 125, 0.2);
+  color: variables.$text;
+  border-radius: 40px 40px 40px 40px;
+}
+
+.card-login .card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, variables.$secondary 0%, variables.$accent 100%);
+  color: variables.$text;
+  padding: 16px;
+  border-bottom: 1px solid variables.$muted;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  text-align: center;
+  border-radius: 40px 40px 0px 0px;
+}
+
+
+.page-login .item-input-wrap {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+}
+
+.page-login .item-input-wrap input {
+  border: none;
+  background: transparent;
+  flex: 1;
+  padding: 0.5rem;
+  font-size: 16px;
+}
+
+.page-login .item-input-wrap .icon {
+  margin-right: 10px;
+}
+
+.app-logo {
+  height: 6rem;
+}
+
+.app-name {
+  font-size: 1.5rem;
+  color: variables.$text;
+  font-weight: bold;
+  opacity: 1;
+  animation: fadeIn 1.5s ease-out;
+}
+
+.button.btn-login {
+  background-color: variables.$accent;
+  color: variables.$text;
+  font-weight: 500;
+}
+
+li.btn-register {
+  margin-top: 5%
+}
+
+#form-login i, .item-label {
+  color: variables.$primary !important;
+}
+
+.button.btn-login:hover {
+  background-color: color.adjust(variables.$accent, $lightness: 10%);
+}
+
+.center-login {
+  margin-top: 5%;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

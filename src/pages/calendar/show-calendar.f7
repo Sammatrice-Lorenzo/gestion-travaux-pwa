@@ -106,7 +106,7 @@
                                             </div>
                                         </li>
                                     </ul>
-                                    <div class="grid grid-cols-3 gap-4 justify-items-center items-center">
+                                    <div class="grid grid-cols-3 gap-4 justify-items-center items-center margin-top">
                                         <button id="btn-send" href="#" class="button button-small button-round button-tonal btn-save" @click="${send}">
                                             <i class="icon f7-icons">checkmark</i>
                                         </button>
@@ -168,7 +168,6 @@
         createWorkEventDay,
         updateWorkEventDay,
         deleteWorkEventDay,
-        isValidForm,
         downloadCalendarEvents
     } from '../../js/workEventDay.js'
     import { getEventsFormatted } from '../../js/formatter/eventsFormatter.js'

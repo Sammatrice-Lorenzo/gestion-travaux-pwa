@@ -1,15 +1,10 @@
 import Framework7 from 'framework7'
 import Framework7DTO from './Framework7DTO'
-import {
-  apiRequest,
-  callAPI,
-  deleteAPI,
-  fetchCreate,
-  fetchFileAPI,
-} from './api'
+import { apiRequest, deleteAPI, fetchCreate, fetchFileAPI } from './api'
 import { checkDataToGetOfAResponseCached, responseIsCached } from './cache'
-import { getMontYear } from './date'
 import { RouteDTO } from './dto/RouteDTO'
+import { getMontYear } from './helper/date.ts'
+import { ApiService } from './service/api/ApiService'
 import { getUrl, getUrlById, getUrlWithParameters } from './urlGenerator'
 
 const URL_PRODUCT_INVOICE = '/api/product_invoice_files'
@@ -31,7 +26,7 @@ async function getProductsInvoicesByUser($f7, date) {
     return checkDataToGetOfAResponseCached(url)
   }
 
-  return callAPI(url, $f7)
+  return new ApiService($f7).call(url)
 }
 
 async function createProductInvoices(date, framework7DTO) {
