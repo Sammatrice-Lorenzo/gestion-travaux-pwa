@@ -21,21 +21,29 @@
   border-top-right-radius: 12px;
 }
 
-.badge-status {
-  padding: 4px 10px;
-  border-radius: 8px;
-  font-size: 0.75rem;
-  background-color: variables.$muted;
-  color: #FFFFFF;
-}
-
-.badge-status.orange { background-color: #f7931e; }
-.badge-status.green { background-color: #28a745; }
-.badge-status.red { background-color: #dc3545; }
-.badge-status.gray { background-color: #6c757d; }
 
 .card-content {
   padding: 16px;
+}
+.custom-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  .card-title {
+    flex: 1 1 auto;
+    margin: 2rem;
+    white-space: normal;
+    overflow-wrap: break-word;
+    // word-break: normal;
+    word-break: break-word
+  }
+
+  .badge-status {
+    flex-shrink: 0;
+    margin-left: auto;
+    white-space: nowrap;
+  }
 }
 
 .card-content ul.data-list {
@@ -62,9 +70,16 @@
 .card-footer {
   padding: 16px;
   border-top: 1px solid variables.$accent;
-  text-align: right;
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
+}
+
+.card-footer.button-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  padding: 1rem;
 }
 
 .section-title {

@@ -73,7 +73,7 @@ export class ApiService {
   }
 
   async call<T = unknown>(
-    url: string,
+    url: URL | string,
     header?: string,
   ): Promise<ApiResponse<T>> {
     this._preloader.show()

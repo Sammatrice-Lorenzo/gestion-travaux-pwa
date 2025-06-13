@@ -1,3 +1,4 @@
+import type Framework7 from 'framework7'
 import type { ZodSchema } from 'zod'
 
 const ERROR_CLASS_INPUT: string = 'item-input-error-message'
@@ -58,4 +59,32 @@ const handleSubmitForm = (
   return true
 }
 
-export { handleSubmitForm }
+const handleSubmitFormInputFiles = (
+  formData: unknown,
+  schema: ZodSchema,
+  app: Framework7,
+): boolean => {
+  const result = schema.safeParse(formData)
+  if (!result.success) {
+    const errors = result.error.flatten().fieldErrors
+    for (const field in errors) {
+      const textField = errors[field]
+      const text = textField ? textField[0] : ''
+      app.toast
+        .create({
+          text: text,
+          icon: '<i class="f7-icons">exclamationmark_triangle_fill</i>',
+          cssClass: 'bg-color-red text-color-white',
+          position: 'center',
+          closeTimeout: 2000,
+        })
+        .open()
+    }
+
+    return false
+  }
+
+  return true
+}
+
+export { handleSubmitForm, handleSubmitFormInputFiles }

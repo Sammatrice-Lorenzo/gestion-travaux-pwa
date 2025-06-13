@@ -2,6 +2,12 @@
   <div id="show-work" class="page">
     <div class="navbar">
       <div class="navbar-inner">
+        <div class="left">
+          <a href="#" class="link back">
+            <i class="icon icon-back"></i>
+            <span class="if-not-md">Retour</span>
+          </a>
+        </div>
         <div class="title">Prestation</div>
         <div class="right">
           <a class="link icon-only panel-open ripple-inset" data-panel="right">
@@ -19,7 +25,7 @@
           <a
             id="form-work-edit"
             href="/form-work/update/${props.prestationId}"
-            class="link icon-only color-primary"
+            class="link icon-only text-color-primary"
           >
             <i class="f7-icons">square_pencil_fill</i>
           </a>
@@ -151,13 +157,42 @@
         </div>
 
         <div class="card-footer button-footer justify-content-center">
-          <a 
-            href="/form-work/invoice/${workStringify}/${work.client.id}"
-            class="button button-outline button-round button-raised color-secondary"
-          >
-            <i class="f7-icons">doc_text_fill</i>
-            <span>Générer la facture</span>
+          <a class="button button-outline button-raised color-primary popover-open" data-popover=".popover-action">
+            <i class="f7-icons">ellipsis_vertical</i>
+            <span>Actions</span>
           </a>
+        </div>
+      </div>
+      <div class="popover popover-action">
+        <div class="popover-inner">
+          <div class="list">
+            <ul>
+              <li>
+                <a class="item-link popover-close" @click="${() => sheet.open()}">
+                  <div class="item-content">
+                    <div class="item-media"><i class="f7-icons">camera</i></div>
+                    <div class="item-inner">Ajouter des images</div>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a class="item-link popover-close" @click="${showImages}">
+                  <div class="item-content">
+                    <div class="item-media"><i class="f7-icons">photo</i></div>
+                    <div class="item-inner">Voir les images</div>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a href="/form-work/invoice/${workStringify}/${work.client.id}" class="item-link popover-close">
+                  <div class="item-content">
+                    <div class="item-media"><i class="f7-icons">doc_text_fill</i></div>
+                    <div class="item-inner">Générer la facture</div>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -174,11 +209,20 @@
   import { totalAmountTVA, tvaOnAmount } from '../../js/helper/priceWorkHelper'
   import { tvaEnum } from '../../js//enum/tvaEnum.js'
   import { getProgressColor } from '../../js/helper/statusHelper.ts'
-  export default async (props, { $, $on, $f7 }) => {
+  import Framework7DTO from '../../js/Framework7DTO.js'
+  import { createSheet } from '../../js/components/modalUploadImages.ts'
+  import WorkImageService from '../../js/WorkImageService.ts'
+  import WorkImageBrowserService from '../../js/service/workImage/WorkImageBrowserService.ts'
+
+  export default async (props, { $, $on, $f7, $el, $onMounted }) => {
     const $$ = Dom7
 
     let work = await findWorkById(props.prestationId, $f7)
     let workStringify = encodeURIComponent(JSON.stringify(work))
+    let sheet
+    let pageBrowser
+    let workImageService = new WorkImageService($f7, props.prestationId)
+    let workImageBrowserService = new WorkImageBrowserService($f7, workImageService)
 
     const openConfirm = () => {
       $f7.dialog.confirm(CONFIRMATION_TO_DELETE, function () {
@@ -186,14 +230,42 @@
       })
     }
 
+    const sendImages = async () => {
+      await workImageService.createWorkImage()
+    }
+
+    const showImages = async () => {
+      pageBrowser = await workImageBrowserService.showImagesInPhotoBrowser()
+      pageBrowser?.open()
+    }
+
+    $onMounted(() => {
+      const sheetModal = {
+        title: 'Insérer les images',
+        formId: 'form-work-images',
+        inputId: 'images',
+        nameInput: 'images[]',
+        acceptFiles: "image/png, image/gif, image/jpeg, image/jpg",
+        description: 'Veuillez séléctionner les images que vous souhaitez uploader. Vous pouvez sélectionner images à la fois.'
+      }
+
+      sheet = createSheet(new Framework7DTO($f7, $el, $), sheetModal, sendImages)
+    })
+
     $on('pageInit', function (page) {
       loadTabbar('show-work', $f7)
+      workImageService = new WorkImageService($f7, props.prestationId)
+      workImageBrowserService = new WorkImageBrowserService($f7, workImageService)
     })
 
     $on('pageReinit', async function (page) {
       work = await findWorkById(props.prestationId, $f7)
       workStringify = encodeURIComponent(JSON.stringify(work))
       $$('#generate-invoice-link').attr('href', `/form-work/invoice/${workStringify}/${work.client.id}`)
+    })
+
+    $on('pageBeforeRemove', () => {
+      pageBrowser?.destroy()
     })
 
     return $render

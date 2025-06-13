@@ -56,7 +56,7 @@ export class RouteDTO {
   }
 
   /**
-   * @param { String } body
+   * @param { String | FormData } body
    * @returns { this }
    */
   setBody(body) {
@@ -66,14 +66,14 @@ export class RouteDTO {
   }
 
   /**
-   * @returns { ?String }
+   * @returns { String | FormData | null }
    */
   getBody() {
     return this.body
   }
 
   /**
-   * @param { String } url
+   * @param { String | URL } url
    * @returns { this }
    */
   setUrlAPI(url) {
@@ -83,7 +83,7 @@ export class RouteDTO {
   }
 
   /**
-   * @returns { ?String }
+   * @returns { String | URL | null }
    */
   getUrlAPI() {
     return this.urlAPI
