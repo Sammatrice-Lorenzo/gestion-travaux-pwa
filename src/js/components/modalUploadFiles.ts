@@ -32,7 +32,7 @@ const createSheet = (
                 </label>
               </div>
             </div>
-            <div class="block display-flex justify-content-center">
+            <div class="block display-flex justify-content-center margin-top">
               <a href="#" id="btn-send-files" class="button button-tonal button-small button-round" style="width: 35%; gap: 0.5rem">
                 <i class="f7-icons" style="font-size: 1.3rem;">tray_arrow_up_fill</i>
                 Uploader
