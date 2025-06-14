@@ -16,6 +16,8 @@ describe('Work test', () => {
     await expect(divShowWork).toBeVisible({
       timeout: 10000,
     })
+
+    await assertModalSheetWorkImage(page)
   })
 
   test('Create Work', async ({ page, defaultBrowserType }) => {
@@ -71,4 +73,19 @@ const submitForm = async (page: Page, name: string) => {
   await page.waitForSelector(`text=${name}`, { timeout: 5000 })
   const element = page.getByText(name, { exact: true })
   await expect(element).toBeVisible()
+}
+
+const assertModalSheetWorkImage = async (page: Page) => {
+  await page.locator('#work-actions').click()
+
+  await page.getByText('Ajouter des images').click()
+
+  await expect(await page.locator('.modal-in')).toBeVisible({
+    timeout: 10000,
+  })
+
+  await page.locator('#btn-send-files').click()
+  await expect(await page.locator('.toast')).toBeVisible({
+    timeout: 10000,
+  })
 }

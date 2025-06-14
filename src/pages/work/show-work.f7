@@ -157,7 +157,7 @@
         </div>
 
         <div class="card-footer button-footer justify-content-center">
-          <a class="button button-outline button-raised color-primary popover-open" data-popover=".popover-action">
+          <a id="work-actions" class="button button-outline button-raised color-primary popover-open" data-popover=".popover-action">
             <i class="f7-icons">ellipsis_vertical</i>
             <span>Actions</span>
           </a>
