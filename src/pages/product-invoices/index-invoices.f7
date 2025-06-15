@@ -165,7 +165,8 @@
         getTVAOfTotalAmountProductInvoiceFiles
     } from '../../js/service/productInvoices/productInvoiceManagerService'
     import { createCalendar } from '../../js/service/calendar/calendarProductInvoiceInput'
-    import { createSheet } from '../../js/components/modalUploadFile.js'
+    import { createSheet } from '../../js/components/modalUploadFiles.ts'
+
     import { createPopup } from '../../js/components/popupProductInvoice.js'
     import { pdfPreviewPopup } from '../../js/components/pdfPreviewPopup.js'
     import { getMontYear } from '../../js/helper/date.ts'
@@ -174,6 +175,8 @@
     import { CONFIRMATION_TO_DELETE } from '../../js/messages.js'
     import { monthsEnum } from '../../js/enum/monthEnum.js'
     import { sendEmail } from '../../js/service/mailService'
+    import sheetModalProductInvoiceFormatter from '../../js/formatter/sheetModalProductInvoiceFormatter.ts'
+
 
     export default async (props, { $, $on, $el, $f7, $onMounted, $update }) => {
         let date = new Date()
@@ -233,7 +236,7 @@
             })
         }
 
-        const sendFiles = async (date, framework7DTO) => {
+        const sendFiles = async () => {
             $f7.sheet.close()
             createProductInvoices(date, framework7DTO)
             productInvoicesByUser = await getProductsInvoicesByUser($f7, date)
@@ -260,7 +263,7 @@
         }
 
         $onMounted(() => {
-            sheet = createSheet(date, framework7DTO, sendFiles)
+            sheet = createSheet(framework7DTO, sheetModalProductInvoiceFormatter, sendFiles)
         })
 
         return $render

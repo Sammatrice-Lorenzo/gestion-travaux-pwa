@@ -1,10 +1,9 @@
 import type Framework7 from 'framework7'
 import type { Dialog } from 'framework7/components/dialog'
 import type { Preloader } from 'framework7/components/preloader'
-import type { View } from 'framework7/types'
 import { stockResponseInCache } from '../../cache'
 import * as messages from '../../messages'
-import { getToken } from '../../token'
+import { getToken, logout } from '../../token'
 
 type ApiResponse<T> = T[]
 
@@ -17,14 +16,14 @@ type ApiRawResponse<T> = {
 export class ApiService {
   private _preloader: Preloader.AppMethods['preloader']
   private _dialog: Dialog.AppMethods['dialog']
-  private _router: View.View['router']
   private _totalItems: number
+  private _app: Framework7
 
   constructor($f7: Framework7) {
     this._preloader = $f7.preloader
     this._dialog = $f7.dialog
-    this._router = $f7.views.main.router
     this._totalItems = 0
+    this._app = $f7
   }
 
   private getHeaders(header?: string) {
@@ -38,7 +37,7 @@ export class ApiService {
     }
   }
 
-  private handleCache(url: string, response: Response): void {
+  private handleCache(url: string | URL, response: Response): void {
     if (process.env.NODE_ENV === 'production') {
       stockResponseInCache(url, response.clone())
     }
@@ -48,8 +47,9 @@ export class ApiService {
     data: ApiRawResponse<unknown>,
   ): Promise<boolean> {
     if (data.code === 401) {
-      this._dialog.alert(messages.TOKEN_EXPIRED)
-      this._router.navigate('/')
+      this._dialog.alert(messages.TOKEN_EXPIRED, '', async () => {
+        await logout(this._app)
+      })
 
       return true
     }
@@ -73,7 +73,7 @@ export class ApiService {
   }
 
   async call<T = unknown>(
-    url: string,
+    url: URL | string,
     header?: string,
   ): Promise<ApiResponse<T>> {
     this._preloader.show()

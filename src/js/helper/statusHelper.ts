@@ -3,11 +3,11 @@ import { ProgressionEnum } from '../enum/ProgressionEnum'
 const getProgressColor = (status: string): string => {
   switch (status) {
     case ProgressionEnum.IN_PROGRESS:
-      return 'orange'
+      return 'bg-color-orange'
     case ProgressionEnum.DONE:
-      return 'green'
+      return 'bg-color-green'
     default:
-      return 'gray'
+      return 'bg-color-red'
   }
 }
 

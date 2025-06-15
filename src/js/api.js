@@ -42,13 +42,14 @@ function apiRequest(routeDTO) {
       }),
     )
     .catch((error) => {
-      console.log(error)
+      console.error(error)
       $f7.dialog.alert(messages.ERROR_SERVER)
     })
 }
 
 /**
  * @param { RouteDTO } routeDTO
+ * @param { string | null } type
  */
 function fetchCreate(routeDTO, type = null) {
   const $f7 = routeDTO.getApp()
@@ -80,7 +81,7 @@ function fetchCreate(routeDTO, type = null) {
       }),
     )
     .catch((error) => {
-      console.log(error)
+      console.error(error)
       $f7.dialog.alert(messages.ERROR_SERVER)
     })
 }
@@ -136,7 +137,7 @@ function fetchFileAPI(routeDTO, nameFile) {
       }
     })
     .catch(async (error) => {
-      console.log(error)
+      console.error(error)
       await clearCache()
       $f7.dialog.alert(messages.ERROR_SERVER)
     })
