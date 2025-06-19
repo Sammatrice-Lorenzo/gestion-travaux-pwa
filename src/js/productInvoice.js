@@ -1,10 +1,11 @@
 import Framework7 from 'framework7'
-import Framework7DTO from './Framework7DTO'
 import { apiRequest, deleteAPI, fetchCreate, fetchFileAPI } from './api'
 import { checkDataToGetOfAResponseCached, responseIsCached } from './cache'
 import { RouteDTO } from './dto/RouteDTO'
 import { getMontYear } from './helper/date.ts'
 import { ApiService } from './service/api/ApiService'
+import { handleSubmitFormInputFiles } from './service/form/formErrorInputs.ts'
+import { formProductInvoiceFilesSchema } from './service/productInvoices/formProductInvoiceFilesSchema.ts'
 import { getUrl, getUrlById, getUrlWithParameters } from './urlGenerator'
 
 const URL_PRODUCT_INVOICE = '/api/product_invoice_files'
@@ -29,19 +30,26 @@ async function getProductsInvoicesByUser($f7, date) {
   return new ApiService($f7).call(url)
 }
 
-async function createProductInvoices(date, framework7DTO) {
+async function createProductInvoices(date, app) {
   const files = document.getElementById('files').files
-  if (!isValidForm(framework7DTO, files)) {
-    return
-  }
-
   const formattedDate = date.toISOString().slice(0, 10)
 
   const url = getUrl(URL_PRODUCT_INVOICE)
   const body = getBody(files, formattedDate)
+  if (
+    !handleSubmitFormInputFiles(
+      Object.fromEntries(body),
+      formProductInvoiceFilesSchema,
+      app,
+    )
+  ) {
+    return
+  }
+
+  app.sheet.close()
 
   const routeDTO = new RouteDTO()
-    .setApp(framework7DTO.getApp())
+    .setApp(app)
     .setRoute(URL_TO_REDIRECT)
     .setUrlAPI(url)
     .setBody(body)
@@ -52,7 +60,7 @@ async function createProductInvoices(date, framework7DTO) {
 
 /**
  * @param { Framework7 } $f7
- * @param { String } id
+ * @param { number } id
  */
 async function deleteProductInvoice($f7, id) {
   const routeDTO = new RouteDTO()
@@ -124,40 +132,9 @@ const getBody = (files, date) => {
   return formData
 }
 
-/**
- * @param { Framework7DTO } framework7DTO
- * @param { File } files
- * @returns { Boolean }
- */
-function isValidForm(framework7DTO, files) {
-  const $ = framework7DTO.getSelector()
-  const $f7 = framework7DTO.getApp()
-
-  const form = $('form#form-product-invoices')
-  const input = $(form).find('input')[0]
-
-  let isValid = true
-
-  if (input.value.trim() === '') {
-    isValid = false
-    $f7.dialog.alert('Aucun fichier sélectionné.')
-  }
-
-  for (const file of files) {
-    if (file.type !== 'application/pdf') {
-      isValid = false
-      const fileName = file.name
-      $f7.dialog.alert(`Le fichier ${fileName} n'est pas un pdf.`)
-    }
-  }
-
-  return isValid
-}
-
 export {
   getProductsInvoicesByUser,
   createProductInvoices,
-  isValidForm,
   deleteProductInvoice,
   downloadFileProductInvoice,
   downloadZIP,
