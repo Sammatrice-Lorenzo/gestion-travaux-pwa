@@ -4,7 +4,6 @@ import type { Popup } from 'framework7/components/popup'
 import type EventsInterface from '../../../intefaces/WorkEventDay/EventInterface.ts'
 import type { EventItemInteface } from '../../../intefaces/WorkEventDay/EventItermInterface.ts'
 import type FormWorkEventDayInterface from '../../../intefaces/WorkEventDay/FormWorkEventDayInteface.ts'
-import type Framework7DTO from '../../Framework7DTO.js'
 import {
   createWorkEventDay,
   deleteWorkEventDay,
@@ -55,12 +54,8 @@ export class CalendarWorkEventDayFormService {
     this._eventItems = eventItems
   }
 
-  public async send(
-    framework7DTO: Framework7DTO,
-    popup: Popup.Popup,
-  ): Promise<void> {
-    const $f7: Framework7 = framework7DTO.getApp()
-    const formData: FormWorkEventDayInterface = $f7.form.convertToData(
+  public async send(app: Framework7, popup: Popup.Popup): Promise<void> {
+    const formData: FormWorkEventDayInterface = app.form.convertToData(
       this._selectorForm,
     ) as FormWorkEventDayInterface
     if (
@@ -73,9 +68,9 @@ export class CalendarWorkEventDayFormService {
       return
     }
 
-    const $ = framework7DTO.getSelector()
+    const $ = app.$
 
-    const dateSelected = new Date($f7.calendar.get().value[0])
+    const dateSelected = new Date(app.calendar.get().value[0])
 
     const workEventDay: EventsInterface = getWorkDayCalendar(
       formData,
@@ -85,21 +80,20 @@ export class CalendarWorkEventDayFormService {
       const id = this._events[this.getIndexOfEventToEdit()].id
       workEventDay.id = id
       this._events[this.getIndexOfEventToEdit()] = workEventDay
-      updateWorkEventDay(workEventDay, id, $f7)
+      updateWorkEventDay(workEventDay, id, app)
       $(this._selectorForm).removeClass('edit')
     } else {
       const futureId = getMaxId(this._events) + 1
       workEventDay.id = futureId
       this._events.push(workEventDay)
-      createWorkEventDay(workEventDay, $f7)
+      createWorkEventDay(workEventDay, app)
     }
 
     popup.close()
   }
 
-  public edit(framework7DTO: Framework7DTO, element: MouseEvent): void {
-    const $f7: Framework7 = framework7DTO.getApp()
-    const $ = framework7DTO.getSelector()
+  public edit(app: Framework7, element: MouseEvent): void {
+    const $ = app.$
     const idElement = Number.parseInt(getElementEdit(element))
     const textUpdate = 'Modification événement'
     this._indexOfEventToEdit = this._events.findIndex(
@@ -109,19 +103,15 @@ export class CalendarWorkEventDayFormService {
     $(this._selectorForm).find('.block-title').children().text(textUpdate)
     $('.title-popup').text(textUpdate)
 
-    const formCalendar = getEventSelected(
-      idElement,
-      this._eventItems,
-      framework7DTO,
-    )
+    const formCalendar = getEventSelected(idElement, this._eventItems, app)
     this._colorPickerSpectrum = createColorPickerForEventCalendar(
-      $f7,
+      app,
       formCalendar.color,
     )
   }
 
-  public removeEvent(element: MouseEvent, framework7DTO: Framework7DTO): void {
+  public removeEvent(element: MouseEvent, app: Framework7): void {
     const idElement = Number.parseInt(getElementEdit(element))
-    deleteWorkEventDay(idElement, framework7DTO.getApp())
+    deleteWorkEventDay(idElement, app)
   }
 }

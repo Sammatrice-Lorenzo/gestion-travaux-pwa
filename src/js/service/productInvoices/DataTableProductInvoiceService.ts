@@ -18,10 +18,16 @@ export default class DataTableProductInvoiceService {
       this._selectedInvoices.length ===
       productInvoiceStore.getters.getInvoices.value.length
     $('.data-table thead input[type="checkbox"]').prop('checked', allSelected)
+    $('.selected-all-product-invoices input[type="checkbox"]').prop(
+      'checked',
+      allSelected,
+    )
+    this.updatetextProductInvoiceSelected()
   }
 
-  public selectAllInvoices(event: Event) {
+  public selectAllInvoices(event: Event): void {
     this._selectedInvoices = this.getAllInvoicesSelected(event)
+    this.updatetextProductInvoiceSelected()
   }
 
   public getSelectedProductInvoices(): number[] {
@@ -30,15 +36,24 @@ export default class DataTableProductInvoiceService {
 
   private getAllInvoicesSelected(event: Event): number[] {
     const $ = this._app.$
-    const productInvoices = productInvoiceStore.getters.getInvoices.value
+    const productInvoices: ProductInvoiceInterface[] =
+      productInvoiceStore.getters.getInvoices.value
     const isChecked: boolean = $(event.target).is(':checked')
     const selectedInvoicesIds: number[] = isChecked
       ? productInvoices.map((invoice) => invoice.id)
       : []
 
     $('.data-table tbody input[type="checkbox"]').prop('checked', isChecked)
+    $('.invoice-card input[type="checkbox"]').prop('checked', isChecked)
 
     return selectedInvoicesIds
+  }
+
+  private updatetextProductInvoiceSelected(): void {
+    const $ = this._app.$
+    $('.selected-info').text(
+      `${this._selectedInvoices.length} facture(s) sélectionnée(s)`,
+    )
   }
 
   private getInvoiceSelected(invoice: ProductInvoiceInterface): number[] {

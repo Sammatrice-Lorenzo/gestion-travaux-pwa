@@ -1,5 +1,6 @@
 import type Framework7 from 'framework7'
 import type { ZodSchema } from 'zod'
+import toastError from '../../components/toastError'
 
 const ERROR_CLASS_INPUT: string = 'item-input-error-message'
 
@@ -70,15 +71,8 @@ const handleSubmitFormInputFiles = (
     for (const field in errors) {
       const textField = errors[field]
       const text = textField ? textField[0] : ''
-      app.toast
-        .create({
-          text: text,
-          icon: '<i class="f7-icons">exclamationmark_triangle_fill</i>',
-          cssClass: 'bg-color-red text-color-white',
-          position: 'center',
-          closeTimeout: 2000,
-        })
-        .open()
+
+      toastError(app, text)
     }
 
     return false

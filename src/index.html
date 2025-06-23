@@ -9,11 +9,17 @@
 				* https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
 				* Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
 				* Enable inline JS: add 'unsafe-inline' to default-src
-				Il faut changer localhost:8000 si l'application est déployé sur un serveur
 		-->
-		  
-		<!-- <meta http-equiv="Content-Security-Policy" content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: content:"> -->
-		<meta http-equiv="Content-Security-Policy" content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: content:; connect-src * 'self' http: https: localhost:8001;">
+		<meta http-equiv="Content-Security-Policy" content="
+			default-src 'self';
+			font-src 'self' data:;
+			script-src 'self' 'unsafe-inline' https:;
+			style-src 'self' 'unsafe-inline' https:;
+			style-src-elem 'self' 'unsafe-inline';
+			style-src-attr 'self' 'unsafe-inline';
+			worker-src 'self' blob:;
+			connect-src 'self' https:;
+		">
 
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
 
@@ -32,11 +38,6 @@
 	</head>
 	<body>
 		<div id="app"></div>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
-		<script>
-			pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
-		</script>
-
 		<script type="module" src="./js/app.js"></script>
 	</body>
 </html>

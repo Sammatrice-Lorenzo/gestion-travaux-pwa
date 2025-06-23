@@ -1,15 +1,10 @@
 import type Framework7 from 'framework7'
 import type ProductInvoiceInterface from '../../../intefaces/ProductInvoice/ProductInvoiceInterface'
-import Framework7DTO from '../../Framework7DTO'
 import { tvaEnum } from '../../enum/tvaEnum'
 import { getIdOfElementClicked } from '../../helper/domElementClick'
 import { getAmountWithoutTVA } from '../../helper/priceWorkHelper'
 import { CONFIRMATION_TO_DELETE } from '../../messages'
-import {
-  deleteProductInvoice,
-  downloadFileProductInvoice,
-  downloadZIP,
-} from '../../productInvoice'
+import { deleteProductInvoice } from '../../productInvoice'
 import productInvoiceStore from '../../store/productInvoiceStore'
 import type ToolbarCalendarProductInvoiceService from '../calendarProducInvoice/ToolbarCalendarProductInvoiceService'
 
@@ -35,32 +30,9 @@ export default class ProductInvoiceManagerService {
     })
   }
 
-  public downloadPDF(element: HTMLElement): void {
-    const invoiceIdStr = getIdOfElementClicked(this._app.$, element)
-    const invoiceId = Number.parseInt(invoiceIdStr)
-    const productInvoice =
-      productInvoiceStore.getters.getInvoiceById.value(invoiceId)
-    if (productInvoice) {
-      downloadFileProductInvoice(this._app, productInvoice)
-    } else {
-      this._app.dialog.alert('Facture introuvable.')
-    }
-  }
-
-  public downloadSelectedInvoices(
-    selectedInvoices: string[],
-    date: Date,
-  ): void {
-    if (selectedInvoices.length < 1) {
-      this._app.dialog.alert('Veuillez sélectionner au moins une facture !')
-      return
-    }
-    downloadZIP(this._app, selectedInvoices, date)
-  }
-
   public totalAmountProductInvoices(): string {
-    const productInvoices = productInvoiceStore.getters
-      .getInvoices as ProductInvoiceInterface[]
+    const productInvoices = productInvoiceStore.getters.getInvoices
+      .value as ProductInvoiceInterface[]
 
     return productInvoices.length >= 1
       ? productInvoices

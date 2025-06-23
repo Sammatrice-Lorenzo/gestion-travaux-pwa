@@ -1,12 +1,35 @@
-.information-product-invoice {
-  margin: 2% auto;
-  width: 90%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
 #index-invoices .card {
   border-radius: 15px 15px 15px 15px;
+}
+
+.invoice-card {
+  position: relative;
+}
+
+.toolbar-bottom-invoice-actions {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 999;
+}
+
+.selected-all-product-invoices {
+  gap: 1.2rem;
+  padding-left: 2rem;
+}
+
+.actions-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+.actions-footer .button {
+  flex: 1 1 45%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
 }

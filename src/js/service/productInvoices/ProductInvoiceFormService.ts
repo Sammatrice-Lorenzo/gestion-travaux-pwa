@@ -10,18 +10,18 @@ import { formProductInvoiceUpdateSchema } from './formProductInvoiceUpdateSchema
 export default class ProductInvoiceFormService {
   public handleOpenPopupEditProductInvoiceFile(
     app: Framework7,
-    element: Event,
+    productInvoice: ProductInvoiceInterface,
   ): void {
-    const currentTarget = app.$(element.currentTarget)
-    const dateInvoice = new Date(currentTarget.data('date'))
+    const dateInvoice = new Date(productInvoice.date)
     const formattedDate = dateInvoice.toISOString().slice(0, 10)
 
     const formPopup: ProductInvoiceUpdateFormInterface = {
-      id: currentTarget.attr('id'),
-      name: currentTarget.data('name'),
+      id: productInvoice.id.toString(),
+      name: productInvoice.name,
       date: formattedDate,
-      'total-amount': currentTarget.data('total-amount'),
+      'total-amount': productInvoice.totalAmount,
     }
+
     const popupEdit = createPopup(
       app,
       formPopup,

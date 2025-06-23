@@ -209,7 +209,6 @@
   import { totalAmountTVA, tvaOnAmount } from '../../js/helper/priceWorkHelper'
   import { tvaEnum } from '../../js//enum/tvaEnum.js'
   import { getProgressColor } from '../../js/helper/statusHelper.ts'
-  import Framework7DTO from '../../js/Framework7DTO.js'
   import { createSheet } from '../../js/components/modalUploadFiles.ts'
   import WorkImageService from '../../js/WorkImageService.ts'
   import WorkImageBrowserService from '../../js/service/workImage/WorkImageBrowserService.ts'
@@ -241,7 +240,7 @@
     }
 
     $onMounted(() => {
-      sheet = createSheet(new Framework7DTO($f7, $el, $), sheetModalWorkImageFormatter, sendImages)
+      sheet = createSheet($f7, sheetModalWorkImageFormatter, sendImages)
     })
 
     $on('pageInit', function (page) {

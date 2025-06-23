@@ -12,6 +12,45 @@
       </div>
     </div>
 
+    <div class="fab fab-right-bottom" style="margin-bottom: 4.5rem;">
+      <a href="#">
+        <i class="icon f7-icons if-not-md">plus</i>
+        <i class="icon f7-icons if-not-md">xmark</i>
+        <i class="icon material-icons md-only">add</i>
+        <i class="icon material-icons md-only">close</i>
+      </a>
+      <div class="fab-buttons fab-buttons-top">
+        <a class="fab-label-button" 
+          @click="${() => sheet?.open()}" 
+          data-tooltip="Insérer les factures" 
+        >
+          <span>
+            <i class="f7-icons">cloud_upload</i>
+          </span>
+          <span class="fab-label">Insérer les factures</span>
+        </a>
+        <a
+          class="fab-label-button color-yellow" 
+          @click="${() => sendEmail(date)}"
+        >
+          <span>
+            <i class="icon f7-icons">envelope</i>
+          </span>
+          <span class="fab-label">Envoyer un mail pour les factures</span>
+        </a>
+        <a 
+          class="fab-label-button color-green" 
+          @click="${() => productInvoiceFileManagement.downloadSelectedInvoices(dataTableProductInvoiceService.getSelectedProductInvoices(), date)}"
+        >
+          <span>
+            <i class="icon f7-icons if-not-md">archivebox</i>
+            <i class="icon material-icons md-only">archive</i>
+          </span>
+          <span class="fab-label">Télécharger les factures au format .zip</span>
+        </a>
+      </div>
+    </div>
+
     <!-- Page content -->
     <div class="page-content">
         
@@ -24,121 +63,127 @@
         <input type="text" id="calendar-input-product-invoice-file" placeholder="MM/AAAA" readonly="readonly" />
       </div>
 
-      <!-- Data Table -->
-      <div class="data-table data-table-init card">
-        <div class="card-header">
-          <div class="data-table-links"></div>
-          <!-- Bouton de téléchargement ZIP ajouté -->
-          <div class="data-table-actions">
-            <a
-              class="tooltip-init color-white"
-              @click="${() => productInvoiceManagerService.downloadSelectedInvoices(dataTableProductInvoiceService.getSelectedProductInvoices(), date)}"
-              data-tooltip="Télécharger le zip"
-            >
-              <i class="icon f7-icons if-not-md">archivebox</i>
-              <i class="icon material-icons md-only">archive</i>
-            </a>
-          </div>
-        </div>
+      <div class="block text-align-center selected-info" style="margin-top: 10px;">
+        ${dataTableProductInvoiceService.getSelectedProductInvoices().length} facture(s) sélectionnée(s)
+      </div>
 
-        <!-- Table des factures -->
-        <div class="card-content">
-          <table>
-            <thead>
-              <tr>
-                <th class="checkbox-cell">
-                  <label class="checkbox">
-                    <input type="checkbox" @change="${(e) => dataTableProductInvoiceService.selectAllInvoices(e)}"/>
-                    <i class="icon-checkbox"></i>
-                  </label>
-                </th>
-                <th class="label-cell">Date</th>
-                <th class="label-cell">Nom</th>
-                <th class="label-cell">Montant total</th>
-                <th class="actions-cell">Visualiser</th>
-                <th class="actions-cell">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${productInvoiceStore.getters.getInvoices.value.map((invoice) => $h`
-                <tr>
-                  <td class='checkbox-cell'>
-                    <label class="checkbox">
-                      <input type="checkbox" @click="${() => dataTableProductInvoiceService.toggleInvoiceSelection(invoice)}"/>
-                      <i class="icon-checkbox"></i>
-                    </label>
-                  </td>
-                  <td class="label-cell">${new Date(invoice.date).toLocaleDateString()}</td>
-                  <td class="label-cell">${invoice.name}</td>
-                  <td class="label-cell">${invoice.totalAmount} €</td>
-                  <td class="actions-cell">
-                    <a
-                      href="#"
-                      @click="${() => openPdfPreviewFromUrl(framework7DTO, invoice.id, pdfPreviewPopup)}"
-                      class="link external tooltip-init"
-                      data-tooltip="Prévisualiser la facture sur l'application"
-                    >
-                      <i class="f7-icons">eye_fill</i>
-                    </a>
-                    <a
-                      href="${uploadsUrl}/products-invoice/${invoice.path}"
-                      target="_blank"
-                      class="link external tooltip-init"
-                      data-tooltip="Visualiser la facture sur une autre page"
-                    >
-                      <i class="f7-icons">doc_text_search</i>
-                    </a>
-                  </td>
-                  <td class="actions-cell color-blue">
-                    <a id="${invoice.id}"
-                      href="#" class="link external"
-                      data-date="${invoice.date}"
-                      data-name="${invoice.name}"
-                      data-total-amount="${invoice.totalAmount}"
-                      @click="${(e) => productInvoiceFormService.handleOpenPopupEditProductInvoiceFile($f7, e)}"
-                    >
-                      <i class="icon f7-icons">square_pencil</i>
-                    </a>
-                    <a id='${invoice.id}' class="link icon-only" @click="${(e) => productInvoiceManagerService.downloadPDF(e)}">
-                      <i class="icon f7-icons if-not-md">download_circle</i>
-                      <i class="icon material-icons md-only">download</i>
-                    </a>
-                    <a id='${invoice.id}' class="link icon-only" @click="${(e) => productInvoiceManagerService.handleDeleteProductInvoice(e, toolbarCalendarProductInvoiceService)}">
-                      <i class="icon f7-icons if-not-md">trash</i>
-                      <i class="icon material-icons md-only">delete</i>
-                    </a>
-                  </td>
-                </tr>
-              `)}
-            </tbody>
-          </table>
+      <div class="display-flex justify-content-start selected-all-product-invoices">
+        <label class="checkbox">
+          <input 
+            type="checkbox" 
+            @change="${(e) => dataTableProductInvoiceService.selectAllInvoices(e)}"
+          />
+          <i class="icon-checkbox"></i>
+        </label>
+        <span>
+          Sélectionner toutes les factures
+        </span>
+      </div>
+
+      <div class="toolbar toolbar-bottom tabbar labels-fixed toolbar-bottom-invoice-actions">
+        <div class="toolbar-inner">
+          <a href="#" class="link" @click="${() => productInvoiceFileManagement.downloadSelectedInvoices()}">
+            <i class="f7-icons">archivebox</i>
+            <span>Télécharger ZIP</span>
+          </a>
+          <a href="#" class="link color-red" @click="${() => productInvoiceManagerService.deleteSelected()}">
+            <i class="f7-icons">trash</i>
+            <span>Supprimer</span>
+          </a>
         </div>
       </div>
 
-      <div class="information-product-invoice">
-        <p style=" color: #333;">
-          Le montant total de vos factures est <strong>${productInvoiceManagerService.totalAmountProductInvoices()} TTC €</strong>
-        </p>
-        <p style="color: #555;">
-          <strong>${productInvoiceManagerService.getTVAOfTotalAmountProductInvoiceFiles()} de TVA €</strong>
-        </p>
-        <div style="width: 85%;">
-          <a class="button button-round button-small button-outline tooltip-init" 
-            @click="${() => sheet?.open()}" 
-            data-tooltip="Insérer les factures" 
-          >
-            <i class="f7-icons">cloud_upload</i>
-            Insérer les factures
-          </a>
-          <a class="button button-round button-small button-outline" 
-            href="#" 
-            @click="${() => sendEmail(date)}"
-            style="margin-top: 1%;" 
-          >
-            <i class="icon f7-icons if-not-md">envelope</i>
-            <i class="icon material-icons md-only">mail</i>
-            Envoyer un mail pour les factures
-          </a>
+      <div class="grid grid-cols-1 medium-grid-cols-2 large-grid-cols-3 gap">
+        ${productInvoiceStore.getters.getInvoices.value.map((invoice) => $h`
+          <div class="card invoice-card tooltip-init">
+            <div class="card-content">
+              <label class="checkbox">
+                <input 
+                  type="checkbox" 
+                  @change="${() => dataTableProductInvoiceService.toggleInvoiceSelection(invoice)}"
+                />
+                <i class="icon-checkbox"></i>
+              </label>
+              <p><strong>Date :</strong> ${new Date(invoice.date).toLocaleDateString()}</p>
+              <p><strong>Nom :</strong> ${invoice.name}</p>
+              <p><strong>Montant :</strong> ${invoice.totalAmount} €</p>
+            </div>
+            <div class="card-footer">
+              <div class="display-flex justify-content-start">
+                <a class="link icon-only tooltip-init popover-open" data-popover=".popover-action" data-tooltip="Autres actions">
+                  <i class="f7-icons">ellipsis_vertical</i>
+                </a>
+    
+                <a
+                  class="link icon-only tooltip-init"
+                  @click="${() => openPdfPreviewFromUrl($f7, invoice.id, pdfPreviewPopup)}"
+                  data-tooltip="Voir"
+                >
+                  <i class="f7-icons">eye_fill</i>
+                </a>
+              </div>
+  
+              <div class="display-flex justify-content-end">
+                <a
+                  href="#" 
+                  @click="${(e) => productInvoiceFormService.handleOpenPopupEditProductInvoiceFile($f7, invoice)}"
+                  class="item-link"
+                >
+                  <i class="f7-icons">square_pencil_fill</i>
+                </a>
+    
+                <a
+                  class="link icon-only color-red tooltip-init"
+                  @click="${(e) => productInvoiceManagerService.handleDeleteProductInvoice(e, toolbarCalendarProductInvoiceService)}"
+                  data-tooltip="Supprimer"
+                >
+                  <i class="f7-icons">trash</i>
+                </a>
+              </div>
+            </div>
+  
+            <div class="popover popover-action">
+              <div class="popover-inner">
+                <div class="list">
+                  <ul>
+                    <li>
+                      <a
+                        class="item-link popover-close"
+                        @click="${(e) => openLinkInNewWindows(e, invoice.path)}"
+                        href="#"
+                      >
+                        <div class="item-content">
+                          <div class="item-media"><i class="f7-icons">doc_text_search</i></div>
+                          <div class="item-inner">Voir dans une autre page</div>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <a class="item-link popover-close" @click="${() => productInvoiceFileManagement.downloadPDF(invoice)}" data-tooltip="Télécharger PDF">
+                        <div class="item-content">
+                          <div class="item-media"><i class="f7-icons">arrow_down_circle</i></div>
+                          <div class="item-inner">Télécharger</div>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        `)}
+      </div>
+
+      <div class="display-flex justify-content-center">
+        <div class="card info-summary-card margin-vertical">
+          <div class="card-content text-align-center">
+            <p style="font-size: 16px; margin: 4px 0; color: #333;">
+              Montant total : <strong>${productInvoiceManagerService.totalAmountProductInvoices()} € TTC</strong>
+            </p>
+            <p style="font-size: 14px; margin: 0; color: #666;">
+              TVA : <strong>${productInvoiceManagerService.getTVAOfTotalAmountProductInvoiceFiles()} €</strong>
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -154,16 +199,14 @@
   import { createCalendar } from '../../js/service/calendar/calendarProductInvoiceInput'
   import { createSheet } from '../../js/components/modalUploadFiles.ts'
 
-  import { pdfPreviewPopup } from '../../js/components/pdfPreviewPopup.js'
+  import { pdfPreviewPopup } from '../../js/components/pdfPreviewPopup.ts'
   import { getMontYear } from '../../js/helper/date.ts'
-  import Framework7DTO from '../../js/Framework7DTO.js'
   import { sendEmail } from '../../js/service/mailService'
   import sheetModalProductInvoiceFormatter from '../../js/formatter/sheetModalProductInvoiceFormatter.ts'
-  import ProductInvoiceFormService from '../../js/service/productInvoice/ProductInvoiceFormService.ts'
+  import ProductInvoiceFormService from '../../js/service/productInvoices/ProductInvoiceFormService.ts'
   import ToolbarCalendarProductInvoiceService from '../../js/service/calendarProducInvoice/ToolbarCalendarProductInvoiceService'
-  import ProductInvoiceFileManagement from '../../js/service/productInvoices/ProductInvoiceFileManagement'
+  import ProductInvoiceFileManagement from '../../js/service/productInvoices/productInvoicesFile/ProductInvoiceFileManagement'
   import productInvoiceStore from '../../js/store/productInvoiceStore'
-
 
   export default async (props, { $, $on, $el, $f7, $onMounted, $update }) => {
     const toolbarCalendarProductInvoiceService = new ToolbarCalendarProductInvoiceService(async () => {
@@ -176,23 +219,24 @@
     const productInvoiceManagerService = new ProductInvoiceManagerService($f7)
 
     $on('pageInit', async function (page) {
+
       loadTabbar('index-invoices', $f7)
       const productInvoicesByUser = await getProductsInvoicesByUser($f7, date)
       productInvoiceStore.dispatch('setInvoices', productInvoicesByUser)
-
       createCalendar($f7, new Date(), toolbarCalendarProductInvoiceService)
       $update()
     })
 
     let sheet
     let popupEdit
-    const framework7DTO = new Framework7DTO($f7, $el, $)
-
-    const uploadsUrl = API_URL
-
+    const openLinkInNewWindows = (e, path) => {
+      e.preventDefault()
+      window.open(`${API_URL}/products-invoice/${path}`, '_blank')
+    }
+    
     $onMounted(() => {
       sheet = createSheet(
-        framework7DTO,
+        $f7,
         sheetModalProductInvoiceFormatter,
         () => productInvoiceFileManagement.sendFiles(date, toolbarCalendarProductInvoiceService)
       )

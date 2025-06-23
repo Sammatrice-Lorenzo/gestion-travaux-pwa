@@ -1,15 +1,15 @@
 import type { Sheet } from 'framework7/types'
+import type Framework7 from 'framework7/types'
 import type SheetModalInterface from '../../intefaces/SheetModalInterface'
-import type Framework7DTO from '../Framework7DTO'
 
 const createSheet = (
-  framework7DTO: Framework7DTO,
+  app: Framework7,
   sheetModal: SheetModalInterface,
   sendFiles: CallableFunction,
 ): Sheet.Sheet => {
   let isListenerAdded = false
 
-  return framework7DTO.getApp().sheet.create({
+  return app.sheet.create({
     content: `
       <div class="sheet-modal">
         <div class="toolbar bg-color-primary text-color-white">
