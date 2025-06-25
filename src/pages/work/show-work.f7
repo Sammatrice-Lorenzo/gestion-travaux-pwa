@@ -40,6 +40,16 @@
       </div>
       <div class="card card-outline animate-fade-in">
         <div class="card-content card-content-padding list no-hairlines">
+          <div class="display-flex justify-content-end">
+            <a
+              id="work-actions"
+              class="link icon-only tooltip-init popover-open"
+              data-popover=".popover-action"
+              data-tooltip="Autres actions"
+            >
+              <i class="f7-icons">ellipsis</i>
+            </a>
+          </div>
           <ul class="info-list">
             <li>
               <div class="item-content">
@@ -154,13 +164,6 @@
               </div>
             </li>
           </ul>
-        </div>
-
-        <div class="card-footer button-footer justify-content-center">
-          <a id="work-actions" class="button button-outline button-raised color-primary popover-open" data-popover=".popover-action">
-            <i class="f7-icons">ellipsis_vertical</i>
-            <span>Actions</span>
-          </a>
         </div>
       </div>
       <div class="popover popover-action">

@@ -63,8 +63,11 @@
         <input type="text" id="calendar-input-product-invoice-file" placeholder="MM/AAAA" readonly="readonly" />
       </div>
 
-      <div class="block text-align-center selected-info" style="margin-top: 10px;">
-        ${dataTableProductInvoiceService.getSelectedProductInvoices().length} facture(s) sélectionnée(s)
+      <div class="display-flex flex-direction-column text-align-center selected-info" style="margin-top: 0.5rem;">
+        <span id="total-product-invoice-selected">
+          ${dataTableProductInvoiceService.getSelectedProductInvoices().length} facture(s) sélectionnée(s)
+        </span>
+        <span id="pagination-info" class="block text-align-center"></span>
       </div>
 
       <div class="display-flex justify-content-start selected-all-product-invoices">
@@ -97,23 +100,24 @@
         ${productInvoiceStore.getters.getInvoices.value.map((invoice) => $h`
           <div class="card invoice-card tooltip-init">
             <div class="card-content">
-              <label class="checkbox">
-                <input 
-                  type="checkbox" 
-                  @change="${() => dataTableProductInvoiceService.toggleInvoiceSelection(invoice)}"
-                />
-                <i class="icon-checkbox"></i>
-              </label>
+              <div class="display-flex justify-content-space-between">
+                <label class="checkbox">
+                  <input 
+                    type="checkbox" 
+                    @change="${() => dataTableProductInvoiceService.toggleInvoiceSelection(invoice)}"
+                  />
+                  <i class="icon-checkbox"></i>
+                </label>
+                <a class="link icon-only tooltip-init popover-open" data-popover=".popover-action" data-tooltip="Autres actions">
+                  <i class="f7-icons">ellipsis</i>
+                </a>
+              </div>
               <p><strong>Date :</strong> ${new Date(invoice.date).toLocaleDateString()}</p>
               <p><strong>Nom :</strong> ${invoice.name}</p>
               <p><strong>Montant :</strong> ${invoice.totalAmount} €</p>
             </div>
             <div class="card-footer">
               <div class="display-flex justify-content-start">
-                <a class="link icon-only tooltip-init popover-open" data-popover=".popover-action" data-tooltip="Autres actions">
-                  <i class="f7-icons">ellipsis_vertical</i>
-                </a>
-    
                 <a
                   class="link icon-only tooltip-init"
                   @click="${() => openPdfPreviewFromUrl($f7, invoice.id, pdfPreviewPopup)}"
@@ -127,14 +131,14 @@
                 <a
                   href="#" 
                   @click="${(e) => productInvoiceFormService.handleOpenPopupEditProductInvoiceFile($f7, invoice)}"
-                  class="item-link"
+                  class="link icon-only"
                 >
                   <i class="f7-icons">square_pencil_fill</i>
                 </a>
     
                 <a
                   class="link icon-only color-red tooltip-init"
-                  @click="${(e) => productInvoiceManagerService.handleDeleteProductInvoice(e, toolbarCalendarProductInvoiceService)}"
+                  @click="${(e) => productInvoiceManagerService.handleDeleteProductInvoice(invoice, toolbarCalendarProductInvoiceService)}"
                   data-tooltip="Supprimer"
                 >
                   <i class="f7-icons">trash</i>
@@ -186,6 +190,16 @@
           </div>
         </div>
       </div>
+
+      <div class="pagination">
+        <a id="products-invoice-prev" href="#" class="btn-prev" @click="${previousElement}">
+          <i class="f7-icons">chevron_left_circle_fill</i>
+        </a>
+        <div id="pagination-links-index-invoices" class="pagination-links"></div>
+        <a id="products-invoice-next" href="#" class="btn-next" @click="${nextElement}">
+          <i class="f7-icons">chevron_right_circle_fill</i>
+        </a>
+      </div>
     </div>
   </div>
 </template>
@@ -207,6 +221,7 @@
   import ToolbarCalendarProductInvoiceService from '../../js/service/calendarProducInvoice/ToolbarCalendarProductInvoiceService'
   import ProductInvoiceFileManagement from '../../js/service/productInvoices/productInvoicesFile/ProductInvoiceFileManagement'
   import productInvoiceStore from '../../js/store/productInvoiceStore'
+  import Pagination from '../../js/service/Pagination.ts'
 
   export default async (props, { $, $on, $el, $f7, $onMounted, $update }) => {
     const toolbarCalendarProductInvoiceService = new ToolbarCalendarProductInvoiceService(async () => {
@@ -218,15 +233,26 @@
     const productInvoiceFileManagement = new ProductInvoiceFileManagement($f7)
     const productInvoiceManagerService = new ProductInvoiceManagerService($f7)
 
-    $on('pageInit', async function (page) {
+    const pagination = new Pagination(10)
 
+    $on('pageInit', async function (page) {
       loadTabbar('index-invoices', $f7)
-      const productInvoicesByUser = await getProductsInvoicesByUser($f7, date)
-      productInvoiceStore.dispatch('setInvoices', productInvoicesByUser)
       createCalendar($f7, new Date(), toolbarCalendarProductInvoiceService)
-      $update()
+
+      await productInvoiceManagerService.initializeProductInvoices(pagination, date, toolbarCalendarProductInvoiceService)
+      $update().then(() => {
+        productInvoiceManagerService.handlePagination(pagination)
+      })
     })
 
+    const previousElement = async () => {
+      await pagination.previousElement($('#products-invoice-prev'), $('#products-invoice-next'))
+    }
+
+    const nextElement = async () => {
+      await pagination?.nextElement($('#products-invoice-prev'), $('#products-invoice-next'))
+    }
+  
     let sheet
     let popupEdit
     const openLinkInNewWindows = (e, path) => {

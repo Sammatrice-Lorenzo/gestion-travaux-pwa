@@ -51,7 +51,7 @@ export default class DataTableProductInvoiceService {
 
   private updatetextProductInvoiceSelected(): void {
     const $ = this._app.$
-    $('.selected-info').text(
+    $('#total-product-invoice-selected').text(
       `${this._selectedInvoices.length} facture(s) sélectionnée(s)`,
     )
   }

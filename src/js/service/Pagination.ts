@@ -3,17 +3,11 @@ export default class Pagination {
   public totalItems: number
   public totalElementParPage: number
   private _updateContentCallback: CallableFunction
-  private _paginationContainer: HTMLElement
+  public paginationContainer: HTMLElement
 
-  constructor(
-    totalItems: number,
-    totalElementParPage: number,
-    paginationContainer: HTMLElement,
-  ) {
+  constructor(totalElementParPage: number) {
     this.currentPage = 1
-    this.totalItems = totalItems
     this.totalElementParPage = totalElementParPage
-    this._paginationContainer = paginationContainer
   }
 
   public setUpdateContentCallBack(updateContent: CallableFunction): void {
@@ -59,7 +53,7 @@ export default class Pagination {
     prevButton.disabled = this.currentPage === 1
     nextButton.disabled = this.currentPage === this.getTotalPages()
 
-    this.renderPageLinks(this._paginationContainer)
+    this.renderPageLinks(this.paginationContainer)
     this.handleActionButtonsWithNumber(prevButton, nextButton)
   }
 
@@ -97,7 +91,7 @@ export default class Pagination {
     prevButton: HTMLButtonElement,
     nextButton: HTMLButtonElement,
   ): void {
-    this._paginationContainer.onclick = async (e: MouseEvent) => {
+    this.paginationContainer.onclick = async (e: MouseEvent) => {
       const target = e.target as HTMLElement
       if (target.classList.contains('page-link')) {
         e.preventDefault()

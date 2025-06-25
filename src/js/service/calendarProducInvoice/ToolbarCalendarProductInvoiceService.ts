@@ -4,10 +4,13 @@ import type ProductInvoiceInterface from '../../../intefaces/ProductInvoice/Prod
 import { monthsEnum } from '../../enum/monthEnum.js'
 import { getProductsInvoicesByUser } from '../../productInvoice.js'
 import productInvoiceStore from '../../store/productInvoiceStore.js'
+import type Pagination from '../Pagination.ts'
 
 export default class ToolbarCalendarProductInvoiceService {
   private _date: Date
   private _$update: CallableFunction
+
+  public pagination: Pagination
 
   constructor($update: CallableFunction) {
     this._date = new Date()
@@ -47,6 +50,13 @@ export default class ToolbarCalendarProductInvoiceService {
     const productInvoices: ProductInvoiceInterface[] =
       await getProductsInvoicesByUser(app, this._date)
     productInvoiceStore.dispatch('setInvoices', productInvoices)
-    this._$update()
+    await this._$update()
+
+    const $ = app.$
+    this.pagination.totalItems = productInvoices.length
+    this.pagination.updatePagination(
+      $('#products-invoice-prev'),
+      $('#products-invoice-next'),
+    )
   }
 }
