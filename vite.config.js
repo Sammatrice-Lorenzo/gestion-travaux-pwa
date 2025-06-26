@@ -5,6 +5,7 @@ import dotenv from 'dotenv'
 import framework7 from 'rollup-plugin-framework7'
 
 import https from 'node:https'
+import { VitePWA } from 'vite-plugin-pwa'
 dotenv.config()
 
 const SRC_DIR = path.resolve(__dirname, './src')
@@ -56,6 +57,13 @@ export default async () => {
           STORAGE_BUCKET_FIREBASE: JSON.stringify(env.STORAGE_BUCKET_FIREBASE),
           MESSAGING_SENDER_ID: JSON.stringify(env.MESSAGING_SENDER_ID),
           APP_ID: JSON.stringify(env.APP_ID),
+        },
+      }),
+      VitePWA({
+        registerType: 'autoUpdate',
+        workbox: {
+          skipWaiting: true,
+          clientsClaim: true,
         },
       }),
     ],
