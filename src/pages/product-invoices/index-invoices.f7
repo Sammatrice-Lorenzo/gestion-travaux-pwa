@@ -98,11 +98,11 @@
 
       <div class="grid grid-cols-1 medium-grid-cols-2 large-grid-cols-3 gap">
         ${productInvoiceStore.getters.getInvoices.value.map((invoice) => $h`
-          <div class="card invoice-card tooltip-init">
+          <div data-testid="invoice-card-${invoice.id}" class="card invoice-card tooltip-init">
             <div class="card-content">
               <div class="display-flex justify-content-space-between">
                 <label class="checkbox">
-                  <input 
+                  <input
                     type="checkbox" 
                     @change="${() => dataTableProductInvoiceService.toggleInvoiceSelection(invoice)}"
                   />

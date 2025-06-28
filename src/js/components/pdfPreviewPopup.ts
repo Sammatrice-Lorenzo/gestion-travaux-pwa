@@ -35,7 +35,7 @@ const handleZoomMouse = (container: HTMLElement): void => {
 const pdfPreviewPopup = (app: Framework7): Popup.Popup => {
   return app.popup.create({
     content: `
-      <div class="popup">
+      <div id="popup-preview-pdf" class="popup">
         <div class="view">
           <div class="page">
             <div class="navbar">
