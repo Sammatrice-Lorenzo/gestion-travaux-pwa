@@ -134,7 +134,7 @@
                                 <a class="edit-event" href="#" @click="${edit}">
                                     <i class="f7-icons">square_pencil</i>
                                 </a>
-                                <a class="swipeout-delete" @click="${(e) => calendarWorkEventDayService.removeEvent(e, framework7DTO)}">
+                                <a class="swipeout-delete" @click="${(e) => calendarWorkEventDayService.removeEvent(e, $f7)}">
                                     <i class="f7-icons">trash</i>
                                 </a>
                             </div>
@@ -171,7 +171,6 @@
         downloadCalendarEvents
     } from '../../js/workEventDay.js'
     import { getEventsFormatted } from '../../js/formatter/eventsFormatter.js'
-    import Framework7DTO from '../../js/Framework7DTO.js'
     import { getClientsByUser } from '../../js/client/client.js'
 
 
@@ -180,7 +179,6 @@
         const workEventDays = await getWorkEventDayByUser($f7)
         let events = getEventsFormatted(workEventDays)
         const calendarWorkEventDayService = new CalendarWorkEventDayFormService(events)
-        const framework7DTO = new Framework7DTO($f7, $el, $)
 
         let calendar
         let popupSwipe
@@ -200,26 +198,26 @@
         }
 
         $on('pageInit', async () => {
-            calendar = await createCalendar(framework7DTO, renderEvents, events)
+            calendar = await createCalendar($f7, renderEvents, events)
             colorPickerSpectrum = createColorPickerForEventCalendar($f7)
         })
 
         const send = async (e) => {
             e.preventDefault()
-            await calendarWorkEventDayService.send(framework7DTO, popupSwipe)
+            await calendarWorkEventDayService.send($f7, popupSwipe)
             eventItems = await renderEventsCalendar(calendar, calendarWorkEventDayService.getEvents())
             calendarWorkEventDayService.setEventItems(eventItems)
             $update()
         }
 
         const edit = (element) => {
-            calendarWorkEventDayService.edit(framework7DTO, element)
+            calendarWorkEventDayService.edit($f7, element)
             popupSwipe.open()
         }
 
         const downloadCalendar = () => downloadCalendarEvents(calendar, $f7)
 
-        handleEditClassForm(framework7DTO)
+        handleEditClassForm($f7)
 
         $onMounted(() => {
             popupSwipe = $f7.popup.create({

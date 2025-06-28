@@ -167,7 +167,7 @@
   import Pagination from '../../js/service/Pagination.ts'
 
   export default async (props, { $, $on, $f7, $update }) => {
-    let pagination
+    const pagination = new Pagination(10)
 
     const response = await getWorkByUser($f7, 1)
     let worksByUser = response.works
@@ -183,11 +183,8 @@
       const response = await getWorkByUser($f7, 1)
       worksByUser = response.works
 
-      pagination = new Pagination(
-        response.totalItems,
-        10,
-        document.querySelector('.pagination-links'), 
-      )
+      pagination.totalItems = response.totalItems
+      pagination.paginationContainer = document.querySelector('.pagination-links')
       pagination.setUpdateContentCallBack(updateWorks)
       pagination.updatePagination($('.btn-prev'), $('.btn-next'))
     })

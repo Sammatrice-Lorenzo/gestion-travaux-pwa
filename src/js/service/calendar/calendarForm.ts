@@ -1,8 +1,8 @@
+import type Framework7 from 'framework7'
 import type ClientEventInterface from '../../../intefaces/WorkEventDay/ClientEventInterface'
 import type EventsInterface from '../../../intefaces/WorkEventDay/EventInterface'
 import type { EventItemInteface } from '../../../intefaces/WorkEventDay/EventItermInterface'
 import type FormWorkEventDayInterface from '../../../intefaces/WorkEventDay/FormWorkEventDayInteface'
-import type Framework7DTO from '../../Framework7DTO'
 
 const getWorkDayCalendar = (
   form: FormWorkEventDayInterface,
@@ -43,12 +43,12 @@ const getElementEdit = (element: MouseEvent): string => {
   return (itemInnerEventTitle.children[2] as HTMLElement).id
 }
 
-const handleEditClassForm = (framework7DTO: Framework7DTO): void => {
-  const $ = framework7DTO.getSelector()
+const handleEditClassForm = (app: Framework7): void => {
+  const $ = app.$
   const selectorForm: string = '#form-calendar'
   const textCreation: string = 'Création nouveau événement'
 
-  framework7DTO.getApp().on(
+  app.on(
     'popupClosed',
     (popup: {
       el: { classList: { contains: (arg0: string) => boolean } }
@@ -71,9 +71,9 @@ type EventItemCalendar = FormWorkEventDayInterface & { id: number }
 const getEventSelected = (
   id: number,
   eventItems: EventItemInteface[],
-  framework7DTO: Framework7DTO,
+  app: Framework7,
 ): EventItemCalendar => {
-  const $ = framework7DTO.getSelector()
+  const $ = app.$
   const event: EventItemInteface = eventItems.filter(
     (event: EventItemInteface) => event.id === id,
   )[0]
@@ -88,7 +88,7 @@ const getEventSelected = (
   }
 
   $('#form-calendar').addClass('edit')
-  framework7DTO.getApp().form.fillFromData('#form-calendar', formCalendar)
+  app.form.fillFromData('#form-calendar', formCalendar)
 
   return formCalendar
 }

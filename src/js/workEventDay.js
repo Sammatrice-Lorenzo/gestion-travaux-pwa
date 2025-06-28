@@ -1,5 +1,4 @@
 import Framework7 from 'framework7'
-import Framework7DTO from './Framework7DTO.js'
 import { apiRequest, deleteAPI, fetchFileAPI } from './api'
 import { checkDataToGetOfAResponseCached, responseIsCached } from './cache'
 import { RouteDTO } from './dto/RouteDTO.js'

@@ -40,6 +40,16 @@
       </div>
       <div class="card card-outline animate-fade-in">
         <div class="card-content card-content-padding list no-hairlines">
+          <div class="display-flex justify-content-end">
+            <a
+              id="work-actions"
+              class="link icon-only tooltip-init popover-open"
+              data-popover=".popover-action"
+              data-tooltip="Autres actions"
+            >
+              <i class="f7-icons">ellipsis</i>
+            </a>
+          </div>
           <ul class="info-list">
             <li>
               <div class="item-content">
@@ -155,13 +165,6 @@
             </li>
           </ul>
         </div>
-
-        <div class="card-footer button-footer justify-content-center">
-          <a id="work-actions" class="button button-outline button-raised color-primary popover-open" data-popover=".popover-action">
-            <i class="f7-icons">ellipsis_vertical</i>
-            <span>Actions</span>
-          </a>
-        </div>
       </div>
       <div class="popover popover-action">
         <div class="popover-inner">
@@ -209,7 +212,6 @@
   import { totalAmountTVA, tvaOnAmount } from '../../js/helper/priceWorkHelper'
   import { tvaEnum } from '../../js//enum/tvaEnum.js'
   import { getProgressColor } from '../../js/helper/statusHelper.ts'
-  import Framework7DTO from '../../js/Framework7DTO.js'
   import { createSheet } from '../../js/components/modalUploadFiles.ts'
   import WorkImageService from '../../js/WorkImageService.ts'
   import WorkImageBrowserService from '../../js/service/workImage/WorkImageBrowserService.ts'
@@ -241,7 +243,7 @@
     }
 
     $onMounted(() => {
-      sheet = createSheet(new Framework7DTO($f7, $el, $), sheetModalWorkImageFormatter, sendImages)
+      sheet = createSheet($f7, sheetModalWorkImageFormatter, sendImages)
     })
 
     $on('pageInit', function (page) {
