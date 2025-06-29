@@ -1,5 +1,5 @@
 export interface FormPageInteface {
-  send(): void
+  send(): Promise<void>
   initForm(): void | Promise<void>
   getPageTitle(): string
   getBlockTitle(): string

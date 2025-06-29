@@ -99,13 +99,13 @@
             }
         })
 
-        const send = (event) => {
+        const send = async (event) => {
             event.preventDefault()
             const $$ = Dom7
             let formData = $f7.form.convertToData('#form-work-invoice')
             const isValid = isValidForm($$, $f7)
             if (isValid) {
-                createInvoiceWork(formData, $f7, props)
+                await createInvoiceWork(formData, $f7, props)
             }
         }
 

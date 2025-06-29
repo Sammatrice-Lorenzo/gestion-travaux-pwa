@@ -21,11 +21,10 @@ export default class WorkImageBrowserService {
       return null
     }
 
-    // @ts-ignore
-    const uploadsUrl = API_URL
     const thumbs = this._workImages.map(
       (photo: WorkImageInteface) =>
-        `${uploadsUrl}/work-images/${photo.imageName}`,
+        // @ts-ignore
+        `${API_URL}/work-images/${photo.imageName}`,
     )
 
     const photoBrowser: PhotoBrowser.PhotoBrowser =
@@ -94,15 +93,14 @@ export default class WorkImageBrowserService {
   ): WorkImageInteface | undefined {
     const index = photoBrowser.activeIndex
     // @ts-ignore
-    const uploadsUrl = API_URL
-
     let photoToDelete: WorkImageInteface | undefined
     if (photoBrowser.params.photos) {
       const imageName: string | PhotoBrowser.Photo =
         photoBrowser.params?.photos[index]
       const name: string = imageName
         .toString()
-        .replace(`${uploadsUrl}/work-images/`, '')
+        // @ts-ignore
+        .replace(`${API_URL}/work-images/`, '')
 
       photoToDelete = this._workImages
         .filter((photo) => photo.imageName === name)

@@ -136,7 +136,7 @@
       <div class="grid grid-cols-3 gap-4 justify-items-center items-center margin-top">
         <button
           class="button button-small button-round button-tonal btn-save"
-          @click="${() => formService.send()}"
+          @click="${async () => await formService.send()}"
         >
           <i class="icon f7-icons">checkmark</i>
         </button>

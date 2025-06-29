@@ -1,6 +1,6 @@
-import { fetchFileAPI } from './api'
 import { RouteDTO } from './dto/RouteDTO'
-import { getUrl } from './urlGenerator.js'
+import { ApiMutationService } from './service/api/ApiMutationService.ts'
+import { getUrl } from './urlGenerator'
 import { addInvoiceLineForUpdate } from './work/component/invoiceLineComponent.js'
 
 /**
@@ -53,7 +53,7 @@ function getBody(form, props) {
  * @param { any } $f7
  * @param { Object } props
  */
-function createInvoiceWork(form, $f7, props) {
+async function createInvoiceWork(form, $f7, props) {
   const body = getBody(form, props)
   const url = getUrl('/api/invoice-file')
 
@@ -63,7 +63,7 @@ function createInvoiceWork(form, $f7, props) {
     .setBody(body)
     .setMethod('POST')
 
-  fetchFileAPI(routeDTO, 'facture_prestation.pdf')
+  await new ApiMutationService($f7).download(routeDTO, 'facture_prestation.pdf')
 }
 
 function showInvoiceForUpdate(invoice, $f7) {

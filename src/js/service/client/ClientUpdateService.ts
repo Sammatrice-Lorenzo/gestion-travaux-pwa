@@ -39,7 +39,7 @@ export default class ClientUpdateService implements FormPageInteface {
     this._app.form.fillFromData(`#${this._selectorForm}`, formClient)
   }
 
-  public send(): void {
+  public async send(): Promise<void> {
     const formData = this._app.form.convertToData(
       `#${this._selectorForm}`,
     ) as ClientFormInteface
@@ -47,6 +47,6 @@ export default class ClientUpdateService implements FormPageInteface {
       return
     }
 
-    updateClient(formData, this._clientId, this._app)
+    await updateClient(formData, this._clientId, this._app)
   }
 }

@@ -17,7 +17,7 @@ $muted: #205D9E;
     background-color: $surface;
     color: $text;
     border: 1px solid $muted;
-    padding: 0.3rem 0.6rem;
+    padding: 0.1rem 0.3rem;
     border-radius: 4px;
     font-size: 0.875rem;
     cursor: pointer;
@@ -40,7 +40,7 @@ $muted: #205D9E;
   .btn-prev,
   .btn-next {
     font-weight: 500;
-    padding: 0.3rem 0.7rem;
+    padding: 0.2rem 0.3rem;
     font-size: 0.875rem;
   }
 

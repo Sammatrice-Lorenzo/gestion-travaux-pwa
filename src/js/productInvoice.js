@@ -1,8 +1,8 @@
 import Framework7 from 'framework7'
-import { apiRequest, deleteAPI, fetchCreate, fetchFileAPI } from './api'
 import { checkDataToGetOfAResponseCached, responseIsCached } from './cache'
 import { RouteDTO } from './dto/RouteDTO'
 import { getMontYear } from './helper/date.ts'
+import { ApiMutationService } from './service/api/ApiMutationService.ts'
 import { ApiService } from './service/api/ApiService'
 import { handleSubmitFormInputFiles } from './service/form/formErrorInputs.ts'
 import { formProductInvoiceFilesSchema } from './service/productInvoices/formProductInvoiceFilesSchema.ts'
@@ -55,7 +55,7 @@ async function createProductInvoices(date, app) {
     .setBody(body)
     .setMethod('POST')
 
-  fetchCreate(routeDTO, 'formData')
+  await new ApiMutationService(app).post(routeDTO, true)
 }
 
 /**
@@ -69,10 +69,10 @@ async function deleteProductInvoice($f7, id) {
     .setRoute(URL_TO_REDIRECT)
     .setUrlAPI(`${URL_PRODUCT_INVOICE}/`)
 
-  deleteAPI(routeDTO)
+  await new ApiMutationService($f7).delete(routeDTO)
 }
 
-function downloadFileProductInvoice($f7, productInvoice) {
+async function downloadFileProductInvoice($f7, productInvoice) {
   const url = getUrl(`${URL_PRODUCT_INVOICE}/${productInvoice.id}/download`)
 
   const routeDTO = new RouteDTO().setApp($f7).setUrlAPI(url).setMethod('GET')
@@ -83,10 +83,10 @@ function downloadFileProductInvoice($f7, productInvoice) {
       ? productInvoice.name
       : `${productInvoice.name}.pdf`
 
-  fetchFileAPI(routeDTO, nameFile)
+  await new ApiMutationService($f7).download(routeDTO, nameFile)
 }
 
-function downloadZIP($f7, ids, date) {
+async function downloadZIP($f7, ids, date) {
   const url = getUrl(`${URL_PRODUCT_INVOICE}_download_zip`)
   let formattedDate = getMontYear(date)
   formattedDate = formattedDate.replace(' ', '_')
@@ -97,10 +97,13 @@ function downloadZIP($f7, ids, date) {
     .setBody(JSON.stringify({ ids: ids }))
     .setMethod('POST')
 
-  fetchFileAPI(routeDTO, `Factures_${formattedDate}.zip`)
+  await new ApiMutationService($f7).download(
+    routeDTO,
+    `Factures_${formattedDate}.zip`,
+  )
 }
 
-function updateProductInvoice($f7, id, form) {
+async function updateProductInvoice($f7, id, form) {
   const url = getUrlById(`${URL_PRODUCT_INVOICE}/`, id)
   const body = JSON.stringify({
     name: form.name,
@@ -115,7 +118,7 @@ function updateProductInvoice($f7, id, form) {
     .setBody(body)
     .setMethod('PUT')
 
-  apiRequest(routeDTO)
+  await new ApiMutationService($f7).generic(routeDTO)
 }
 
 /**

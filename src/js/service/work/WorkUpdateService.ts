@@ -44,7 +44,7 @@ export default class WorkUpdateService implements FormPageInteface {
     getInputEquipementUpdateForm(work.equipements)
   }
 
-  public send(): void {
+  public async send(): Promise<void> {
     const formData = this._app.form.convertToData(
       `#${this._selectorForm}`,
     ) as WorkFormInterface
@@ -53,6 +53,6 @@ export default class WorkUpdateService implements FormPageInteface {
       return
     }
 
-    updateWork(formData, this._workId, this._app)
+    await updateWork(formData, this._workId, this._app)
   }
 }

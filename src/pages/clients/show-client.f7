@@ -119,8 +119,8 @@
     })
 
     const openConfirm = () => {
-      $f7.dialog.confirm(CONFIRMATION_TO_DELETE, function () {
-        deleteClient($$('.delete')[0].id, $f7)
+      $f7.dialog.confirm(CONFIRMATION_TO_DELETE, async function () {
+        await deleteClient($$('.delete')[0].id, $f7)
       })
     }
 

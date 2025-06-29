@@ -26,22 +26,24 @@ export default class ProductInvoiceFileManagement {
     })
   }
 
-  public downloadPDF(productInvoice: ProductInvoiceInterface | null): void {
+  public async downloadPDF(
+    productInvoice: ProductInvoiceInterface | null,
+  ): Promise<void> {
     if (productInvoice) {
-      downloadFileProductInvoice(this._app, productInvoice)
+      await downloadFileProductInvoice(this._app, productInvoice)
     } else {
       this._app.dialog.alert('Facture introuvable.')
     }
   }
 
-  public downloadSelectedInvoices(
+  public async downloadSelectedInvoices(
     selectedInvoices: string[],
     date: Date,
-  ): void {
+  ): Promise<void> {
     if (selectedInvoices.length < 1) {
       toastError(this._app, 'Veuillez sélectionner au moins une facture!')
       return
     }
-    downloadZIP(this._app, selectedInvoices, date)
+    await downloadZIP(this._app, selectedInvoices, date)
   }
 }

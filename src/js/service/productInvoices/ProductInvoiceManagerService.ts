@@ -63,6 +63,7 @@ export default class ProductInvoiceManagerService {
         ;(card as HTMLElement).style.display = 'none'
       }
     }
+
     const paginationInfo = document.getElementById('pagination-info')
     if (paginationInfo) {
       paginationInfo.innerHTML = `Affichage des factures <strong>${start + 1}</strong> à <strong>${Math.min(end, cards.length)}</strong> sur <strong>${cards.length}</strong>`
