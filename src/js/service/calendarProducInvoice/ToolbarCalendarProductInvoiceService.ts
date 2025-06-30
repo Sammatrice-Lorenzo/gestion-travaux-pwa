@@ -5,12 +5,14 @@ import { monthsEnum } from '../../enum/monthEnum.js'
 import { getProductsInvoicesByUser } from '../../productInvoice.js'
 import productInvoiceStore from '../../store/productInvoiceStore.js'
 import type Pagination from '../Pagination.ts'
+import type InvoicePaginatorService from '../productInvoices/InvoicePaginatorService'
 
 export default class ToolbarCalendarProductInvoiceService {
   private _date: Date
   private _$update: CallableFunction
 
   public pagination: Pagination
+  public invoicePaginatorService: InvoicePaginatorService
 
   constructor($update: CallableFunction) {
     this._date = new Date()
@@ -47,16 +49,23 @@ export default class ToolbarCalendarProductInvoiceService {
   }
 
   public async refreshProductInvoicesInDom(app: Framework7): Promise<void> {
+    const $ = app.$
+
     const productInvoices: ProductInvoiceInterface[] =
       await getProductsInvoicesByUser(app, this._date)
+
     productInvoiceStore.dispatch('setInvoices', productInvoices)
     await this._$update()
 
-    const $ = app.$
     this.pagination.totalItems = productInvoices.length
     this.pagination.updatePagination(
       $('#products-invoice-prev'),
       $('#products-invoice-next'),
     )
+
+    await new Promise((resolve) => requestAnimationFrame(resolve))
+
+    const cards: HTMLElement[] = $('.invoice-card')
+    this.invoicePaginatorService.paginateCards(cards, this.pagination)
   }
 }

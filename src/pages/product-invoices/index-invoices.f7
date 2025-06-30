@@ -138,7 +138,7 @@
     
                 <a
                   class="link icon-only color-red tooltip-init"
-                  @click="${(e) => productInvoiceManagerService.handleDeleteProductInvoice(invoice, toolbarCalendarProductInvoiceService)}"
+                  @click="${(e) => productInvoiceManagerService.handleDeleteProductInvoice(invoice)}"
                   data-tooltip="Supprimer"
                 >
                   <i class="f7-icons">trash</i>
@@ -220,6 +220,7 @@
   import ProductInvoiceFormService from '../../js/service/productInvoices/ProductInvoiceFormService.ts'
   import ToolbarCalendarProductInvoiceService from '../../js/service/calendarProducInvoice/ToolbarCalendarProductInvoiceService'
   import ProductInvoiceFileManagement from '../../js/service/productInvoices/productInvoicesFile/ProductInvoiceFileManagement'
+  import InvoicePaginatorService from '../../js/service/productInvoices/InvoicePaginatorService.ts'
   import productInvoiceStore from '../../js/store/productInvoiceStore'
   import Pagination from '../../js/service/Pagination.ts'
 
@@ -231,17 +232,18 @@
     const productInvoiceFormService = new ProductInvoiceFormService()
     const dataTableProductInvoiceService = new DataTableProductInvoiceService($f7)
     const productInvoiceFileManagement = new ProductInvoiceFileManagement($f7)
-    const productInvoiceManagerService = new ProductInvoiceManagerService($f7)
-
+    const productInvoiceManagerService = new ProductInvoiceManagerService($f7, toolbarCalendarProductInvoiceService)
+    const invoicePaginatorService = new InvoicePaginatorService()
     const pagination = new Pagination(10)
+    toolbarCalendarProductInvoiceService.invoicePaginatorService = invoicePaginatorService
 
     $on('pageInit', async function (page) {
       loadTabbar('index-invoices', $f7)
       createCalendar($f7, new Date(), toolbarCalendarProductInvoiceService)
 
-      await productInvoiceManagerService.initializeProductInvoices(pagination, date, toolbarCalendarProductInvoiceService)
+      await productInvoiceManagerService.initializeProductInvoices(pagination, date, invoicePaginatorService)
       $update().then(() => {
-        productInvoiceManagerService.handlePagination(pagination)
+        invoicePaginatorService.paginateCards($('.invoice-card'), pagination)
       })
     })
 
