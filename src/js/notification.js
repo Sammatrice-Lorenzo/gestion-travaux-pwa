@@ -2,24 +2,42 @@ import { getMessaging, getToken, onMessage } from 'firebase/messaging'
 import { firebase } from './firebase'
 
 export const messaging = getMessaging(firebase)
-export function askUserPermissionForSendANotificationPush() {
-  let token
 
+const handleAskNotification = () => {
   Notification.requestPermission()
     .then((permission) => {
       if (permission === 'granted') {
         getToken(messaging, { vapidKey: process.env.VAPID_KEY }).then(
           (currentToken) => {
             if (currentToken) {
-              token = currentToken
+              console.info('Nouveau token obtenu :', currentToken)
             }
           },
         )
       }
     })
     .catch((error) => {
-      console.log('Error requesting permission', error)
+      console.error('Erreur lors de la demande de permission', error)
     })
+}
+
+const sendNotification = () => {
+  getToken(messaging, { vapidKey: import.meta.env.VITE_VAPID_KEY }).then(
+    (currentToken) => {
+      if (!currentToken) throw new Error('Aucun token Firebase')
+      console.info('Token FCM :', currentToken)
+    },
+  )
+}
+
+export function askUserPermissionForSendANotificationPush() {
+  if (Notification.permission === 'granted') {
+    sendNotification()
+  } else if (Notification.permission !== 'denied') {
+    handleAskNotification()
+  } else {
+    console.warn('User has refused notifications')
+  }
 }
 
 export function sendNotificationPushForProgression($f7) {

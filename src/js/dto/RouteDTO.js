@@ -1,9 +1,9 @@
 export class RouteDTO {
   route = '/'
   body = null
-  method = null
-  idElement = null
-  urlAPI = null
+  method = 'GET'
+  idElement = 0
+  urlAPI = ''
   app = null
   contentType = null
 
@@ -35,7 +35,7 @@ export class RouteDTO {
   }
 
   /**
-   * @returns { ?number }
+   * @returns { number }
    */
   getIdElement() {
     return this.idElement
@@ -83,7 +83,7 @@ export class RouteDTO {
   }
 
   /**
-   * @returns { String | URL | null }
+   * @returns { String | URL }
    */
   getUrlAPI() {
     return this.urlAPI
@@ -100,7 +100,7 @@ export class RouteDTO {
   }
 
   /**
-   * @returns { ?String }
+   * @returns { String }
    */
   getMethod() {
     return this.method

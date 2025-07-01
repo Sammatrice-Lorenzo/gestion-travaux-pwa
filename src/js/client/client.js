@@ -1,6 +1,6 @@
-import { apiRequest, deleteAPI, fetchCreate } from '../api'
 import { checkDataToGetOfAResponseCached, responseIsCached } from '../cache'
 import { RouteDTO } from '../dto/RouteDTO'
+import { ApiMutationService } from '../service/api/ApiMutationService'
 import { ApiService } from '../service/api/ApiService'
 import { clientSchema } from '../service/client/clientSchema'
 import { handleSubmitForm } from '../service/form/formErrorInputs'
@@ -22,7 +22,7 @@ async function getClientsByUser($f7) {
   return new ApiService($f7).call(url)
 }
 
-function createClient(form, $f7) {
+async function createClient(form, $f7) {
   if (!handleSubmitForm(form, clientSchema, ID_FORM)) {
     return
   }
@@ -36,10 +36,10 @@ function createClient(form, $f7) {
     .setUrlAPI(url)
     .setBody(body)
 
-  fetchCreate(routeDTO)
+  await new ApiMutationService($f7).post(routeDTO)
 }
 
-function updateClient(form, idClient, $f7) {
+async function updateClient(form, idClient, $f7) {
   const url = getUrlById(URL_CLIENTS, idClient)
   const body = getBodyClient(form)
 
@@ -54,17 +54,17 @@ function updateClient(form, idClient, $f7) {
     .setBody(body)
     .setMethod('PUT')
 
-  apiRequest(routeDTO)
+  await new ApiMutationService($f7).generic(routeDTO)
 }
 
-function deleteClient(idClient, $f7) {
+async function deleteClient(idClient, $f7) {
   const routeDTO = new RouteDTO()
     .setApp($f7)
     .setIdElement(idClient)
     .setRoute(URL_TO_REDIRECT)
     .setUrlAPI(URL_CLIENTS)
 
-  deleteAPI(routeDTO)
+  await new ApiMutationService($f7).delete(routeDTO)
 }
 
 async function findClientById(id, $f7) {

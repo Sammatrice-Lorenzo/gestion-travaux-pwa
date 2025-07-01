@@ -1,5 +1,9 @@
-importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js')
-importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js')
+importScripts(
+  'https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js',
+)
+importScripts(
+  'https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js',
+)
 
 const configFirebase = {
   apiKey: FIREBASE_API_KEY,
@@ -14,21 +18,17 @@ const configFirebase = {
 firebase.initializeApp(configFirebase)
 
 const messaging = firebase.messaging()
-
 messaging.onBackgroundMessage((payload) => {
-  if (payload.notification) {
-    const notificationTitle = payload.notification.title || 'Notification'
-    const notificationOptions = {
-      body:
-        payload.notification.body ||
-        'Vous avez reçu une nouvelle notification.',
-      icon: '../public/icons/favicon.png',
-      silent: false,
-    }
+  console.info(
+    '[firebase-messaging-sw.js] Received background message ',
+    payload,
+  )
 
-    return self.registration.showNotification(
-      notificationTitle,
-      notificationOptions,
-    )
+  const notificationTitle = payload.notification?.title || 'Notification'
+  const notificationOptions = {
+    body: payload.notification?.body || 'Vous avez reçu une notification.',
+    icon: '/icons/favicon.png',
   }
+
+  // self.registration.showNotification(notificationTitle, notificationOptions)
 })

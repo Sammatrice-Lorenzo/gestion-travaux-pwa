@@ -80,13 +80,13 @@ export class CalendarWorkEventDayFormService {
       const id = this._events[this.getIndexOfEventToEdit()].id
       workEventDay.id = id
       this._events[this.getIndexOfEventToEdit()] = workEventDay
-      updateWorkEventDay(workEventDay, id, app)
+      await updateWorkEventDay(workEventDay, id, app)
       $(this._selectorForm).removeClass('edit')
     } else {
       const futureId = getMaxId(this._events) + 1
       workEventDay.id = futureId
       this._events.push(workEventDay)
-      createWorkEventDay(workEventDay, app)
+      await createWorkEventDay(workEventDay, app)
     }
 
     popup.close()
@@ -110,8 +110,11 @@ export class CalendarWorkEventDayFormService {
     )
   }
 
-  public removeEvent(element: MouseEvent, app: Framework7): void {
+  public async removeEvent(
+    element: MouseEvent,
+    app: Framework7,
+  ): Promise<void> {
     const idElement = Number.parseInt(getElementEdit(element))
-    deleteWorkEventDay(idElement, app)
+    await deleteWorkEventDay(idElement, app)
   }
 }

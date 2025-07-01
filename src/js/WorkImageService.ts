@@ -1,8 +1,8 @@
 import type Framework7 from 'framework7'
 import type WorkImageInteface from '../intefaces/WorkImage/WorkImageInterface'
-import { deleteAPI, fetchCreate } from './api'
 import { checkDataToGetOfAResponseCached, responseIsCached } from './cache'
 import { RouteDTO } from './dto/RouteDTO'
+import { ApiMutationService } from './service/api/ApiMutationService'
 import { ApiService } from './service/api/ApiService'
 import { handleSubmitFormInputFiles } from './service/form/formErrorInputs'
 import { workImageSchema } from './service/workImage/workImageSchema'
@@ -16,7 +16,7 @@ export default class WorkImageService {
     private _workId: number,
   ) {}
 
-  public createWorkImage(): void {
+  public async createWorkImage(): Promise<void> {
     const images = document.getElementById('images') as HTMLInputElement
     const url: URL = getUrl(URL_WORK_IMAGES)
     const body = this.getBody(images.files ?? [])
@@ -40,7 +40,7 @@ export default class WorkImageService {
       .setBody(body)
       .setMethod('POST')
 
-    fetchCreate(routeDTO, 'formData')
+    await new ApiMutationService(this._app).post(routeDTO, true)
   }
 
   public async getWorkImagesByWork(): Promise<WorkImageInteface[]> {
@@ -67,7 +67,7 @@ export default class WorkImageService {
       .setRoute(`/prestation/${this._workId}`)
       .setUrlAPI(`${URL_WORK_IMAGES}/`)
 
-    deleteAPI(routeDTO)
+    await new ApiMutationService(this._app).delete(routeDTO)
   }
 
   private getBody(images: FileList | never[]): FormData {

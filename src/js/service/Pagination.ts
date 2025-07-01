@@ -59,7 +59,7 @@ export default class Pagination {
 
   public renderPageLinks(container: HTMLElement): void {
     container.innerHTML = ''
-    const maximumVisbleLinkPages: number = 4
+    const maximumVisbleLinkPages: number = 3
     const totalPages: number = this.getTotalPages()
 
     let startPage: number = Math.max(

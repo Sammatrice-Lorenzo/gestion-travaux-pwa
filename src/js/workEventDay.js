@@ -1,7 +1,7 @@
 import Framework7 from 'framework7'
-import { apiRequest, deleteAPI, fetchFileAPI } from './api'
 import { checkDataToGetOfAResponseCached, responseIsCached } from './cache'
 import { RouteDTO } from './dto/RouteDTO.js'
+import { ApiMutationService } from './service/api/ApiMutationService.ts'
 import { ApiService } from './service/api/ApiService.ts'
 import { getDateCalendarDefaultFormat } from './service/calendar/calendarDateService.ts'
 import { getUrl, getUrlById, getUrlWithParameters } from './urlGenerator'
@@ -35,7 +35,7 @@ async function getWorkEventDayByUser($f7, calendar = null) {
  * @param {*} $f7
  * @param { Object } form
  */
-const handleCallAPI = (url, method, $f7, form) => {
+const handleCallAPI = async (url, method, $f7, form) => {
   const body = getBody(form)
 
   const routeDTO = new RouteDTO()
@@ -45,30 +45,30 @@ const handleCallAPI = (url, method, $f7, form) => {
     .setBody(body)
     .setMethod(method)
 
-  apiRequest(routeDTO)
+  await new ApiMutationService($f7).generic(routeDTO)
 }
 
-function createWorkEventDay(form, $f7) {
+async function createWorkEventDay(form, $f7) {
   const urlWorkEventDay = URL_WORK_EVENT_DAY.slice(0, -1)
   const url = getUrl(urlWorkEventDay)
 
-  handleCallAPI(url, 'POST', $f7, form)
+  await handleCallAPI(url, 'POST', $f7, form)
 }
 
-function updateWorkEventDay(form, idWorkEventDay, $f7) {
+async function updateWorkEventDay(form, idWorkEventDay, $f7) {
   const url = getUrlById(URL_WORK_EVENT_DAY, idWorkEventDay)
 
-  handleCallAPI(url, 'PUT', $f7, form)
+  await handleCallAPI(url, 'PUT', $f7, form)
 }
 
-function deleteWorkEventDay(idWorkEventDay, $f7) {
+async function deleteWorkEventDay(idWorkEventDay, $f7) {
   const routeDTO = new RouteDTO()
     .setApp($f7)
     .setIdElement(idWorkEventDay)
     .setRoute(URL_TO_REDIRECT)
     .setUrlAPI(URL_WORK_EVENT_DAY)
 
-  deleteAPI(routeDTO)
+  await new ApiMutationService($f7).delete(routeDTO)
 }
 
 /**
@@ -104,7 +104,7 @@ const getBody = (body) => {
  * @param { import('framework7/components/calendar').Calendar.Calendar } calendar
  * @param { Framework7 } $f7
  */
-function downloadCalendarEvents(calendar, $f7) {
+async function downloadCalendarEvents(calendar, $f7) {
   const date = getDateCalendarDefaultFormat(calendar)
 
   const url = getUrl(`${URL_WORK_EVENT_DAY}file_download`)
@@ -118,7 +118,10 @@ function downloadCalendarEvents(calendar, $f7) {
     .setBody(body)
     .setMethod('POST')
 
-  fetchFileAPI(routeDTO, `prestations_${date}.pdf`)
+  await new ApiMutationService($f7).download(
+    routeDTO,
+    `prestations_${date}.pdf`,
+  )
 }
 
 export {

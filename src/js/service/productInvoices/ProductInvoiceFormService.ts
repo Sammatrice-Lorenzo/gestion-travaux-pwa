@@ -30,17 +30,17 @@ export default class ProductInvoiceFormService {
     popupEdit.open()
   }
 
-  private handleProductInvoiceUpdate(
+  private async handleProductInvoiceUpdate(
     $f7: Framework7,
     formProductInvoice: ProductInvoiceUpdateFormInterface,
     idForm: string,
-  ): void {
+  ): Promise<void> {
     const formData = $f7.form.convertToData(`#${idForm}`)
     if (!handleSubmitForm(formData, formProductInvoiceUpdateSchema, idForm)) {
       return
     }
 
-    updateProductInvoice($f7, formProductInvoice.id, formData)
+    await updateProductInvoice($f7, formProductInvoice.id, formData)
     $f7.popup.close()
 
     const productInvoice: ProductInvoiceInterface =

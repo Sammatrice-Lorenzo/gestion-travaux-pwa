@@ -1,9 +1,6 @@
 import Framework7 from 'framework7/bundle'
 
-import {
-  askUserPermissionForSendANotificationPush,
-  messaging,
-} from './notification.js'
+import { askUserPermissionForSendANotificationPush } from './notification.js'
 
 // Import F7 Styles
 import 'framework7/css/bundle'
@@ -44,8 +41,8 @@ const app = new Framework7({
 askUserPermissionForSendANotificationPush()
 setupServicesWorkers()
 reloadPage(app, '/prestation/')
-;async () => {
+;(async () => {
   await checkAndClearCache()
-}
+})()
 
 export default app

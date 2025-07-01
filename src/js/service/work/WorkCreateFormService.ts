@@ -6,7 +6,7 @@ import { getEquipementsInForm } from '../../work/component/btnComponent'
 import { handleSubmitForm } from '../form/formErrorInputs'
 import { formWorkSchema } from './workSchema'
 
-export default class WorkCreateService implements FormPageInteface {
+export default class WorkCreateFormService implements FormPageInteface {
   constructor(
     private _app: Framework7,
     private _selectorForm: string,
@@ -24,7 +24,7 @@ export default class WorkCreateService implements FormPageInteface {
     this._app.form.removeFormData(`#${this._selectorForm}`)
   }
 
-  public send(): void {
+  public async send(): Promise<void> {
     const formData = this._app.form.convertToData(
       `#${this._selectorForm}`,
     ) as WorkFormInterface
@@ -38,6 +38,6 @@ export default class WorkCreateService implements FormPageInteface {
       return
     }
 
-    createWork(formData, this._app)
+    await createWork(formData, this._app)
   }
 }

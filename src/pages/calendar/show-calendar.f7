@@ -134,7 +134,7 @@
                                 <a class="edit-event" href="#" @click="${edit}">
                                     <i class="f7-icons">square_pencil</i>
                                 </a>
-                                <a class="swipeout-delete" @click="${(e) => calendarWorkEventDayService.removeEvent(e, $f7)}">
+                                <a class="swipeout-delete" @click="${async (e) => await calendarWorkEventDayService.removeEvent(e, $f7)}">
                                     <i class="f7-icons">trash</i>
                                 </a>
                             </div>
@@ -165,9 +165,7 @@
     import { createColorPickerForEventCalendar } from '../../js/service/calendar/colorPickerEventCalendar.ts'
     import {
         getWorkEventDayByUser,
-        createWorkEventDay,
         updateWorkEventDay,
-        deleteWorkEventDay,
         downloadCalendarEvents
     } from '../../js/workEventDay.js'
     import { getEventsFormatted } from '../../js/formatter/eventsFormatter.js'
@@ -215,7 +213,7 @@
             popupSwipe.open()
         }
 
-        const downloadCalendar = () => downloadCalendarEvents(calendar, $f7)
+        const downloadCalendar = async () => await downloadCalendarEvents(calendar, $f7)
 
         handleEditClassForm($f7)
 

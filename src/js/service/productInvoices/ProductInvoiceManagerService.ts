@@ -10,24 +10,29 @@ import {
 import productInvoiceStore from '../../store/productInvoiceStore'
 import type Pagination from '../Pagination'
 import type ToolbarCalendarProductInvoiceService from '../calendarProducInvoice/ToolbarCalendarProductInvoiceService'
+import type InvoicePaginatorService from './InvoicePaginatorService'
 
 export default class ProductInvoiceManagerService {
   private _app: Framework7
+  private _toolbarService: ToolbarCalendarProductInvoiceService
 
-  constructor(app: Framework7) {
+  constructor(
+    app: Framework7,
+    toolbarService: ToolbarCalendarProductInvoiceService,
+  ) {
     this._app = app
+    this._toolbarService = toolbarService
   }
 
   public async handleDeleteProductInvoice(
     productInvoice: ProductInvoiceInterface,
-    toolbarService: ToolbarCalendarProductInvoiceService,
   ): Promise<void> {
     this._app.dialog.confirm(CONFIRMATION_TO_DELETE, async () => {
       await deleteProductInvoice(this._app, productInvoice.id)
       productInvoiceStore.dispatch('removeInvoice', productInvoice.id)
 
       this._app.on('dialogClosed', async () => {
-        await toolbarService.refreshProductInvoicesInDom(this._app)
+        await this._toolbarService.refreshProductInvoicesInDom(this._app)
       })
     })
   }
@@ -49,30 +54,10 @@ export default class ProductInvoiceManagerService {
     return (total - getAmountWithoutTVA(total, tvaEnum.TVA_PRODUCT)).toFixed(2)
   }
 
-  public handlePagination(pagination: Pagination): void {
-    const cards: HTMLElement[] = this._app.$('.invoice-card')
-
-    const start: number =
-      (pagination.currentPage - 1) * pagination.totalElementParPage
-    const end: number = start + pagination.totalElementParPage
-    pagination.totalItems = cards.length
-    for (const [index, card] of cards.entries()) {
-      if (index >= start && index < end) {
-        ;(card as HTMLElement).style.display = 'block'
-      } else {
-        ;(card as HTMLElement).style.display = 'none'
-      }
-    }
-    const paginationInfo = document.getElementById('pagination-info')
-    if (paginationInfo) {
-      paginationInfo.innerHTML = `Affichage des factures <strong>${start + 1}</strong> à <strong>${Math.min(end, cards.length)}</strong> sur <strong>${cards.length}</strong>`
-    }
-  }
-
   public async initializeProductInvoices(
     pagination: Pagination,
     date: Date,
-    toolbarService: ToolbarCalendarProductInvoiceService,
+    invoicePaginatorService: InvoicePaginatorService,
   ): Promise<void> {
     const productInvoicesByUser: ProductInvoiceInterface[] =
       await getProductsInvoicesByUser(this._app, date)
@@ -85,9 +70,11 @@ export default class ProductInvoiceManagerService {
     ) as HTMLElement
 
     pagination.setUpdateContentCallBack(() => {
-      this.handlePagination(pagination)
+      const cards: HTMLElement[] = this._app.$('.invoice-card')
+      invoicePaginatorService.paginateCards(cards, pagination)
     })
-    toolbarService.pagination = pagination
+
+    this._toolbarService.pagination = pagination
     pagination.updatePagination(
       $('#products-invoice-prev'),
       $('#products-invoice-next'),

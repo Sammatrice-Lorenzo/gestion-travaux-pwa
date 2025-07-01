@@ -40,7 +40,7 @@
         </a>
         <a 
           class="fab-label-button color-green" 
-          @click="${() => productInvoiceFileManagement.downloadSelectedInvoices(dataTableProductInvoiceService.getSelectedProductInvoices(), date)}"
+          @click="${async () => await productInvoiceFileManagement.downloadSelectedInvoices(dataTableProductInvoiceService.getSelectedProductInvoices(), date)}"
         >
           <span>
             <i class="icon f7-icons if-not-md">archivebox</i>
@@ -85,7 +85,7 @@
 
       <div class="toolbar toolbar-bottom tabbar labels-fixed toolbar-bottom-invoice-actions">
         <div class="toolbar-inner">
-          <a href="#" class="link" @click="${() => productInvoiceFileManagement.downloadSelectedInvoices()}">
+          <a href="#" class="link" @click="${async () => await productInvoiceFileManagement.downloadSelectedInvoices()}">
             <i class="f7-icons">archivebox</i>
             <span>Télécharger ZIP</span>
           </a>
@@ -138,7 +138,7 @@
     
                 <a
                   class="link icon-only color-red tooltip-init"
-                  @click="${(e) => productInvoiceManagerService.handleDeleteProductInvoice(invoice, toolbarCalendarProductInvoiceService)}"
+                  @click="${(e) => productInvoiceManagerService.handleDeleteProductInvoice(invoice)}"
                   data-tooltip="Supprimer"
                 >
                   <i class="f7-icons">trash</i>
@@ -163,7 +163,7 @@
                       </a>
                     </li>
                     <li>
-                      <a class="item-link popover-close" @click="${() => productInvoiceFileManagement.downloadPDF(invoice)}" data-tooltip="Télécharger PDF">
+                      <a class="item-link popover-close" @click="${async () => await productInvoiceFileManagement.downloadPDF(invoice)}" data-tooltip="Télécharger PDF">
                         <div class="item-content">
                           <div class="item-media"><i class="f7-icons">arrow_down_circle</i></div>
                           <div class="item-inner">Télécharger</div>
@@ -191,7 +191,7 @@
         </div>
       </div>
 
-      <div class="pagination">
+      <div class="pagination" style="bottom: calc(var(--f7-fab-margin) + var(--f7-safe-area-right));">
         <a id="products-invoice-prev" href="#" class="btn-prev" @click="${previousElement}">
           <i class="f7-icons">chevron_left_circle_fill</i>
         </a>
@@ -220,6 +220,7 @@
   import ProductInvoiceFormService from '../../js/service/productInvoices/ProductInvoiceFormService.ts'
   import ToolbarCalendarProductInvoiceService from '../../js/service/calendarProducInvoice/ToolbarCalendarProductInvoiceService'
   import ProductInvoiceFileManagement from '../../js/service/productInvoices/productInvoicesFile/ProductInvoiceFileManagement'
+  import InvoicePaginatorService from '../../js/service/productInvoices/InvoicePaginatorService.ts'
   import productInvoiceStore from '../../js/store/productInvoiceStore'
   import Pagination from '../../js/service/Pagination.ts'
 
@@ -231,17 +232,18 @@
     const productInvoiceFormService = new ProductInvoiceFormService()
     const dataTableProductInvoiceService = new DataTableProductInvoiceService($f7)
     const productInvoiceFileManagement = new ProductInvoiceFileManagement($f7)
-    const productInvoiceManagerService = new ProductInvoiceManagerService($f7)
-
+    const productInvoiceManagerService = new ProductInvoiceManagerService($f7, toolbarCalendarProductInvoiceService)
+    const invoicePaginatorService = new InvoicePaginatorService()
     const pagination = new Pagination(10)
+    toolbarCalendarProductInvoiceService.invoicePaginatorService = invoicePaginatorService
 
     $on('pageInit', async function (page) {
       loadTabbar('index-invoices', $f7)
       createCalendar($f7, new Date(), toolbarCalendarProductInvoiceService)
 
-      await productInvoiceManagerService.initializeProductInvoices(pagination, date, toolbarCalendarProductInvoiceService)
+      await productInvoiceManagerService.initializeProductInvoices(pagination, date, invoicePaginatorService)
       $update().then(() => {
-        productInvoiceManagerService.handlePagination(pagination)
+        invoicePaginatorService.paginateCards($('.invoice-card'), pagination)
       })
     })
 

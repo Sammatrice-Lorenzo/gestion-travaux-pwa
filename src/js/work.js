@@ -1,7 +1,7 @@
 import Framework7 from 'framework7'
-import { apiRequest, deleteAPI, fetchCreate } from './api'
 import { checkDataToGetOfAResponseCached, responseIsCached } from './cache'
 import { RouteDTO } from './dto/RouteDTO'
+import { ApiMutationService } from './service/api/ApiMutationService'
 import { ApiService } from './service/api/ApiService'
 import {
   getUrl,
@@ -44,7 +44,7 @@ async function findWorkById(id, $f7) {
   return works[0]
 }
 
-function createWork(form, $f7) {
+async function createWork(form, $f7) {
   const url = getUrl('/api/works')
   const body = getBodyWork(form)
 
@@ -54,20 +54,20 @@ function createWork(form, $f7) {
     .setUrlAPI(url)
     .setBody(body)
 
-  fetchCreate(routeDTO)
+  await new ApiMutationService($f7).post(routeDTO)
 }
 
-function deleteWork(idWork, $f7) {
+async function deleteWork(idWork, $f7) {
   const routeDTO = new RouteDTO()
     .setApp($f7)
     .setIdElement(idWork)
     .setRoute(URL_TO_REDIRECT)
     .setUrlAPI(URL_WORK)
 
-  deleteAPI(routeDTO)
+  await new ApiMutationService($f7).delete(routeDTO)
 }
 
-function updateWork(form, idWork, $f7) {
+async function updateWork(form, idWork, $f7) {
   const url = getUrlById(URL_WORK, idWork)
   const body = getBodyWork(form)
 
@@ -78,7 +78,7 @@ function updateWork(form, idWork, $f7) {
     .setBody(body)
     .setMethod('PUT')
 
-  apiRequest(routeDTO)
+  await new ApiMutationService($f7).generic(routeDTO)
 }
 
 /**

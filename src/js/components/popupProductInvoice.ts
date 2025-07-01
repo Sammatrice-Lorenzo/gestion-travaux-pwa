@@ -104,10 +104,13 @@ const fillData = (
   )
 
   if (buttonProductInvoice) {
-    buttonProductInvoice.addEventListener('click', (event: MouseEvent) => {
-      event.preventDefault()
-      handleProductInvoiceUpdate($f7, formProductInvoice, ID_FORM)
-    })
+    buttonProductInvoice.addEventListener(
+      'click',
+      async (event: MouseEvent) => {
+        event.preventDefault()
+        await handleProductInvoiceUpdate($f7, formProductInvoice, ID_FORM)
+      },
+    )
   }
 }
 

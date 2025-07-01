@@ -3,7 +3,7 @@ import { clearCache } from './cache'
 import * as messages from './messages'
 import { ApiService } from './service/api/ApiService.ts'
 import { getToken } from './token.js'
-import { getUrl, getUrlById, getUrlUser } from './urlGenerator.js'
+import { getUrl, getUrlById, getUrlUser } from './urlGenerator'
 
 export async function showUser($f7) {
   const url = getUrlUser()
@@ -48,7 +48,7 @@ export function createUser(form, $f7) {
       }),
     )
     .catch((error) => {
-      console.log(error)
+      console.error(error)
       $f7.dialog.alert(messages.ERROR_SERVER)
     })
 }
@@ -82,7 +82,7 @@ export function updateUser(form, idUser, $f7) {
       }),
     )
     .catch((error) => {
-      console.log(error)
+      console.error(error)
       $f7.dialog.alert(messages.ERROR_SERVER)
     })
 }

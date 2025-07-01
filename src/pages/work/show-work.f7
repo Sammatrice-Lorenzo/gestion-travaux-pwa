@@ -228,8 +228,8 @@
     let workImageBrowserService = new WorkImageBrowserService($f7, workImageService)
 
     const openConfirm = () => {
-      $f7.dialog.confirm(CONFIRMATION_TO_DELETE, function () {
-        deleteWork($$('.delete')[0].id, $f7)
+      $f7.dialog.confirm(CONFIRMATION_TO_DELETE, async function () {
+        await deleteWork($$('.delete')[0].id, $f7)
       })
     }
 

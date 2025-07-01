@@ -23,7 +23,7 @@ export default class ClientCreateService implements FormPageInteface {
     this._app.form.removeFormData(`#${this._selectorForm}`)
   }
 
-  public send(): void {
+  public async send(): Promise<void> {
     const formData = this._app.form.convertToData(
       `#${this._selectorForm}`,
     ) as ClientFormInteface
@@ -32,6 +32,6 @@ export default class ClientCreateService implements FormPageInteface {
       return
     }
 
-    createClient(formData, this._app)
+    await createClient(formData, this._app)
   }
 }
