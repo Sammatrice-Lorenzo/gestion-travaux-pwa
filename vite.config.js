@@ -10,7 +10,7 @@ dotenv.config()
 
 const SRC_DIR = path.resolve(__dirname, './src')
 const PUBLIC_DIR = path.resolve(__dirname, './public')
-const BUILD_DIR = path.resolve(__dirname, './src/www')
+const BUILD_DIR = path.resolve(__dirname, './www')
 const JWT_DIR = path.resolve(__dirname, './config/jwt/public.pem')
 const ENV_LOCAL = path.resolve(__dirname, './.env.local')
 const ENV_TEST_LOCAL = path.resolve(__dirname, './.env.test.local')
@@ -108,14 +108,6 @@ export default async () => {
         JWT_PUBLIC_KEY: publicKey,
         VAPID_KEY: env.VAPID_KEY,
       },
-    },
-    copy: {
-      targets: [
-        {
-          src: 'src/service-worker.js',
-          dest: './www',
-        },
-      ],
     },
   }
 }

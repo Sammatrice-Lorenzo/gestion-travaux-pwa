@@ -17,7 +17,6 @@ node_modules/
 
 # Optional npm cache directory
 .npm
-
 # Optional eslint cache
 .eslintcache
 
@@ -41,11 +40,12 @@ Thumbs.db
 
 # Production build
 www/
-
+public/firebase-messaging-sw.js
 config/ssl-prod
 config/ssl/cert.pem
 config/ssl/key.pem
 config/jwt/
+*.crt
 
 # Playwright
 /tests/test-results/
