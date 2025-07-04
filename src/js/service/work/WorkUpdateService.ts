@@ -9,7 +9,7 @@ import {
   getInputEquipementUpdateForm,
 } from '../../work/component/btnComponent'
 import { handleSubmitForm } from '../form/formErrorInputs'
-import { formWorkSchema } from './workSchema'
+import { formWorkSchema } from '../schema/work/workSchema'
 
 export default class WorkUpdateService implements FormPageInteface {
   constructor(

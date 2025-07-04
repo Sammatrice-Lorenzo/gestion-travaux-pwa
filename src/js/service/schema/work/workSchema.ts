@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { ProgressionEnum } from '../../enum/ProgressionEnum'
+import { ProgressionEnum } from '../../../enum/ProgressionEnum'
 
 const dateField = z
   .union([z.string(), z.date()])

@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import dateSchema from '../schema/dateSchema'
+import dateSchema from '../dateSchema'
 
 export const formProductInvoiceFilesSchema = z.object({
   date: dateSchema,

@@ -9,8 +9,8 @@ import {
   deleteWorkEventDay,
   updateWorkEventDay,
 } from '../../workEventDay.js'
-import { FormWorkEventDaySchema } from '../../workEventDay/workEventDaySchema.ts'
 import { handleSubmitForm } from '../form/formErrorInputs.ts'
+import { FormWorkEventDaySchema } from '../schema/workEventDay/workEventDaySchema.ts'
 import {
   getElementEdit,
   getEventSelected,

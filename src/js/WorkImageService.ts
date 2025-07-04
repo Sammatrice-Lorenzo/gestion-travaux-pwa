@@ -5,7 +5,7 @@ import { RouteDTO } from './dto/RouteDTO'
 import { ApiMutationService } from './service/api/ApiMutationService'
 import { ApiService } from './service/api/ApiService'
 import { handleSubmitFormInputFiles } from './service/form/formErrorInputs'
-import { workImageSchema } from './service/workImage/workImageSchema'
+import { workImageSchema } from './service/schema/workImage/workImageSchema'
 import { getUrl, getUrlWithParameters } from './urlGenerator'
 
 const URL_WORK_IMAGES = '/api/work_images'

@@ -4,7 +4,7 @@ import type WorkFormInterface from '../../../intefaces/Work/WorkFormInterface'
 import { createWork } from '../../work'
 import { getEquipementsInForm } from '../../work/component/btnComponent'
 import { handleSubmitForm } from '../form/formErrorInputs'
-import { formWorkSchema } from './workSchema'
+import { formWorkSchema } from '../schema/work/workSchema'
 
 export default class WorkCreateFormService implements FormPageInteface {
   constructor(
