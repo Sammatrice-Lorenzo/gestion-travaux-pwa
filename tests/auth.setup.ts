@@ -11,7 +11,7 @@ test('authenticate', async ({ baseURL, browser }) => {
 
   await expect(page).toHaveTitle(/Gestion Travaux/)
 
-  await page.locator('input[name=username]').fill('user@test.com')
+  await page.locator('input[name=email]').fill('user@test.com')
   await page.locator('input[name=password]').fill('1234')
   await page.getByTestId('link-login').click()
 

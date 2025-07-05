@@ -4,7 +4,7 @@ import type { ClientInterface } from '../../../intefaces/Client/ClientInterface'
 import type { FormPageInteface } from '../../../intefaces/FormPageInteface'
 import { findClientById, updateClient } from '../../client/client'
 import { handleSubmitForm } from '../form/formErrorInputs'
-import { clientSchema } from './clientSchema'
+import { clientSchema } from '../schema/client/clientSchema'
 
 export default class ClientUpdateService implements FormPageInteface {
   constructor(

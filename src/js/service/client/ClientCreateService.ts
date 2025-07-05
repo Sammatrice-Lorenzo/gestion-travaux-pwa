@@ -3,7 +3,7 @@ import type { ClientFormInteface } from '../../../intefaces/Client/ClientFormInt
 import type { FormPageInteface } from '../../../intefaces/FormPageInteface'
 import { createClient } from '../../client/client'
 import { handleSubmitForm } from '../form/formErrorInputs'
-import { clientSchema } from './clientSchema'
+import { clientSchema } from '../schema/client/clientSchema'
 
 export default class ClientCreateService implements FormPageInteface {
   constructor(

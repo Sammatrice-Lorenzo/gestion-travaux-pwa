@@ -12,10 +12,10 @@
               <ul>
                 <li class="item-content item-input">
                   <div class="item-inner">
-                    <div class="item-title item-label">Username</div>
+                    <div class="item-title item-label">Email</div>
                     <div class="item-input-wrap">
                       <i class="icon f7-icons">person_fill</i>
-                      <input type="text" name="username" placeholder="Votre email" />
+                      <input type="text" name="email" placeholder="Votre email" required />
                     </div>
                   </div>
                 </li>
@@ -24,7 +24,7 @@
                     <div class="item-title item-label">Password</div>
                     <div class="item-input-wrap">
                       <i class="icon f7-icons">lock_fill</i>
-                      <input type="password" name="password" placeholder="Votre mot de passe" />
+                      <input type="password" name="password" placeholder="Votre mot de passe" required />
                     </div>
                   </div>
                 </li>
@@ -57,12 +57,14 @@
 </template>
 <script>
   import Framework7 from 'framework7/bundle';
-  import { login } from '../js/login.js';
+  import LoginService from '../js/service/login/LoginService'
 
   export default async (props, { $, $on, $f7 }) => {
     const handleLogin = async () => {
-      const formData = $f7.form.convertToData('#form-login')
-      await login(formData.username, formData.password, $f7)
+      const formLogin = $f7.form.convertToData('#form-login')
+
+      const loginService = new LoginService($f7)
+      await loginService.login(formLogin)
     }
 
     return $render;

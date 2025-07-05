@@ -5,7 +5,7 @@ import { getMontYear } from './helper/date.ts'
 import { ApiMutationService } from './service/api/ApiMutationService.ts'
 import { ApiService } from './service/api/ApiService'
 import { handleSubmitFormInputFiles } from './service/form/formErrorInputs.ts'
-import { formProductInvoiceFilesSchema } from './service/productInvoices/formProductInvoiceFilesSchema.ts'
+import { formProductInvoiceFilesSchema } from './service/schema/productInvoice/formProductInvoiceFilesSchema.ts'
 import { getUrl, getUrlById, getUrlWithParameters } from './urlGenerator'
 
 const URL_PRODUCT_INVOICE = '/api/product_invoice_files'

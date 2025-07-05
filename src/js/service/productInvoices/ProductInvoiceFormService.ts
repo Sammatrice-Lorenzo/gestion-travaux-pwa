@@ -5,7 +5,7 @@ import { createPopup } from '../../components/popupProductInvoice'
 import { updateProductInvoice } from '../../productInvoice'
 import productInvoiceStore from '../../store/productInvoiceStore'
 import { handleSubmitForm } from '../form/formErrorInputs'
-import { formProductInvoiceUpdateSchema } from './formProductInvoiceUpdateSchema'
+import { formProductInvoiceUpdateSchema } from '../schema/productInvoice/formProductInvoiceUpdateSchema'
 
 export default class ProductInvoiceFormService {
   public handleOpenPopupEditProductInvoiceFile(
