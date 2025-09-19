@@ -11,8 +11,8 @@ export default class ToolbarCalendarProductInvoiceService {
   private _date: Date
   private _$update: CallableFunction
 
-  public pagination: Pagination
-  public invoicePaginatorService: InvoicePaginatorService
+  public pagination!: Pagination
+  public invoicePaginatorService!: InvoicePaginatorService
 
   constructor($update: CallableFunction) {
     this._date = new Date()

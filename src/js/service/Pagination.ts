@@ -1,9 +1,9 @@
 export default class Pagination {
   public currentPage: number
-  public totalItems: number
+  public totalItems = 0
   public totalElementParPage: number
-  private _updateContentCallback: CallableFunction
-  public paginationContainer: HTMLElement
+  private _updateContentCallback!: CallableFunction
+  public paginationContainer!: HTMLElement
 
   constructor(totalElementParPage: number) {
     this.currentPage = 1
