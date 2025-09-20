@@ -190,6 +190,7 @@
                 calendar.params.events = events
                 calendar.update()
             }
+            calendarWorkEventDayService.setEvents(events)
             eventItems = await renderEventsCalendar(calendar, events)
             calendarWorkEventDayService.setEventItems(eventItems)
             $update()

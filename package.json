@@ -44,9 +44,9 @@
     "skeleton-elements": "^4.0.1",
     "svelte-routing": "^1.6.0",
     "swiper": "^9.2.3",
-    "vite-plugin-pwa": "^0.14.7",
-    "workbox-build": "^6.6.0",
-    "workbox-window": "^6.6.0",
+    "vite-plugin-pwa": "^1.0.3",
+    "workbox-build": "^7.3.0",
+    "workbox-window": "^7.3.0",
     "zod": "^3.24.4"
   },
   "devDependencies": {
@@ -66,7 +66,10 @@
     "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-framework7": "^1.2.1",
     "sass": "^1.62.0",
-    "vite": "^4.5.14",
+    "vite": "^5.4.20",
     "workbox-cli": "^6.5.4"
+  },
+  "resolutions": {
+    "tmp": "^0.2.4"
   }
 }
