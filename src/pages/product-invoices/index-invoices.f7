@@ -111,7 +111,11 @@
                   />
                   <i class="icon-checkbox"></i>
                 </label>
-                <a class="link icon-only tooltip-init popover-open" data-popover=".popover-action" data-tooltip="Autres actions">
+                <a
+                  class="link icon-only tooltip-init popover-open"
+                  data-tooltip="Autres actions"
+                  data-popover="#popover-${invoice.id}"
+                  >
                   <i class="f7-icons">ellipsis</i>
                 </a>
               </div>
@@ -149,7 +153,7 @@
               </div>
             </div>
   
-            <div class="popover popover-action">
+            <div id="popover-${invoice.id}" class="popover popover-action">
               <div class="popover-inner">
                 <div class="list">
                   <ul>

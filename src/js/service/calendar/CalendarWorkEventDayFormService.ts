@@ -28,7 +28,7 @@ export class CalendarWorkEventDayFormService {
 
   private _eventItems: EventItemInteface[] = []
 
-  private _indexOfEventToEdit: number
+  private _indexOfEventToEdit!: number
 
   constructor(
     events: EventsInterface[],
@@ -52,6 +52,10 @@ export class CalendarWorkEventDayFormService {
 
   public setEventItems(eventItems: EventItemInteface[]): void {
     this._eventItems = eventItems
+  }
+
+  public setEvents(events: EventsInterface[]): void {
+    this._events = events
   }
 
   public async send(app: Framework7, popup: Popup.Popup): Promise<void> {
