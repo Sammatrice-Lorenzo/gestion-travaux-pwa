@@ -18,9 +18,11 @@ const productInvoiceStore = createStore({
       return state.productInvoices
     },
     getInvoiceById:
-      ({ state }) =>
+      ({ state }: State) =>
       (id: number) => {
-        return state.productInvoices.find((invoice) => invoice.id === id)
+        return state.productInvoices.find(
+          (invoice: ProductInvoiceInterface) => invoice.id === id,
+        )
       },
   },
   actions: {

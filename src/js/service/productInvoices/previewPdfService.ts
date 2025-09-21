@@ -5,7 +5,7 @@ import { getToken } from '../../token'
 import { getUrl } from '../../urlGenerator'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
-  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/5.3.31/pdf.worker.mjs'
+  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/5.4.149/pdf.worker.mjs'
 
 let scale = 1
 let pdfDoc: pdfjsLib.PDFDocumentProxy | null = null
@@ -80,7 +80,7 @@ async function displayPdfInCanvas(
     canvas.width = viewport.width
     canvas.height = viewport.height
 
-    await page.render({ canvasContext: context, viewport }).promise
+    await page.render({ canvasContext: context, viewport, canvas }).promise
     container.appendChild(canvas)
   }
 }

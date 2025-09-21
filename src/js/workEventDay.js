@@ -83,11 +83,11 @@ const getBody = (body) => {
   const [startHours, startMinutes] = body.startHours.split(':')
   const [endHours, endMinutes] = body.endHours.split(':')
 
-  date.setHours(Number.parseInt(startHours) + 2, Number.parseInt(startMinutes))
-  const startDate = new Date(date)
+  date.setHours(Number.parseInt(startHours), Number.parseInt(startMinutes))
+  const startDate = new Date(date).toISOString()
 
-  date.setHours(Number.parseInt(endHours) + 2, Number.parseInt(endMinutes))
-  const endDate = new Date(date)
+  date.setHours(Number.parseInt(endHours), Number.parseInt(endMinutes))
+  const endDate = new Date(date).toISOString()
 
   const json = {
     title: body.title,

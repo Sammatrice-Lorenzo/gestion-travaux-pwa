@@ -40,7 +40,10 @@
         </a>
         <a 
           class="fab-label-button color-green" 
-          @click="${async () => await productInvoiceFileManagement.downloadSelectedInvoices(dataTableProductInvoiceService.getSelectedProductInvoices(), date)}"
+          @click="${async () => await productInvoiceFileManagement.downloadSelectedInvoices(
+            dataTableProductInvoiceService.getSelectedProductInvoices(),
+            toolbarCalendarProductInvoiceService.getDate()
+          )}"
         >
           <span>
             <i class="icon f7-icons if-not-md">archivebox</i>
@@ -54,7 +57,7 @@
     <!-- Page content -->
     <div class="page-content">
         
-      <div class="block-title">Factures de vos produits de ${getMontYear(date)}</div>
+      <div class="block-title">Factures de vos produits de ${getMontYear(toolbarCalendarProductInvoiceService.getDate())}</div>
 
       <div class="block calendar-input-container-modern">
         <label for="calendar-input-product-invoice-file" class="calendar-product-invoice-label">
