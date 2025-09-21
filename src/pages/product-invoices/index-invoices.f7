@@ -254,9 +254,6 @@
       })
     })
 
-    console.log(date);
-    
-
     const previousElement = async () => {
       await pagination.previousElement($('#products-invoice-prev'), $('#products-invoice-next'))
     }

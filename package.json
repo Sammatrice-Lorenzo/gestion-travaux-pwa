@@ -38,7 +38,7 @@
     "jsonwebtoken": "^9.0.0",
     "jwt-decode": "^3.1.2",
     "material-icons": "^1.13.5",
-    "pdfjs-dist": "^5.3.31",
+    "pdfjs-dist": "^5.4.149",
     "postcss": "^8.4.38",
     "sass-migrator": "^2.3.1",
     "skeleton-elements": "^4.0.1",
