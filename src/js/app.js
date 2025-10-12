@@ -10,7 +10,7 @@ import '../css/icons.css'
 import '../css/app.scss'
 
 import App from '../app.f7'
-import { checkAndClearCache } from './cache.js'
+import { checkAndClearCache } from './cache.ts'
 import { reloadPage } from './helper/routerHelper.js'
 import routes from './routes.js'
 import { setupServicesWorkers } from './serviceWorker.js'

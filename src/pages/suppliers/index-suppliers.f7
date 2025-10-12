@@ -1,0 +1,82 @@
+<template>
+  <div id="index-suppliers" class="page">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="title">Les fournisseurs</div>
+        <div class="right">
+          <a class="link icon-only panel-open ripple-inset" data-panel="right">
+            <i class="icon material-icons md-only">menu</i>
+            <i class="icon f7-icons if-not-md">menu</i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-content">
+      <!-- Header Block -->
+      <div class="block-title display-flex justify-content-space-between align-items-center">
+        <span class="text-lg font-bold">Mes fournisseurs</span>
+        <a href="/form-supplier/" class="button-small button-outline">
+          <span class="ml-5">Ajouter</span>
+          <i class="icon f7-icons">plus_app_fill</i>
+        </a>
+      </div>
+
+      <!-- Modern Supplier Cards List -->
+      <div id="index-row-card" class="list list-strong-ios list-outline-ios media-list list-dividers-ios list-container">
+        <ul>
+          ${suppliers.map((supplier) => $h`
+          <li class="index-card">
+            <a class="item-link item-content" href="/supplier/${supplier.id}/">
+              <div class="item-inner">
+                <div class="item-title-row">
+                  <div class="item-title font-medium text-color-primary">${supplier.name}</div>
+                </div>
+                <div class="item-text">
+                  <p class="no-margin">
+                    <i class="icon f7-icons color-red">map_pin</i> ${supplier.address}
+                  </p>
+                  <p class="no-margin">
+                    <i class="icon f7-icons color-red">map_pin</i> ${supplier.city}
+                  </p>
+                  <p class="no-margin">
+                    <i class="icon f7-icons color-red">map_pin</i> ${supplier.country}
+                  </p>
+                  <p class="no-margin">
+                    <i class="icon f7-icons color-green">phone_fill</i>
+                    <a href="tel:${supplier.phone}" class="link">${supplier.phone}</a>
+                  </p>
+                  <p class="no-margin">
+                    <i class="icon f7-icons color-blue">envelope_fill</i>
+                    <p class="link">${supplier.vatNumber}</p>
+                  </p>
+                </div>
+              </div>
+            </a>
+          </li>
+          `)}
+        </ul>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  import Framework7 from 'framework7/bundle'
+
+  import Supplier from '../../js/supplier.ts'
+  import { loadTabbar } from '../../js/components/tabbar'
+
+  export default async (props, { $, $on, $f7 }) => {
+    const supplier = new Supplier($f7)
+
+    const suppliersByUser = await supplier.getSuppliersByUser($f7)
+    let suppliers = suppliersByUser.reverse()
+
+    $on('pageInit', function (page) {
+      loadTabbar('index-suppliers', $f7)
+    })
+
+    return $render
+  }
+</script>

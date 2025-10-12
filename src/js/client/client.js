@@ -1,5 +1,6 @@
 import { checkDataToGetOfAResponseCached, responseIsCached } from '../cache'
 import { RouteDTO } from '../dto/RouteDTO'
+import { getPhoneNumberInString } from '../helper/phoneNumberHelper'
 import { ApiMutationService } from '../service/api/ApiMutationService'
 import { ApiService } from '../service/api/ApiService'
 import { handleSubmitForm } from '../service/form/formErrorInputs'
@@ -88,23 +89,11 @@ function getBodyClient(form) {
   })
 }
 
-/**
- * En format 06.01.02.03.04
- * @param { String } phoneNumber
- * @returns { String }
- */
-function getPhoneNumberInString(phoneNumber) {
-  return phoneNumber.length <= 10
-    ? phoneNumber.match(/.{1,2}/g).join('.')
-    : phoneNumber
-}
-
 export {
   getClientsByUser,
   createClient,
   updateClient,
   deleteClient,
   findClientById,
-  getPhoneNumberInString,
   URL_CLIENTS,
 }

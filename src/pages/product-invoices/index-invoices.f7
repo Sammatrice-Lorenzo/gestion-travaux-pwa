@@ -222,7 +222,7 @@
 
   import { pdfPreviewPopup } from '../../js/components/pdfPreviewPopup.ts'
   import { getMontYear } from '../../js/helper/date.ts'
-  import { sendEmail } from '../../js/service/mailService'
+  import { sendEmail } from '../../js/service/mailService.ts'
   import sheetModalProductInvoiceFormatter from '../../js/formatter/sheetModalProductInvoiceFormatter.ts'
   import ProductInvoiceFormService from '../../js/service/productInvoices/ProductInvoiceFormService.ts'
   import ToolbarCalendarProductInvoiceService from '../../js/service/calendarProducInvoice/ToolbarCalendarProductInvoiceService'
