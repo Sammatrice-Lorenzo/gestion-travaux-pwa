@@ -17,7 +17,7 @@
       <div class="block-title display-flex justify-content-space-between align-items-center">
         <span class="text-lg font-bold">Informations fournisseur</span>
         <div class="display-flex gap justify-content-end actions">
-          <a href="/form-supplier/update/${props.supplierId}" class="link icon-only">
+          <a data-testid='edit-supplier' href="/form-supplier/update/${props.supplierId}" class="link icon-only">
             <i class="f7-icons">square_pencil_fill</i>
           </a>
           <a id="${props.supplierId}" href="#" class="link icon-only color-red delete" @click="${openConfirm}">
@@ -36,7 +36,7 @@
                     <i class="icon f7-icons">building</i>
                   </div>
                   <div class="item-inner">
-                    <div data-testid="name-client" class="item-title">${supplier.name}</div>
+                    <div data-testid="name-supplier" class="item-title">${supplier.name}</div>
                   </div>
                 </div>
               </li>
