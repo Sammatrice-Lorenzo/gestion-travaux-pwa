@@ -8,4 +8,5 @@ export const formProductInvoiceUpdateSchema = z.object({
     (val) => (typeof val === 'string' ? Number.parseFloat(val) : val),
     z.number().min(0.0, 'Montant invalide'),
   ),
+  supplier: z.string().nullable().optional(),
 })

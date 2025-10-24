@@ -1,6 +1,7 @@
 import type Framework7 from 'framework7'
 import type { Dialog } from 'framework7/components/dialog'
 import { clearCache } from '../../cache'
+import toastError from '../../components/toastError.js'
 import type { RouteDTO } from '../../dto/RouteDTO'
 import { downloadFile } from '../../helper/fileHelper'
 import * as messages from '../../messages.js'
@@ -31,7 +32,7 @@ export class ApiMutationService {
         await logout(this._app)
       })
     } else {
-      this._dialog.alert(messages.ERROR_SERVER)
+      toastError(this._app, messages.ERROR_SERVER)
     }
   }
 
@@ -50,7 +51,7 @@ export class ApiMutationService {
       this._app.views.main.router.navigate(route)
     } else if (status === 422) {
       const data = await response.json()
-      this._dialog.alert(data['hydra:description'] || messages.ERROR_SERVER)
+      toastError(this._app, data['hydra:description'] || messages.ERROR_SERVER)
     } else {
       this.handleErrorResponse(status)
     }
@@ -103,7 +104,7 @@ export class ApiMutationService {
     try {
       const response = await fetch(url, {
         method: 'DELETE',
-        headers: this.getHeaders(),
+        headers: this.getHeaders('application/ld+json'),
       })
 
       await this.handleResponse(

@@ -122,6 +122,7 @@
               <p><strong>Date :</strong> ${new Date(invoice.date).toLocaleDateString()}</p>
               <p><strong>Nom :</strong> ${invoice.name}</p>
               <p><strong>Montant :</strong> ${invoice.totalAmount} €</p>
+              <p><strong>${invoice.supplier ? `Fournisseur : ${invoice.supplier.name}` : ''}</strong></p>
             </div>
             <div class="card-footer">
               <div class="display-flex justify-content-start">
@@ -137,7 +138,7 @@
               <div class="display-flex justify-content-end">
                 <a
                   href="#" 
-                  @click="${(e) => productInvoiceFormService.handleOpenPopupEditProductInvoiceFile($f7, invoice)}"
+                  @click="${(e) => productInvoiceFormService.handleOpenPopupEditProductInvoiceFile($f7, invoice, suppliers)}"
                   class="link icon-only"
                 >
                   <i class="f7-icons">square_pencil_fill</i>
@@ -228,6 +229,7 @@
   import ToolbarCalendarProductInvoiceService from '../../js/service/calendarProducInvoice/ToolbarCalendarProductInvoiceService'
   import ProductInvoiceFileManagement from '../../js/service/productInvoices/productInvoicesFile/ProductInvoiceFileManagement'
   import InvoicePaginatorService from '../../js/service/productInvoices/InvoicePaginatorService.ts'
+  import Supplier from '../../js/Supplier.ts'
   import productInvoiceStore from '../../js/store/productInvoiceStore'
   import Pagination from '../../js/service/Pagination.ts'
 
@@ -242,6 +244,8 @@
     const productInvoiceManagerService = new ProductInvoiceManagerService($f7, toolbarCalendarProductInvoiceService)
     const invoicePaginatorService = new InvoicePaginatorService()
     const pagination = new Pagination(10)
+    const supplierManager = new Supplier($f7)
+    const suppliers = await supplierManager.getSuppliersByUser()
     toolbarCalendarProductInvoiceService.invoicePaginatorService = invoicePaginatorService
 
     $on('pageInit', async function (page) {

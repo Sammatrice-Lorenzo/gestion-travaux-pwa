@@ -1,5 +1,6 @@
 import type Framework7 from 'framework7'
 import type ProductInvoiceUpdateFormInterface from '../../intefaces/ProductInvoice/ProductInvoiceUpdateFormInterface'
+import type SupplierInterface from '../../intefaces/Supplier/SupplierInterface'
 
 const ID_FORM = 'form-product-invoice-edit'
 
@@ -7,6 +8,7 @@ const createPopup = (
   app: Framework7,
   formProductInvoice: ProductInvoiceUpdateFormInterface,
   handleProductInvoiceUpdate: CallableFunction,
+  suppliers: SupplierInterface[],
 ) => {
   const $f7 = app
 
@@ -70,6 +72,36 @@ const createPopup = (
                         </div>
                       </div>
                     </li>
+                    <li>
+                      <div class="item-content item-input">
+                        <div class="item-inner">
+                          <div class="item-input-wrap">
+                            <a
+                              class="item-link smart-select smart-select-init"
+                              data-open-in="popup"
+                              data-searchbar="true"
+                              data-searchbar-placeholder="Rechercher le fournisseur"
+                              data-close-placeholder="Fermer"
+                            >
+                              <select name="supplier">
+                                ${suppliers.map(
+                                  (supplier) => `
+                                  <option id='supplier-option-${supplier.id}' value='${supplier.id}'>${supplier.name}</option>
+                                `,
+                                )}
+                                <option value="" selected>Aucun</option>
+                              </select>
+                                <div class="item-content">
+                                  <div class="item-inner">
+                                    <div class="item-title">Fournisseur</div>
+                                  </div>
+                                </div>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
                   </ul>
                   <div class="block display-flex justify-content-center margin-top">
                     <a id="btn-update-product-invoice" href="#" class="button button-tonal button-small button-round" style="width: 35%;">
@@ -98,6 +130,8 @@ const fillData = (
   handleProductInvoiceUpdate: CallableFunction,
 ) => {
   $f7.form.fillFromData(`#${ID_FORM}`, formProductInvoice)
+
+  $f7.$(`#supplier-option-${formProductInvoice.supplier}`)
 
   const buttonProductInvoice: HTMLElement | null = document.getElementById(
     'btn-update-product-invoice',
