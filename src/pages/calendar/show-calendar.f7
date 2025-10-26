@@ -9,8 +9,6 @@
             <span class="if-not-md">Retour</span>
           </a>
         </div>
-        <div class="title navbar-calendar-title">
-        </div>
         <div class="right">
           <a href="#" download class="link icon-only" @click="${downloadCalendar}">
             <i class="icon f7-icons">arrow_down_circle_fill</i>
@@ -128,7 +126,7 @@
           ${eventItems.length > 0 && eventItems.map((item) => $h`
             <li class="item-content swipeout">
               <div class="event-color" style="background-color: ${item.color}"></div>
-              <div class="item-inner swipeout-content" data-id="${item.id}">
+              <div class="item-inner swipeout-content tooltip-init" data-id="${item.id}" data-tooltip="${showNameEvent(item)}">
                 <div class="item-title">${showNameEvent(item)}</div>
                 <div class="item-after">
                   <p class="event-times">${item.startTime}</p>

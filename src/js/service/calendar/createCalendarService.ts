@@ -8,12 +8,37 @@ const updateNavbarCalendar = (
   app: Framework7,
 ): void => {
   const monthNames = monthsEnum.getMonths()
-
   app
-    .$('.navbar-calendar-title')
+    .$('.calendar-custom-toolbar .center')
     .text(`${monthNames[calendar.currentMonth]}, ${calendar.currentYear}`)
   app.navbar.size(app.navbar.getElByPage(app.$el.value))
 }
+
+const initActionsToolbar = (
+  calendar: Calendar.Calendar,
+  app: Framework7,
+): void => {
+  app.$('.calendar-custom-toolbar .left .link').on('click', () => {
+    calendar.prevMonth(1)
+  })
+  app.$('.calendar-custom-toolbar .right .link').on('click', () => {
+    calendar.nextMonth(1)
+  })
+}
+
+const toolbar = `
+  <div class="toolbar calendar-custom-toolbar no-shadow bg-color-background">
+    <div class="toolbar-inner">
+      <div class="left">
+        <a  class="link icon-only"><i class="icon icon-back color-white"></i></a>
+      </div>
+      <div class="center color-white" style="color: white; font-weight: bold;"></div>
+      <div class="right">
+        <a  class="link icon-only"><i class="icon icon-forward color-white"></i></a>
+      </div>
+    </div>
+  </div>
+`
 
 const createCalendar = async (
   app: Framework7,
@@ -22,11 +47,13 @@ const createCalendar = async (
 ): Promise<Calendar.Calendar> => {
   return app.calendar.create({
     containerEl: '#calendar',
-    toolbar: false,
+    toolbar: true,
     value: [new Date()],
     events: events,
+    renderToolbar: () => toolbar,
     on: {
       init: (calendar: Calendar.Calendar) => {
+        initActionsToolbar(calendar, app)
         updateNavbarCalendar(calendar, app)
         calendar.$el.addClass('no-safe-area-right')
         renderEvents(calendar)
