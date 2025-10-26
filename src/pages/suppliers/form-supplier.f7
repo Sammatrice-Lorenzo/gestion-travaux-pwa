@@ -101,7 +101,7 @@
 
   import SupplierUpdateService from '../../js/service/supplier/SupplierUpdateService.ts'
   import SupplierCreateService from '../../js/service/supplier/SupplierCreateService.ts'
-  import Supplier from '../../js/supplier.ts'
+  import Supplier from '../../js/Supplier.ts'
 
   export default async (props, {$, $on, $f7, $onBeforeUnmount, page } ) => {
     const supplier = new Supplier($f7)

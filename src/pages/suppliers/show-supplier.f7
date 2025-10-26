@@ -109,7 +109,7 @@
   import { getPhoneNumberInString } from '../../js/helper/phoneNumberHelper.ts'
   import { CONFIRMATION_TO_DELETE } from '../../js/messages.js'
   import { loadTabbar } from '../../js/components/tabbar.js'
-  import Supplier from '../../js/supplier.ts'
+  import Supplier from '../../js/Supplier.ts'
 
   export default async (props, { $, $on, $f7 }) => {
     const $$ = Dom7

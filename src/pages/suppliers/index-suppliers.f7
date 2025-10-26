@@ -64,7 +64,7 @@
 <script>
   import Framework7 from 'framework7/bundle'
 
-  import Supplier from '../../js/supplier.ts'
+  import Supplier from '../../js/Supplier.ts'
   import { loadTabbar } from '../../js/components/tabbar'
 
   export default async (props, { $, $on, $f7 }) => {
