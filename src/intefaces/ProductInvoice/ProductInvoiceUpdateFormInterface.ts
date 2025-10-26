@@ -3,4 +3,5 @@ export default interface ProductInvoiceUpdateFormInterface {
   name: string
   date: string
   'total-amount': number
+  supplier: string | null | undefined
 }

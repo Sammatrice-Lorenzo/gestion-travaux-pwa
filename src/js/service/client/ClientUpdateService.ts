@@ -14,7 +14,7 @@ export default class ClientUpdateService implements FormPageInteface {
   ) {}
 
   public getPageTitle(): string {
-    return 'Modification prestation'
+    return 'Modification client'
   }
 
   public getBlockTitle(): string {

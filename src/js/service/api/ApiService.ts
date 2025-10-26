@@ -5,7 +5,7 @@ import { stockResponseInCache } from '../../cache'
 import * as messages from '../../messages'
 import { getToken, logout } from '../../token'
 
-type ApiResponse<T> = T[]
+export type ApiResponse<T> = T[]
 
 type ApiRawResponse<T> = {
   code?: number
