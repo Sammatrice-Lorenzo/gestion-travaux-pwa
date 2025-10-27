@@ -1,24 +1,34 @@
+import Framework7 from 'framework7'
 import { logout } from '../../js/token.js'
 
+/**
+ * @param { string } selector
+ * @returns { string }
+ */
 const templateTabbar = (selector) => {
   return `
-        <div class="toolbar-inner">
-            <a href="/calendar/" class="tab-link">
-                <i class="f7-icons">calendar</i>
-                <span class="tabbar-label">Calendrier</span>
-            </a>
-            <a href="/prestation/" class="tab-link tab-link-active">
-                <i class="material-icons">home</i>
-                <span class="tabbar-label">Prestations</span>
-            </a>
-            <a href="" id="logout-link-${selector}" class="tab-link">
-                <i class="f7-icons blue">arrow_right_circle</i>
-                <span class="tabbar-label">Déconnexion</span>
-            </a>
-        </div>
+    <div class="toolbar-inner">
+      <a href="/calendar/" class="tab-link">
+        <i class="f7-icons">calendar</i>
+        <span class="tabbar-label">Calendrier</span>
+      </a>
+      <a href="/prestation/" class="tab-link tab-link-active">
+        <i class="material-icons">home</i>
+        <span class="tabbar-label">Prestations</span>
+      </a>
+      <a href="" id="logout-link-${selector}" class="tab-link">
+        <i class="f7-icons blue">arrow_right_circle</i>
+        <span class="tabbar-label">Déconnexion</span>
+      </a>
+    </div>
     `
 }
 
+/**
+ *
+ * @param { string } idSelector
+ * @param { Framework7 } $f7
+ */
 const loadTabbar = (idSelector, $f7) => {
   const selectorTemplate = document.querySelector(`#${idSelector}`)
 

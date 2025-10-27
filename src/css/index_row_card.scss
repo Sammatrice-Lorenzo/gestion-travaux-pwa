@@ -1,0 +1,38 @@
+#index-row-card .index-card {
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  margin: 1rem 15px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: var(--f7-card-bg-color, #fff);
+}
+
+#index-row-card .index-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+#index-row-card .item-inner {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+#index-row-card .item-subtitle {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 6px;
+}
+
+#index-row-card .item-text p {
+  margin: 3px 0;
+  font-size: 14px;
+}
+
+#index-row-card .item-text .icon {
+  font-size: 15px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+#index-row-card .button-small {
+  border-radius: 10px;
+}

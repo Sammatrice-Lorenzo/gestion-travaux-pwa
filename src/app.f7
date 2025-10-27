@@ -1,78 +1,85 @@
 <template>
-    <div id="app">
-
-        <div class="panel panel-left panel-cover dark panel-init">
-            <div class="view">
-                <div class="page">
-                    <div class="navbar">
-                        <div class="navbar-bg"></div>
-                        <div class="navbar-inner">
-                            <div class="title">Left Panel</div>
-                        </div>
-                    </div>
-                    <div class="page-content">
-                        <div class="block">Left panel content goes here</div>
-                    </div>
-                </div>
+  <div id="app">
+    <div class="panel panel-left panel-cover dark panel-init">
+      <div class="view">
+        <div class="page">
+          <div class="navbar">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner">
+              <div class="title">Left Panel</div>
             </div>
+          </div>
+          <div class="page-content">
+            <div class="block">Left panel content goes here</div>
+          </div>
         </div>
-        <!-- Right panel with reveal effect-->
-        <div class="panel panel-right panel-reveal dark">
-            <div class="view">
-                <div class="page">
-                    <div class="navbar">
-                        <div class="navbar-bg"></div>
-                        <div class="navbar-inner">
-                            <div class="title">Menu</div>
-                        </div>
-                    </div>
-                    <div class="page-content">
-                        <div class="list list-strong-ios list-outline-ios menu-list">
-                            <ul>
-                                <li>
-                                    <a href="/product/invoices/" class="item-content item-link">
-                                        <div class="item-media">
-                                            <i class="f7-icons md icon-size">doc_text</i>
-                                        </div>
-                                        <div class="item-inner">
-                                            <div class="item-title">Mes factures</div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="/clients/" class="item-content item-link">
-                                        <div class="item-media">
-                                            <i class="f7-icons md icon-size">person_2</i>
-                                        </div>
-                                        <div class="item-inner">
-                                            <div class="item-title">Clients</div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="/mon-compte/" class="item-content item-link">
-                                        <div class="item-media">
-                                            <i class="f7-icons md icon-size">person</i>
-                                        </div>
-                                        <div class="item-inner">
-                                            <div class="item-title">Mon profil</div>
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Your main view, should have "view-main" class -->
-        <div class="view view-main view-init safe-areas" data-url="/"></div>
+      </div>
     </div>
+    <div class="panel panel-right panel-reveal dark">
+      <div class="view">
+        <div class="page">
+          <div class="navbar">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner">
+              <div class="title">Menu</div>
+            </div>
+          </div>
+          <div class="page-content">
+            <div class="list list-strong-ios list-outline-ios menu-list">
+              <ul>
+                <li>
+                  <a href="/product/invoices/" class="item-content item-link">
+                    <div class="item-media">
+                      <i class="f7-icons md icon-size">doc_text</i>
+                    </div>
+                    <div class="item-inner">
+                      <div class="item-title">Mes factures</div>
+                    </div>
+                  </a>
+                </li>
+                <li>
+                  <a href="/clients/" class="item-content item-link">
+                    <div class="item-media">
+                      <i class="f7-icons md icon-size">person_2</i>
+                    </div>
+                    <div class="item-inner">
+                      <div class="item-title">Clients</div>
+                    </div>
+                  </a>
+                </li>
+                <li>
+                  <a href="/suppliers/" class="item-content item-link">
+                    <div class="item-media">
+                      <i class="f7-icons md icon-size">building_2_crop_circle</i>
+                    </div>
+                    <div class="item-inner">
+                      <div class="item-title">Fournisseurs</div>
+                    </div>
+                  </a>
+                </li>
+                <li>
+                  <a href="/mon-compte/" class="item-content item-link">
+                    <div class="item-media">
+                      <i class="f7-icons md icon-size">person</i>
+                    </div>
+                    <div class="item-inner">
+                      <div class="item-title">Mon profil</div>
+                    </div>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="view view-main view-init safe-areas" data-url="/"></div>
+  </div>
 </template>
 <script>
-    export default (props, { $f7, $update, $on }) => {
+  export default (props, { $f7, $update, $on }) => {
 
-        return $render;
-    }
+    return $render;
+  }
 </script>

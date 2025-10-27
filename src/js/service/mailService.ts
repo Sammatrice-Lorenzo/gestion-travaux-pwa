@@ -1,11 +1,14 @@
 import { getMontYear } from '../helper/date.ts'
-import { getDecodedToken } from '../token'
+import { getDecodedToken } from '../token.js'
 
 /**
  * @param { Date } date
  */
-function sendEmail(date) {
-  const token = getDecodedToken()
+function sendEmail(date: Date): void {
+  const token = getDecodedToken() as {
+    lastname: string
+    firstname: string
+  }
   const user = `${token.lastname} ${token.firstname}`
 
   const email = 'example@domain.com'

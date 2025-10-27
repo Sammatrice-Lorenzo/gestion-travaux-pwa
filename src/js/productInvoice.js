@@ -109,6 +109,7 @@ async function updateProductInvoice($f7, id, form) {
     name: form.name,
     date: form.date,
     totalAmount: Number.parseFloat(form['total-amount']),
+    supplierId: Number.parseInt(form.supplier),
   })
 
   const routeDTO = new RouteDTO()

@@ -19,10 +19,10 @@
           <i class="icon f7-icons">plus_app_fill</i>
         </a>
       </div>
-      <div class="list list-strong-ios list-outline-ios list-dividers-ios media-list">
+      <div id="index-row-card" class="list list-strong-ios list-outline-ios media-list list-dividers-ios list-container">
         <ul>
           ${clientsByUser.map((client) => $h`
-          <li>
+          <li class="index-card">
             <a class="item-link item-content" href="/client/${client.id}/">
               <div class="item-media">
                 <i class="icon f7-icons color-primary">person_fill</i>
@@ -47,7 +47,8 @@
 <script>
   import Framework7 from 'framework7/bundle'
 
-  import { getClientsByUser, getPhoneNumberInString } from '../../js/client/client.js'
+  import { getPhoneNumberInString } from '../../js/helper/phoneNumberHelper.ts'
+  import { getClientsByUser } from '../../js/client/client.js'
   import { loadTabbar } from '../../js/components/tabbar.js'
 
   export default async (props, { $, $on, $f7 }) => {
