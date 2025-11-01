@@ -11,8 +11,7 @@ function createCalendar(
   app.calendar.create({
     inputEl: '#calendar-input-product-invoice-file',
     openIn: 'customModal',
-    header: false,
-    footer: false,
+    footer: true,
     dateFormat: 'MM yyyy',
     value: [date],
     on: {
@@ -28,9 +27,11 @@ function createCalendar(
 
 const hideMonthDaysInCalendar = (app: Framework7): void => {
   const $ = app.$
-  $('.calendar-months').css('display', 'none')
   $('.calendar-week-header').css('display', 'none')
-  $('.calendar-modal.modal-in').css('height', '12%')
+  $('.calendar-modal.modal-in').css('height', '10%')
+  const calendarFooter = $('.calendar-footer')
+  calendarFooter.find('.calendar-close').text('Fin')
+  calendarFooter.css('heigt', '40%')
 }
 
 const actionsOpenCalendar = (
