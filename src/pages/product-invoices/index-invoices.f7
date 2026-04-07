@@ -66,6 +66,48 @@
         <input type="text" id="calendar-input-product-invoice-file" placeholder="MM/AAAA" readonly="readonly" />
       </div>
 
+      <div class="block">
+        <div class="list no-hairlines-md">
+          <ul>
+            <!-- Recherche -->
+            <li class="item-content item-input">
+              <div class="item-media">
+                <i class="f7-icons">search</i>
+              </div>
+              <div class="item-inner">
+                <div class="item-title item-label">Rechercher</div>
+                <div class="item-input-wrap">
+                  <input 
+                    type="search" 
+                    placeholder="Nom ou date..."
+                    @input="${(e) => handleSearch(e.target.value)}"
+                  />
+                </div>
+              </div>
+            </li>
+
+            <!-- Fournisseur -->
+            <li class="item-content item-input item-input-with-value">
+              <div class="item-media">
+                <i class="f7-icons">person_2</i>
+              </div>
+              <div class="item-inner">
+                <div class="item-title item-label">Fournisseur</div>
+                <div class="item-input-wrap">
+                  <select @change="${(e) => handleSupplierFilter(e.target.value)}">
+                    <option value="">Tous</option>
+                    ${suppliers.map((supplier) => $h`
+                      <option value="${supplier.id}">${supplier.name}</option>
+                    `)}
+                  </select>
+                </div>
+              </div>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+
       <div class="display-flex flex-direction-column text-align-center selected-info" style="margin-top: 0.5rem;">
         <span id="total-product-invoice-selected">
           ${dataTableProductInvoiceService.getSelectedProductInvoices().length} facture(s) sélectionnée(s)
@@ -100,7 +142,7 @@
       </div>
 
       <div class="grid grid-cols-1 medium-grid-cols-2 large-grid-cols-3 gap">
-        ${productInvoiceStore.getters.getInvoices.value.map((invoice) => $h`
+        ${productInvoiceStore.getters.getFilteredInvoices.value.map((invoice) => $h`
           <div data-testid="invoice-card-${invoice.id}" class="card invoice-card tooltip-init">
             <div class="card-content">
               <div class="display-flex justify-content-space-between">
@@ -247,13 +289,70 @@
     const pagination = new Pagination(10)
     const supplierManager = new Supplier($f7)
     const suppliers = await supplierManager.getSuppliersByUser()
+    console.log(suppliers);
+    
     toolbarCalendarProductInvoiceService.invoicePaginatorService = invoicePaginatorService
+
+    let searchTerm = ''
+    let selectedSupplier = ''
+    let originalInvoices = []
+
+    const getFilteredInvoices = () => {
+      const invoices = originalInvoices || []
+
+      return invoices.filter(inv => {
+
+        const matchSearch =
+          !searchTerm ||
+          inv.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          new Date(inv.date).toLocaleDateString().includes(searchTerm)
+
+        const matchSupplier =
+          !selectedSupplier ||
+          inv.supplier?.id == selectedSupplier
+
+        return matchSearch && matchSupplier
+      })
+    }
+
+    const handleSearch = (value) => {
+      searchTerm = value
+      refreshInvoices()
+    }
+
+    const handleSupplierFilter = (value) => {
+      selectedSupplier = value
+      refreshInvoices()
+    }
+
+    const refreshInvoices = async () => {
+      const filtered = getFilteredInvoices()
+
+      productInvoiceStore.dispatch('setFilteredInvoices', filtered)
+
+      pagination.totalItems = filtered.length
+      pagination.currentPage = 1
+      pagination.updatePagination(
+        $('#products-invoice-prev'),
+        $('#products-invoice-next'),
+        $('#pagination-links-index-invoices')
+      )
+
+      await $update()
+
+      setTimeout(() => {
+        invoicePaginatorService.paginateCards($('.invoice-card'), pagination)
+      })
+    }
 
     $on('pageInit', async function (page) {
       loadTabbar('index-invoices', $f7)
       createCalendar($f7, new Date(), toolbarCalendarProductInvoiceService)
 
       await productInvoiceManagerService.initializeProductInvoices(pagination, date, invoicePaginatorService)
+      
+      originalInvoices = [...(productInvoiceStore.getters.getInvoices.value || [])]
+      
       $update().then(() => {
         invoicePaginatorService.paginateCards($('.invoice-card'), pagination)
       })
