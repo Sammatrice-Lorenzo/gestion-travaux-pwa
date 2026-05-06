@@ -3,8 +3,6 @@ import path from 'node:path'
 import replace from '@rollup/plugin-replace'
 import dotenv from 'dotenv'
 import framework7 from 'rollup-plugin-framework7'
-
-import https from 'node:https'
 import { VitePWA } from 'vite-plugin-pwa'
 dotenv.config()
 
@@ -21,6 +19,7 @@ const env = dotenv.config({ path: envPath }).parsed || dotenv.config().parsed
 
 const optionsServer = {
   host: true,
+  port: 5173,
   hmr: {
     overlay: true,
   },
@@ -31,15 +30,6 @@ const optionsServer = {
       cors: true,
     },
   },
-}
-
-if (process.env.NODE_ENV === 'development') {
-  const key = path.resolve(__dirname, './config/ssl/key.pem')
-  const cert = path.resolve(__dirname, './config/ssl/cert.pem')
-  optionsServer.https = https.createServer({
-    key: fs.readFileSync(key, 'utf8'),
-    cert: fs.readFileSync(cert, 'utf8'),
-  })
 }
 
 export default async () => {
@@ -66,20 +56,6 @@ export default async () => {
           clientsClaim: true,
         },
       }),
-    ],
-    middleware: [
-      (req, res, next) => {
-        if (req.url.startsWith('/www/')) {
-          const filePath = path.join(
-            __dirname,
-            'www',
-            req.url.replace('/www/', ''),
-          )
-          res.sendFile(filePath)
-        } else {
-          next()
-        }
-      },
     ],
     root: SRC_DIR,
     base: '/',
