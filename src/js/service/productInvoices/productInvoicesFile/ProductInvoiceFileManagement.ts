@@ -37,7 +37,7 @@ export default class ProductInvoiceFileManagement {
   }
 
   public async downloadSelectedInvoices(
-    selectedInvoices: string[],
+    selectedInvoices: number[],
     date: Date,
   ): Promise<void> {
     if (selectedInvoices.length < 1) {

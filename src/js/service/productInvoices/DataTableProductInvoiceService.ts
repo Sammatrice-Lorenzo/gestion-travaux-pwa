@@ -57,15 +57,10 @@ export default class DataTableProductInvoiceService {
   }
 
   private getInvoiceSelected(invoice: ProductInvoiceInterface): number[] {
-    let selectedInvoicesFiltered: number[] = []
     if (this._selectedInvoices.includes(invoice.id)) {
-      selectedInvoicesFiltered = this._selectedInvoices.filter(
-        (id) => id !== invoice.id,
-      )
-    } else {
-      selectedInvoicesFiltered.push(invoice.id)
+      return this._selectedInvoices.filter((id) => id !== invoice.id)
     }
 
-    return selectedInvoicesFiltered
+    return [...this._selectedInvoices, invoice.id]
   }
 }
