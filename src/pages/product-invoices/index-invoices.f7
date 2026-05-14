@@ -270,6 +270,7 @@
   import sheetModalProductInvoiceFormatter from '../../js/formatter/sheetModalProductInvoiceFormatter.ts'
   import ProductInvoiceFormService from '../../js/service/productInvoices/ProductInvoiceFormService.ts'
   import ToolbarCalendarProductInvoiceService from '../../js/service/calendarProducInvoice/ToolbarCalendarProductInvoiceService'
+  import ProductInvoiceFilterService from '../../js/service/productInvoices/ProductInvoiceFilterService.ts'
   import ProductInvoiceFileManagement from '../../js/service/productInvoices/productInvoicesFile/ProductInvoiceFileManagement'
   import InvoicePaginatorService from '../../js/service/productInvoices/InvoicePaginatorService.ts'
   import Supplier from '../../js/Supplier.ts'
@@ -289,6 +290,7 @@
     const pagination = new Pagination(10)
     const supplierManager = new Supplier($f7)
     const suppliers = await supplierManager.getSuppliersByUser()
+    const productInvoiceFilterService = new ProductInvoiceFilterService($f7, $update)
 
     toolbarCalendarProductInvoiceService.invoicePaginatorService = invoicePaginatorService
 
@@ -296,29 +298,6 @@
     let selectedSupplier = ''
     let originalInvoices = []
     let displayedInvoices = []
-    const getFilteredInvoices = () => {
-      const invoices = originalInvoices.length
-        ? originalInvoices
-        : productInvoiceStore.getters.getInvoices.value || []
-      const normalizedSearchTerm = searchTerm?.trim().toLowerCase()
-      return invoices.filter(inv => {
-        const invoiceName = inv.name ? inv.name.toString().toLowerCase() : ''
-        const supplierName = inv.supplier?.name ? inv.supplier.name.toString().toLowerCase() : ''
-        const invoiceDate = new Date(inv.date).toLocaleDateString().toLowerCase()
-
-        const matchSearch =
-          !normalizedSearchTerm ||
-          invoiceName.includes(normalizedSearchTerm) ||
-          supplierName.includes(normalizedSearchTerm) ||
-          invoiceDate.includes(normalizedSearchTerm)
-
-        const matchSupplier =
-          !selectedSupplier ||
-          inv.supplier?.id == selectedSupplier
-
-        return matchSearch && matchSupplier
-      })
-    }
 
     const handleSearch = (value) => {
       searchTerm = value || ''
@@ -331,24 +310,13 @@
     }
 
     const refreshInvoices = async () => {
-      displayedInvoices = getFilteredInvoices()
-      productInvoiceStore.dispatch('setFilteredInvoices', displayedInvoices)
-
-      pagination.totalItems = displayedInvoices.length
-      pagination.currentPage = 1
-
-      await $update()
-
-      pagination.updatePagination(
-        $('#products-invoice-prev'),
-        $('#products-invoice-next'),
-        $('#pagination-links-index-invoices')
-      )
-
-      setTimeout(() => {
-        const freshCards = Array.from(document.querySelectorAll('.invoice-card'))
-        invoicePaginatorService.paginateCards(freshCards, pagination)
-      }, 50)
+      displayedInvoices = await productInvoiceFilterService.refreshInvoices({
+        originalInvoices,
+        searchTerm,
+        selectedSupplier,
+        pagination,
+        invoicePaginatorService,
+      })
     }
 
     $on('pageInit', async function (page) {
