@@ -40,9 +40,16 @@ const app = new Framework7({
 
 askUserPermissionForSendANotificationPush()
 setupServicesWorkers()
-reloadPage(app, '/prestation/')
-;(async () => {
+reloadPage(
+  app,
+  '/prestation/',
+)(async () => {
   await checkAndClearCache()
+  if (localStorage.getItem('APP_VERSION') !== process.env.APP_VERSION) {
+    localStorage.clear()
+    localStorage.setItem('APP_VERSION', process.env.APP_VERSION)
+    window.location.reload()
+  }
 })()
 
 export default app

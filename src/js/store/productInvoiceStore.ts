@@ -32,11 +32,11 @@ const productInvoiceStore = createStore({
   },
   actions: {
     setInvoices({ state }: State, invoices: ProductInvoiceInterface[]) {
-      state.productInvoices = invoices
-      state.filteredInvoices = invoices
+      state.productInvoices = [...invoices]
+      state.filteredInvoices = [...invoices]
     },
     setFilteredInvoices({ state }: State, invoices: ProductInvoiceInterface[]) {
-      state.filteredInvoices = invoices
+      state.filteredInvoices = [...invoices]
     },
     updateInvoice({ state }: State, updatedInvoice: ProductInvoiceInterface) {
       const index = state.productInvoices.findIndex(

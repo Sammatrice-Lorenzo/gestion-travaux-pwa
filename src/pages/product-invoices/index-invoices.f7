@@ -289,23 +289,28 @@
     const pagination = new Pagination(10)
     const supplierManager = new Supplier($f7)
     const suppliers = await supplierManager.getSuppliersByUser()
-    console.log(suppliers);
-    
+
     toolbarCalendarProductInvoiceService.invoicePaginatorService = invoicePaginatorService
 
     let searchTerm = ''
     let selectedSupplier = ''
     let originalInvoices = []
-
+    let displayedInvoices = []
     const getFilteredInvoices = () => {
-      const invoices = originalInvoices || []
-
+      const invoices = originalInvoices.length
+        ? originalInvoices
+        : productInvoiceStore.getters.getInvoices.value || []
+      const normalizedSearchTerm = searchTerm?.trim().toLowerCase()
       return invoices.filter(inv => {
+        const invoiceName = inv.name ? inv.name.toString().toLowerCase() : ''
+        const supplierName = inv.supplier?.name ? inv.supplier.name.toString().toLowerCase() : ''
+        const invoiceDate = new Date(inv.date).toLocaleDateString().toLowerCase()
 
         const matchSearch =
-          !searchTerm ||
-          inv.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          new Date(inv.date).toLocaleDateString().includes(searchTerm)
+          !normalizedSearchTerm ||
+          invoiceName.includes(normalizedSearchTerm) ||
+          supplierName.includes(normalizedSearchTerm) ||
+          invoiceDate.includes(normalizedSearchTerm)
 
         const matchSupplier =
           !selectedSupplier ||
@@ -316,7 +321,7 @@
     }
 
     const handleSearch = (value) => {
-      searchTerm = value
+      searchTerm = value || ''
       refreshInvoices()
     }
 
@@ -326,23 +331,24 @@
     }
 
     const refreshInvoices = async () => {
-      const filtered = getFilteredInvoices()
+      displayedInvoices = getFilteredInvoices()
+      productInvoiceStore.dispatch('setFilteredInvoices', displayedInvoices)
 
-      productInvoiceStore.dispatch('setFilteredInvoices', filtered)
-
-      pagination.totalItems = filtered.length
+      pagination.totalItems = displayedInvoices.length
       pagination.currentPage = 1
+
+      await $update()
+
       pagination.updatePagination(
         $('#products-invoice-prev'),
         $('#products-invoice-next'),
         $('#pagination-links-index-invoices')
       )
 
-      await $update()
-
       setTimeout(() => {
-        invoicePaginatorService.paginateCards($('.invoice-card'), pagination)
-      })
+        const freshCards = Array.from(document.querySelectorAll('.invoice-card'))
+        invoicePaginatorService.paginateCards(freshCards, pagination)
+      }, 50)
     }
 
     $on('pageInit', async function (page) {
@@ -350,12 +356,27 @@
       createCalendar($f7, new Date(), toolbarCalendarProductInvoiceService)
 
       await productInvoiceManagerService.initializeProductInvoices(pagination, date, invoicePaginatorService)
-      
       originalInvoices = [...(productInvoiceStore.getters.getInvoices.value || [])]
-      
-      $update().then(() => {
-        invoicePaginatorService.paginateCards($('.invoice-card'), pagination)
-      })
+      displayedInvoices = [...originalInvoices]
+
+      if (searchTerm) {
+        await refreshInvoices()
+      } else {
+        productInvoiceStore.dispatch('setFilteredInvoices', originalInvoices)
+        pagination.totalItems = originalInvoices.length
+        await $update()
+
+        pagination.updatePagination(
+          $('#products-invoice-prev'),
+          $('#products-invoice-next'),
+          $('#pagination-links-index-invoices')
+        )
+
+        setTimeout(() => {
+          const freshCards = Array.from(document.querySelectorAll('.invoice-card'))
+          invoicePaginatorService.paginateCards(freshCards, pagination)
+        }, 50)
+      }
     })
 
     const previousElement = async () => {
