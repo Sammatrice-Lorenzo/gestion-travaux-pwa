@@ -67,44 +67,86 @@
       </div>
 
       <div class="block">
-        <div class="list no-hairlines-md">
-          <ul>
-            <!-- Recherche -->
-            <li class="item-content item-input">
-              <div class="item-media">
-                <i class="f7-icons">search</i>
-              </div>
-              <div class="item-inner">
-                <div class="item-title item-label">Rechercher</div>
-                <div class="item-input-wrap">
-                  <input 
-                    type="search" 
-                    placeholder="Nom ou date..."
-                    @input="${(e) => handleSearch(e.target.value)}"
-                  />
-                </div>
-              </div>
-            </li>
+        <div class="display-flex justify-content-space-between align-items-center">
+          <a
+            href="#"
+            class="button button-fill button-small sheet-open"
+            data-sheet="#filter-sheet"
+          >
+            <i class="f7-icons">ellipsis</i>
+            <span>Filtres</span>
+          </a>
+          <span class="badge color-blue" style="padding: 0.4rem 0.7rem;">
+            ${productInvoiceStore.getters.getFilteredInvoices.value.length} résultats
+          </span>
+        </div>
+      </div>
 
-            <!-- Fournisseur -->
-            <li class="item-content item-input item-input-with-value">
-              <div class="item-media">
-                <i class="f7-icons">person_2</i>
-              </div>
-              <div class="item-inner">
-                <div class="item-title item-label">Fournisseur</div>
-                <div class="item-input-wrap">
-                  <select @change="${(e) => handleSupplierFilter(e.target.value)}">
-                    <option value="">Tous</option>
-                    ${suppliers.map((supplier) => $h`
-                      <option value="${supplier.id}">${supplier.name}</option>
-                    `)}
-                  </select>
+      <div id="filter-sheet" class="sheet-modal sheet-modal-bottom">
+        <div class="toolbar bg-color-primary text-color-white">
+          <div class="toolbar-inner justify-content-space-between">
+            <div class="left" style="padding: 3%;">Filtres</div>
+            <div class="right">
+              <a class="link sheet-close text-color-white">
+                <i class="f7-icons">xmark_circle</i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="sheet-modal-inner text-aligns-center">
+          <div class="list no-hairlines-md" style="margin-top: 0.5rem;">
+            <ul style="margin: 0;">
+              <li class="item-content item-input">
+                <div class="item-media"><i class="f7-icons">search</i></div>
+                <div class="item-inner">
+                  <div class="item-title item-label">Rechercher</div>
+                  <div class="item-input-wrap">
+                    <input
+                      type="search"
+                      placeholder="Nom ou date..."
+                      value="${searchTerm}"
+                      @input="${(e) => handleSearch(e.target.value)}"
+                    />
+                  </div>
                 </div>
-              </div>
-            </li>
-
-          </ul>
+              </li>
+              <li class="item-content item-input item-input-with-value">
+                <div class="item-media"><i class="f7-icons">person_2</i></div>
+                <div class="item-inner">
+                  <div class="item-title item-label">Fournisseur</div>
+                  <div class="item-input-wrap">
+                    <select
+                      value="${selectedSupplier}"
+                      @change="${(e) => handleSupplierFilter(e.target.value)}"
+                    >
+                      <option value="">Tous</option>
+                      ${suppliers.map((supplier) => $h`
+                        <option value="${supplier.id}">${supplier.name}</option>
+                      `)}
+                    </select>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div style="display: flex; gap: 0.5rem; padding: 0.5rem; margin-top: 0.5rem;">
+            <a
+              href="#"
+              class="button button-fill button-small sheet-close"
+              style="flex: 1;"
+              @click="${refreshInvoices}"
+            >
+              Appliquer
+            </a>
+            <a
+              href="#"
+              class="button button-outline button-small sheet-close"
+              style="flex: 1;"
+              @click="${resetFilters}"
+            >
+              Réinit.
+            </a>
+          </div>
         </div>
       </div>
 
@@ -307,6 +349,18 @@
     const handleSupplierFilter = (value) => {
       selectedSupplier = value
       refreshInvoices()
+    }
+
+    const resetFilters = async () => {
+      searchTerm = ''
+      selectedSupplier = ''
+      displayedInvoices = await productInvoiceFilterService.refreshInvoices({
+        originalInvoices,
+        searchTerm,
+        selectedSupplier,
+        pagination,
+        invoicePaginatorService,
+      })
     }
 
     const refreshInvoices = async () => {
