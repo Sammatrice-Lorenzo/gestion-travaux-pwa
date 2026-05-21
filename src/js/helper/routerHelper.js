@@ -11,6 +11,12 @@ function checkAuthentication() {
 
 export function reloadPage(app, route) {
   app.on('pageBeforeIn', (page) => {
+    const assetVersion = process.env.APP_VERSION
+    if (assetVersion && localStorage.getItem('APP_VERSION') !== assetVersion) {
+      localStorage.clear()
+      localStorage.setItem('APP_VERSION', process.env.APP_VERSION)
+      window.location.reload()
+    }
     const isAuthenticated = checkAuthentication()
 
     if (page.route.path === '/' && isAuthenticated) {

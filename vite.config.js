@@ -83,6 +83,7 @@ export default async () => {
       'process.env': {
         JWT_PUBLIC_KEY: publicKey,
         VAPID_KEY: env.VAPID_KEY,
+        APP_VERSION: env.APP_VERSION,
       },
     },
   }
