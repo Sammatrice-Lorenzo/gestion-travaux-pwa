@@ -14,7 +14,7 @@ const URL_TO_REDIRECT = '/product/invoices/'
 /**
  * @param {*} $f7
  * @param { Date } date
- * @returns
+ * @returns { Promise<ProductInvoiceInterface[]> }
  */
 async function getProductsInvoicesByUser($f7, date) {
   const formattedDate = date.toISOString().slice(0, 10)

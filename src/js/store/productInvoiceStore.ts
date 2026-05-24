@@ -3,6 +3,7 @@ import type ProductInvoiceInterface from '../../intefaces/ProductInvoice/Product
 
 interface StateProductInvoice {
   productInvoices: ProductInvoiceInterface[]
+  filteredInvoices: ProductInvoiceInterface[]
 }
 
 type State = {
@@ -12,10 +13,14 @@ type State = {
 const productInvoiceStore = createStore({
   state: {
     productInvoices: [] as ProductInvoiceInterface[],
+    filteredInvoices: [] as ProductInvoiceInterface[],
   },
   getters: {
     getInvoices({ state }: State) {
       return state.productInvoices
+    },
+    getFilteredInvoices({ state }: State) {
+      return state.filteredInvoices
     },
     getInvoiceById:
       ({ state }: State) =>
@@ -27,7 +32,11 @@ const productInvoiceStore = createStore({
   },
   actions: {
     setInvoices({ state }: State, invoices: ProductInvoiceInterface[]) {
-      state.productInvoices = invoices
+      state.productInvoices = [...invoices]
+      state.filteredInvoices = [...invoices]
+    },
+    setFilteredInvoices({ state }: State, invoices: ProductInvoiceInterface[]) {
+      state.filteredInvoices = [...invoices]
     },
     updateInvoice({ state }: State, updatedInvoice: ProductInvoiceInterface) {
       const index = state.productInvoices.findIndex(

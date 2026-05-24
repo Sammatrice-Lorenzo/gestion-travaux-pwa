@@ -4,8 +4,10 @@ import * as pdfjsLib from 'pdfjs-dist'
 import { getToken } from '../../token'
 import { getUrl } from '../../urlGenerator'
 
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/5.4.149/pdf.worker.mjs'
+pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/build/pdf.worker.min.mjs',
+  import.meta.url,
+).toString()
 
 let scale = 1
 let pdfDoc: pdfjsLib.PDFDocumentProxy | null = null

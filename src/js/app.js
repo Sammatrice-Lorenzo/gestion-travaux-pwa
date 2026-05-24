@@ -41,8 +41,5 @@ const app = new Framework7({
 askUserPermissionForSendANotificationPush()
 setupServicesWorkers()
 reloadPage(app, '/prestation/')
-;(async () => {
-  await checkAndClearCache()
-})()
 
 export default app
