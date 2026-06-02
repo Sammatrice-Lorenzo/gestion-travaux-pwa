@@ -8,7 +8,8 @@
 
 .toolbar-bottom-invoice-actions {
   position: fixed;
-  bottom: 0;
+  /* Laisse de la place au safe-area (iPhone/desktop scaling) */
+  bottom: env(safe-area-inset-bottom);
   width: 100%;
   z-index: 999;
 }
