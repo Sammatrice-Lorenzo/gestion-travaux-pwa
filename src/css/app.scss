@@ -32,9 +32,12 @@
 .tabbar {
   z-index: 1;
 }
-
+  
 .page-content {
   overflow-y: auto;
   max-height: calc(100vh - 60px);
-  padding-bottom: 60px;
+
+  /* Évite que le contenu soit masqué par la toolbar fixe + la pagination */
+  padding-bottom: calc(60px + env(safe-area-inset-bottom));
 }
+

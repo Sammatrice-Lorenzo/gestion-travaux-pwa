@@ -94,7 +94,7 @@
           </div>
         </div>
         <div class="sheet-modal-inner text-aligns-center">
-          <div class="list no-hairlines-md" style="margin-top: 0.5rem;">
+          <div class="list no-hairlines-md list inset no-margin">
             <ul style="margin: 0;">
               <li class="item-content item-input">
                 <div class="item-media"><i class="f7-icons">search</i></div>
