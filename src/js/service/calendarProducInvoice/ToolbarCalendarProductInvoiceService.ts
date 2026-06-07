@@ -57,7 +57,9 @@ export default class ToolbarCalendarProductInvoiceService {
     productInvoiceStore.dispatch('setInvoices', productInvoices)
     await this._$update()
 
-    this.pagination.totalItems = productInvoices.length
+    const displayedInvoices =
+      productInvoiceStore.getters.getFilteredInvoices.value
+    this.pagination.totalItems = displayedInvoices.length
     this.pagination.updatePagination(
       $('#products-invoice-prev'),
       $('#products-invoice-next'),
