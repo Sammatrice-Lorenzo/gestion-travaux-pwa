@@ -320,26 +320,38 @@
   import Pagination from '../../js/service/Pagination.ts'
 
   export default async (props, { $, $on, $el, $f7, $onMounted, $update }) => {
+    const invoicePaginatorService = new InvoicePaginatorService()
+    const pagination = new Pagination(10)
+    const productInvoiceFilterService = new ProductInvoiceFilterService($f7, $update)
+
+    let searchTerm = ''
+    let selectedSupplier = ''
+
+    const refreshInvoices = async () => {
+      await productInvoiceFilterService.refreshInvoices({
+        searchTerm,
+        selectedSupplier,
+        pagination,
+        invoicePaginatorService,
+      })
+    }
+
     const toolbarCalendarProductInvoiceService = new ToolbarCalendarProductInvoiceService(async () => {
-      $update()
+      if (searchTerm || selectedSupplier) {
+        await refreshInvoices()
+      } else {
+        await $update()
+      }
     })
     const date = toolbarCalendarProductInvoiceService.getDate()
     const productInvoiceFormService = new ProductInvoiceFormService()
     const dataTableProductInvoiceService = new DataTableProductInvoiceService($f7)
     const productInvoiceFileManagement = new ProductInvoiceFileManagement($f7)
     const productInvoiceManagerService = new ProductInvoiceManagerService($f7, toolbarCalendarProductInvoiceService)
-    const invoicePaginatorService = new InvoicePaginatorService()
-    const pagination = new Pagination(10)
     const supplierManager = new Supplier($f7)
     const suppliers = await supplierManager.getSuppliersByUser()
-    const productInvoiceFilterService = new ProductInvoiceFilterService($f7, $update)
 
     toolbarCalendarProductInvoiceService.invoicePaginatorService = invoicePaginatorService
-
-    let searchTerm = ''
-    let selectedSupplier = ''
-    let originalInvoices = []
-    let displayedInvoices = []
 
     const handleSearch = (value) => {
       searchTerm = value || ''
@@ -354,23 +366,7 @@
     const resetFilters = async () => {
       searchTerm = ''
       selectedSupplier = ''
-      displayedInvoices = await productInvoiceFilterService.refreshInvoices({
-        originalInvoices,
-        searchTerm,
-        selectedSupplier,
-        pagination,
-        invoicePaginatorService,
-      })
-    }
-
-    const refreshInvoices = async () => {
-      displayedInvoices = await productInvoiceFilterService.refreshInvoices({
-        originalInvoices,
-        searchTerm,
-        selectedSupplier,
-        pagination,
-        invoicePaginatorService,
-      })
+      await refreshInvoices()
     }
 
     $on('pageInit', async function (page) {
@@ -378,14 +374,13 @@
       createCalendar($f7, new Date(), toolbarCalendarProductInvoiceService)
 
       await productInvoiceManagerService.initializeProductInvoices(pagination, date, invoicePaginatorService)
-      originalInvoices = [...(productInvoiceStore.getters.getInvoices.value || [])]
-      displayedInvoices = [...originalInvoices]
+      const invoices = productInvoiceStore.getters.getInvoices.value || []
 
       if (searchTerm) {
         await refreshInvoices()
       } else {
-        productInvoiceStore.dispatch('setFilteredInvoices', originalInvoices)
-        pagination.totalItems = originalInvoices.length
+        productInvoiceStore.dispatch('setFilteredInvoices', invoices)
+        pagination.totalItems = invoices.length
         await $update()
 
         pagination.updatePagination(

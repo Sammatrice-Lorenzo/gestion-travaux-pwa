@@ -5,7 +5,6 @@ import type Pagination from '../Pagination'
 import type InvoicePaginatorService from './InvoicePaginatorService'
 
 interface RefreshOptions {
-  originalInvoices: ProductInvoiceInterface[]
   searchTerm: string
   selectedSupplier: string
   pagination: Pagination
@@ -22,13 +21,11 @@ export default class ProductInvoiceFilterService {
   }
 
   public getFilteredInvoices(
-    originalInvoices: ProductInvoiceInterface[],
     searchTerm: string,
     selectedSupplier: string,
   ): ProductInvoiceInterface[] {
-    const invoices: ProductInvoiceInterface[] = originalInvoices.length
-      ? originalInvoices
-      : productInvoiceStore.getters.getInvoices.value || []
+    const invoices: ProductInvoiceInterface[] =
+      productInvoiceStore.getters.getInvoices.value || []
     const normalizedSearchTerm = searchTerm?.trim().toLowerCase() || ''
 
     return invoices.filter((inv) => {
@@ -56,14 +53,12 @@ export default class ProductInvoiceFilterService {
   }
 
   public async refreshInvoices({
-    originalInvoices,
     searchTerm,
     selectedSupplier,
     pagination,
     invoicePaginatorService,
   }: RefreshOptions): Promise<ProductInvoiceInterface[]> {
     const filteredInvoices = this.getFilteredInvoices(
-      originalInvoices,
       searchTerm,
       selectedSupplier,
     )
