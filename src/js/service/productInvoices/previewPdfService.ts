@@ -1,8 +1,8 @@
 import type Framework7 from 'framework7'
 import type { Popup } from 'framework7/components/popup'
 import * as pdfjsLib from 'pdfjs-dist'
-import { getToken } from '../../token'
 import { getUrl } from '../../urlGenerator'
+import { apiCredentials } from '../SessionService'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.mjs',
@@ -29,14 +29,13 @@ async function openPdfPreviewFromUrl(
   pdfPreviewPopup: (app: Framework7) => Popup.Popup,
 ): Promise<void> {
   const url: URL = getUrl(`/api/product_invoice_files/${id}/download/`)
-  const token = getToken()
 
   try {
     const response = await fetch(url, {
       method: 'GET',
+      credentials: apiCredentials,
       headers: {
         'Content-Type': 'application/pdf',
-        Authorization: `Bearer ${token}`,
       },
     })
 

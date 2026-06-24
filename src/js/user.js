@@ -1,8 +1,8 @@
 import Dom7 from 'dom7'
 import { clearCache } from './cache'
 import * as messages from './messages'
+import { apiCredentials } from './service/SessionService'
 import { ApiService } from './service/api/ApiService.ts'
-import { getToken } from './token.js'
 import { getUrl, getUrlById, getUrlUser } from './urlGenerator'
 
 export async function showUser($f7) {
@@ -23,6 +23,7 @@ export function createUser(form, $f7) {
 
   fetch(url, {
     method: 'POST',
+    credentials: apiCredentials,
     headers: {
       'Content-Type': 'application/json',
     },
@@ -54,7 +55,6 @@ export function createUser(form, $f7) {
 }
 
 export function updateUser(form, idUser, $f7) {
-  const token = getToken()
   const url = getUrlById('/api/users', idUser)
   const message = messages.getTypeMessageByMethodAPI('PUT')
 
@@ -65,22 +65,22 @@ export function updateUser(form, idUser, $f7) {
 
   fetch(url, {
     method: 'PUT',
+    credentials: apiCredentials,
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
     },
     body: body,
   })
-    .then((response) =>
-      response.json().then((data) => {
-        clearCache()
-        localStorage.removeItem('token')
-        localStorage.setItem('token', data.token)
+    .then(async (response) => {
+      if (!response.ok) {
+        $f7.dialog.alert(messages.ERROR_SERVER)
+        return
+      }
 
-        $f7.dialog.alert(message)
-        $f7.views.main.router.navigate('/mon-compte/')
-      }),
-    )
+      await clearCache()
+      $f7.dialog.alert(message)
+      $f7.views.main.router.navigate('/mon-compte/')
+    })
     .catch((error) => {
       console.error(error)
       $f7.dialog.alert(messages.ERROR_SERVER)

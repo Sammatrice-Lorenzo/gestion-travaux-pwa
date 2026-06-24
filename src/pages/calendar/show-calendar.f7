@@ -138,7 +138,10 @@
                 <a class="edit-event" href="#" @click="${edit}">
                   <i class="f7-icons">square_pencil</i>
                 </a>
-                <a class="swipeout-delete" @click="${async (e) => await calendarWorkEventDayService.removeEvent(e, $f7)}">
+                <a class="swipeout-delete" @click="${async (e) => {
+                  await calendarWorkEventDayService.removeEvent(e, $f7)
+                  await refreshEvents()
+                }}">
                   <i class="f7-icons">trash</i>
                 </a>
               </div>
@@ -204,6 +207,17 @@
       $update()
     }
 
+    const refreshEvents = async () => {
+      const eventsDay = await getWorkEventDayByUser($f7, calendar)
+      events = getEventsFormatted(eventsDay)
+      calendar.params.events = events
+      calendar.update()
+      calendarWorkEventDayService.setEvents(events)
+      eventItems = await renderEventsCalendar(calendar, events)
+      calendarWorkEventDayService.setEventItems(eventItems)
+      $update()
+    }
+
     $on('pageInit', async () => {
       calendar = await createCalendar($f7, renderEvents, events)
       colorPickerSpectrum = createColorPickerForEventCalendar($f7)
@@ -212,9 +226,7 @@
     const send = async (e) => {
       e.preventDefault()
       await calendarWorkEventDayService.send($f7, popupSwipe)
-      eventItems = await renderEventsCalendar(calendar, calendarWorkEventDayService.getEvents())
-      calendarWorkEventDayService.setEventItems(eventItems)
-      $update()
+      await refreshEvents()
     }
 
     const edit = (element) => {

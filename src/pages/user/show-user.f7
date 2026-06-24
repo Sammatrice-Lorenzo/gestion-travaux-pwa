@@ -27,12 +27,11 @@
     import Dom7 from 'dom7';
 
     import { showUser } from '../../js/user.js'
-    import { getDecodedToken } from '../../js/token.js'
     import { loadTabbar } from '../../js/components/tabbar.js'
 
     export default async (props, { $, $on, $f7 }) => {
         const user = await showUser($f7)
-        const idUser = getDecodedToken().id
+        const idUser = user.id
 
         $on('pageInit', function (page) {
             loadTabbar('show-user', $f7)

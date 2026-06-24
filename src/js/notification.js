@@ -30,14 +30,13 @@ function askUserPermissionForSendANotificationPush() {
   }
 }
 
-const sendTokenMessaging = async (userToken) => {
+const sendTokenMessaging = async () => {
   if (Notification.permission !== 'granted') return
 
   getToken(messaging, { vapidKey: process.env.VAPID_KEY }).then(
     async (currentToken) => {
       if (currentToken) {
         await new RegisterTokenNotificationPushService().registerToken(
-          userToken,
           currentToken,
         )
       }
