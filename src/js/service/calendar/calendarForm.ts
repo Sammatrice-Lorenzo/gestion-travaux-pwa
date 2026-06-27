@@ -71,12 +71,32 @@ type EventItemCalendar = FormWorkEventDayInterface & { id: number }
 const getEventSelected = (
   id: number,
   eventItems: EventItemInteface[],
+  events: EventsInterface[],
   app: Framework7,
 ): EventItemCalendar => {
   const $ = app.$
-  const event: EventItemInteface = eventItems.filter(
-    (event: EventItemInteface) => event.id === id,
-  )[0]
+  let event: EventItemInteface | undefined = eventItems.find(
+    (eventItem: EventItemInteface) => eventItem.id === id,
+  )
+
+  if (!event) {
+    const eventFromStore = events.find(
+      (storedEvent: EventsInterface) => storedEvent.id === id,
+    )
+    if (!eventFromStore?.id) {
+      throw new Error(`Event with id ${id} not found`)
+    }
+
+    event = {
+      id: eventFromStore.id,
+      title: eventFromStore.title,
+      startTime: eventFromStore.startHours,
+      endTime: eventFromStore.endHours,
+      color: eventFromStore.color,
+      client: eventFromStore.client ?? null,
+    }
+  }
+
   const client: ClientEventInterface | null = event.client
   const formCalendar: EventItemCalendar = {
     id: event.id,

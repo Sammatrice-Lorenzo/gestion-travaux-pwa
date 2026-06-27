@@ -55,22 +55,34 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     { name: 'setup', testMatch: /.*\.setup\.ts/ },
-    {
-      name: 'firefox',
-      use: {
-        ...devices['Desktop Firefox'],
-        storageState: './tests/auth.json',
-      },
-      dependencies: ['setup'],
-    },
-    /* Test against mobile viewports. */
-    {
-      name: 'Mobile Chrome',
-      use: {
-        ...devices['Pixel 5'],
-        storageState: './tests/auth.json',
-      },
-      dependencies: ['setup'],
-    },
+    ...(process.env.CI
+      ? [
+          {
+            name: 'Mobile Chrome',
+            use: {
+              ...devices['Pixel 5'],
+              storageState: './tests/auth.json',
+            },
+            dependencies: ['setup'],
+          },
+        ]
+      : [
+          {
+            name: 'firefox',
+            use: {
+              ...devices['Desktop Firefox'],
+              storageState: './tests/auth.json',
+            },
+            dependencies: ['setup'],
+          },
+          {
+            name: 'Mobile Chrome',
+            use: {
+              ...devices['Pixel 5'],
+              storageState: './tests/auth.json',
+            },
+            dependencies: ['setup'],
+          },
+        ]),
   ],
 })

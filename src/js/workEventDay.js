@@ -44,15 +44,16 @@ const handleCallAPI = async (url, method, $f7, form) => {
     .setUrlAPI(url)
     .setBody(body)
     .setMethod(method)
+    .setSkipNavigation(true)
 
-  await new ApiMutationService($f7).generic(routeDTO)
+  return new ApiMutationService($f7).generic(routeDTO)
 }
 
 async function createWorkEventDay(form, $f7) {
   const urlWorkEventDay = URL_WORK_EVENT_DAY.slice(0, -1)
   const url = getUrl(urlWorkEventDay)
 
-  await handleCallAPI(url, 'POST', $f7, form)
+  return handleCallAPI(url, 'POST', $f7, form)
 }
 
 async function updateWorkEventDay(form, idWorkEventDay, $f7) {
@@ -67,6 +68,7 @@ async function deleteWorkEventDay(idWorkEventDay, $f7) {
     .setIdElement(idWorkEventDay)
     .setRoute(URL_TO_REDIRECT)
     .setUrlAPI(URL_WORK_EVENT_DAY)
+    .setSkipNavigation(true)
 
   await new ApiMutationService($f7).delete(routeDTO)
 }

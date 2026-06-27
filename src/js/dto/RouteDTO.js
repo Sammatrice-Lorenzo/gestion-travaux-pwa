@@ -6,6 +6,24 @@ export class RouteDTO {
   urlAPI = ''
   app = null
   contentType = null
+  skipNavigation = false
+
+  /**
+   * @param { boolean } skip
+   * @returns { this }
+   */
+  setSkipNavigation(skip) {
+    this.skipNavigation = skip
+
+    return this
+  }
+
+  /**
+   * @returns { boolean }
+   */
+  getSkipNavigation() {
+    return this.skipNavigation
+  }
 
   /**
    * @param { String } route

@@ -3,7 +3,7 @@ import type { Dialog } from 'framework7/components/dialog'
 import type { Preloader } from 'framework7/components/preloader'
 import { stockResponseInCache } from '../../cache'
 import * as messages from '../../messages'
-import { getToken, logout } from '../../token'
+import { apiCredentials, clearSession, logout } from '../SessionService'
 
 export type ApiResponse<T> = T[]
 
@@ -27,12 +27,10 @@ export class ApiService {
   }
 
   private getHeaders(header?: string) {
-    const token = getToken()
     const type: string = header ?? 'application/json'
 
     return {
       'Content-Type': type,
-      Authorization: `Bearer ${token}`,
       Accept: type,
     }
   }
@@ -47,6 +45,7 @@ export class ApiService {
     data: ApiRawResponse<unknown>,
   ): Promise<boolean> {
     if (data.code === 401) {
+      clearSession()
       this._dialog.alert(messages.TOKEN_EXPIRED, '', async () => {
         await logout(this._app)
       })
@@ -81,8 +80,17 @@ export class ApiService {
     try {
       const response = await fetch(url, {
         method: 'GET',
+        credentials: apiCredentials,
         headers: this.getHeaders(header),
       })
+
+      if (response.status === 401) {
+        clearSession()
+        this._dialog.alert(messages.TOKEN_EXPIRED, '', async () => {
+          await logout(this._app)
+        })
+        return []
+      }
 
       const data = await response.clone().json()
       this.handleCache(url, response)

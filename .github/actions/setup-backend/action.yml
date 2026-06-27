@@ -1,0 +1,45 @@
+name: Setup Symfony Backend
+description: Installe les dépendances backend pour les tests e2e Playwright
+
+inputs:
+    backend_path:
+        required: false
+        default: backend
+
+runs:
+    using: 'composite'
+    steps:
+        - name: Setup PHP extensions
+          uses: shivammathur/setup-php@v2
+          with:
+              php-version: '8.3'
+              extensions: gd, sodium, curl, zip, pdo_mysql
+              tools: composer
+
+        - name: Configure Git safe.directory
+          shell: bash
+          run: git config --global --add safe.directory "${GITHUB_WORKSPACE}/${{ inputs.backend_path }}"
+
+        - name: Composer install
+          shell: bash
+          run: composer install --prefer-dist --no-progress --no-scripts --working-dir="${GITHUB_WORKSPACE}/${{ inputs.backend_path }}"
+
+        - name: Update permissions on vendor
+          run: sudo chmod -R 777 "${GITHUB_WORKSPACE}/${{ inputs.backend_path }}/vendor/"
+          shell: bash
+
+        - name: Install dependencies with Yarn
+          shell: bash
+          run: yarn
+          working-directory: ${{ inputs.backend_path }}
+
+        - name: Install Symfony CLI
+          shell: bash
+          run: |
+              curl -sS https://get.symfony.com/cli/installer | bash
+              mv ~/.symfony*/bin/symfony /usr/local/bin/symfony
+
+        - name: Install JWT keys
+          shell: bash
+          run: php bin/console lexik:jwt:generate-keypair
+          working-directory: ${{ inputs.backend_path }}

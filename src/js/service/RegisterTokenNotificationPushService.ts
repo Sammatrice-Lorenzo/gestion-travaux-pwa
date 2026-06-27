@@ -1,16 +1,14 @@
 import { getUrl } from '../urlGenerator'
+import { apiCredentials } from './SessionService'
 
 export default class RegisterTokenNotificationPushService {
-  public async registerToken(
-    userToken: string,
-    currentToken: string,
-  ): Promise<void> {
+  public async registerToken(currentToken: string): Promise<void> {
     const url = getUrl('/api/token_notification_pushes')
 
     await fetch(url, {
       method: 'POST',
+      credentials: apiCredentials,
       headers: {
-        Authorization: `Bearer ${userToken}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
