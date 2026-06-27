@@ -13,6 +13,11 @@
       box-shadow: 0 4px 16px rgba(13, 40, 71, 0.12);
     }
 
+    &.return-invoice-card-highlight {
+      box-shadow: 0 0 0 3px rgba(10, 124, 66, 0.35);
+      transform: translateY(-2px);
+    }
+
     .card-header-row {
       display: flex;
       justify-content: space-between;
@@ -97,6 +102,18 @@
       font-size: 0.8rem;
       background: rgba(13, 40, 71, 0.06);
       color: #444;
+    }
+
+    .linked-invoice-link {
+      text-decoration: none;
+      color: var(--f7-theme-color);
+      font-weight: 600;
+      transition: background 0.2s ease;
+
+      &:hover,
+      &:active {
+        background: rgba(40, 112, 189, 0.12);
+      }
     }
 
     .card-footer {

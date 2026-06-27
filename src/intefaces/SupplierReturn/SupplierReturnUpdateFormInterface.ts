@@ -4,4 +4,5 @@ export default interface SupplierReturnUpdateFormInterface {
   date: string
   'credit-amount': number
   supplier: string | null | undefined
+  'linked-invoice'?: string | null
 }

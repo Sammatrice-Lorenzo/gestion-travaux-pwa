@@ -1,14 +1,35 @@
 import type Framework7 from 'framework7'
+import type ProductInvoiceInterface from '../../intefaces/ProductInvoice/ProductInvoiceInterface'
 import type SupplierInterface from '../../intefaces/Supplier/SupplierInterface'
 import type SupplierReturnUpdateFormInterface from '../../intefaces/SupplierReturn/SupplierReturnUpdateFormInterface'
+import { formatProductInvoiceOptionLabel } from '../service/supplierReturns/supplierReturnLinkedInvoiceHelper'
 
 const ID_FORM = 'form-supplier-return-edit'
+
+const buildLinkedInvoiceOptions = (
+  productInvoices: ProductInvoiceInterface[],
+  selectedId?: string | null,
+): string => {
+  const noneSelected = !selectedId ? 'selected' : ''
+  const options = productInvoices
+    .map(
+      (invoice) => `
+        <option value="${invoice.id}" ${selectedId === String(invoice.id) ? 'selected' : ''}>
+          ${formatProductInvoiceOptionLabel(invoice)}
+        </option>
+      `,
+    )
+    .join('')
+
+  return `<option value="" ${noneSelected}>Aucune</option>${options}`
+}
 
 const createPopup = (
   app: Framework7,
   formSupplierReturn: SupplierReturnUpdateFormInterface,
   handleSupplierReturnUpdate: CallableFunction,
   suppliers: SupplierInterface[],
+  productInvoices: ProductInvoiceInterface[],
 ) => {
   const $f7 = app
 
@@ -82,7 +103,7 @@ const createPopup = (
                               data-searchbar-placeholder="Rechercher le fournisseur"
                               data-close-placeholder="Fermer"
                             >
-                              <select name="supplier">
+                              <select name="supplier" id="supplier-return-edit-supplier">
                                 ${suppliers
                                   .map(
                                     (supplier) => `
@@ -95,6 +116,31 @@ const createPopup = (
                               <div class="item-content">
                                 <div class="item-inner">
                                   <div class="item-title">Fournisseur</div>
+                                </div>
+                              </div>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="item-content item-input">
+                        <div class="item-inner">
+                          <div class="item-input-wrap">
+                            <a
+                              class="item-link smart-select smart-select-init"
+                              data-open-in="popup"
+                              data-searchbar="true"
+                              data-searchbar-placeholder="Rechercher une facture"
+                              data-close-placeholder="Fermer"
+                            >
+                              <select name="linked-invoice" id="supplier-return-linked-invoice">
+                                ${buildLinkedInvoiceOptions(productInvoices, formSupplierReturn['linked-invoice'])}
+                              </select>
+                              <div class="item-content">
+                                <div class="item-inner">
+                                  <div class="item-title">Facture liée</div>
+                                  <div class="item-footer">Factures du mois affiché${formSupplierReturn.supplier ? ', filtrées par fournisseur' : ''}</div>
                                 </div>
                               </div>
                             </a>
@@ -119,17 +165,76 @@ const createPopup = (
     push: true,
     swipeToClose: true,
     on: {
-      open: () => fillData($f7, formSupplierReturn, handleSupplierReturnUpdate),
+      open: () =>
+        fillData(
+          $f7,
+          formSupplierReturn,
+          handleSupplierReturnUpdate,
+          productInvoices,
+        ),
     },
   })
+}
+
+const refreshLinkedInvoiceSelect = (
+  productInvoices: ProductInvoiceInterface[],
+  supplierId: string | null | undefined,
+  currentLinkedId: string | null | undefined,
+): void => {
+  const select = document.getElementById(
+    'supplier-return-linked-invoice',
+  ) as HTMLSelectElement | null
+
+  if (!select) {
+    return
+  }
+
+  const supplierFilter = supplierId ? Number.parseInt(supplierId, 10) : null
+  const filtered = supplierFilter
+    ? productInvoices.filter(
+        (invoice) => invoice.supplier?.id === supplierFilter,
+      )
+    : productInvoices
+
+  const linkedId = currentLinkedId ? Number.parseInt(currentLinkedId, 10) : null
+  if (linkedId && !filtered.some((invoice) => invoice.id === linkedId)) {
+    const current = productInvoices.find((invoice) => invoice.id === linkedId)
+    if (current) {
+      filtered.unshift(current)
+    }
+  }
+
+  const keepSelection = select.value
+  select.innerHTML = buildLinkedInvoiceOptions(filtered, keepSelection || null)
+
+  if (!filtered.some((invoice) => String(invoice.id) === keepSelection)) {
+    select.value = ''
+  }
 }
 
 const fillData = (
   $f7: Framework7,
   formSupplierReturn: SupplierReturnUpdateFormInterface,
   handleSupplierReturnUpdate: CallableFunction,
+  productInvoices: ProductInvoiceInterface[],
 ) => {
   $f7.form.fillFromData(`#${ID_FORM}`, formSupplierReturn)
+
+  const supplierSelect = document.getElementById(
+    'supplier-return-edit-supplier',
+  ) as HTMLSelectElement | null
+
+  supplierSelect?.addEventListener('change', () => {
+    const linkedSelect = document.getElementById(
+      'supplier-return-linked-invoice',
+    ) as HTMLSelectElement | null
+
+    refreshLinkedInvoiceSelect(
+      productInvoices,
+      supplierSelect.value,
+      linkedSelect?.value,
+    )
+  })
 
   const button: HTMLElement | null = document.getElementById(
     'btn-update-supplier-return',

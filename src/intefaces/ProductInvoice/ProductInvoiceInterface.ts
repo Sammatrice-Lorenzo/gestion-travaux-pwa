@@ -1,4 +1,5 @@
 import type SupplierReadInterface from '../Supplier/SupplierReadInterface'
+import type LinkedSupplierReturnInterface from './LinkedSupplierReturnInterface'
 
 export default interface ProductInvoiceInterface {
   id: number
@@ -7,4 +8,5 @@ export default interface ProductInvoiceInterface {
   date: string | Date
   totalAmount: number
   supplier: SupplierReadInterface | null | undefined
+  linkedSupplierReturns?: LinkedSupplierReturnInterface[]
 }

@@ -9,4 +9,5 @@ export const formSupplierReturnUpdateSchema = z.object({
     z.number().min(0, 'Montant invalide'),
   ),
   supplier: z.string().nullable().optional(),
+  'linked-invoice': z.string().nullable().optional(),
 })

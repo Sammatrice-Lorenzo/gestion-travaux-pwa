@@ -47,6 +47,10 @@ export default class SupplierReturnToolbarService {
     return this._date
   }
 
+  public setDate(date: Date): void {
+    this._date = date
+  }
+
   public async refreshInDom(app: Framework7): Promise<void> {
     const $ = app.$
     const invoices: SupplierReturnInvoiceInterface[] =

@@ -152,7 +152,7 @@
 
       <div class="grid grid-cols-1 medium-grid-cols-2 large-grid-cols-3 gap">
         ${filteredInvoices.map((inv) => $h`
-          <div class="card return-invoice-card tooltip-init" data-id="${inv.id}">
+          <div class="card return-invoice-card tooltip-init" data-id="${inv.id}" data-testid="return-invoice-card-${inv.id}">
             <div class="card-content">
               <div class="card-header-row">
                 <span class="credit-badge">
@@ -206,10 +206,14 @@
                     <i class="f7-icons meta-icon">link</i>
                     <span class="meta-label">Facture liée</span>
                     <span class="meta-value">
-                      <span class="linked-invoice-tag">
+                      <a
+                        href="#"
+                        class="linked-invoice-tag linked-invoice-link"
+                        @click="${(e) => goToLinkedProductInvoice(e, inv.linkedProductInvoice.id)}"
+                      >
                         <i class="f7-icons" style="font-size: 0.75rem;">doc</i>
                         ${inv.linkedProductInvoice.name}
-                      </span>
+                      </a>
                     </span>
                   </li>
                 ` : ''}
@@ -229,7 +233,7 @@
                 <a
                   href="#"
                   class="link icon-only tooltip-init"
-                  @click="${() => supplierReturnFormService.handleOpenPopupEditSupplierReturnFile($f7, inv, suppliers)}"
+                  @click="${() => supplierReturnFormService.handleOpenPopupEditSupplierReturnFile($f7, inv, suppliers, toolbarService.getDate())}"
                   data-tooltip="Modifier"
                 >
                   <i class="f7-icons">square_pencil_fill</i>
@@ -260,7 +264,7 @@
                       <a
                         class="item-link popover-close"
                         href="#"
-                        @click="${() => supplierReturnFormService.handleOpenPopupEditSupplierReturnFile($f7, inv, suppliers)}"
+                        @click="${() => supplierReturnFormService.handleOpenPopupEditSupplierReturnFile($f7, inv, suppliers, toolbarService.getDate())}"
                       >
                         <div class="item-content">
                           <div class="item-media"><i class="f7-icons">square_pencil</i></div>
@@ -320,6 +324,7 @@
   import SupplierReturnFileManagement from '../../js/service/supplierReturns/SupplierReturnFileManagement.ts'
   import SupplierReturnFormService from '../../js/service/supplierReturns/SupplierReturnFormService.ts'
   import SupplierReturnToolbarService from '../../js/service/supplierReturns/SupplierReturnToolbarService.ts'
+  import { navigateToLinkedProductInvoice, consumeHighlightedSupplierReturnId, consumeHighlightedSupplierReturnDate } from '../../js/service/supplierReturns/supplierReturnLinkedInvoiceHelper.ts'
   import Pagination from '../../js/service/Pagination.ts'
   import Supplier from '../../js/Supplier.ts'
   import supplierReturnInvoiceStore from '../../js/store/supplierReturnInvoiceStore'
@@ -479,18 +484,46 @@
       })
     }
 
+    const goToLinkedProductInvoice = (event, invoiceId) => {
+      event.preventDefault()
+      navigateToLinkedProductInvoice($f7, invoiceId)
+    }
+
+    const highlightLinkedSupplierReturn = () => {
+      const highlightId = consumeHighlightedSupplierReturnId()
+      if (!highlightId) {
+        return
+      }
+
+      setTimeout(() => {
+        const card = document.querySelector(
+          `[data-testid="return-invoice-card-${highlightId}"]`,
+        )
+        if (!card) {
+          return
+        }
+
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        card.classList.add('return-invoice-card-highlight')
+        window.setTimeout(
+          () => card.classList.remove('return-invoice-card-highlight'),
+          2500,
+        )
+      }, 300)
+    }
+
     const prevPage = () =>
       pagination.previousElement($('#supplier-return-prev'), $('#supplier-return-next'))
     const nextPage = () =>
       pagination.nextElement($('#supplier-return-prev'), $('#supplier-return-next'))
 
-    const initCalendar = () => {
+    const initCalendar = (initialDate = new Date()) => {
       $f7.calendar.create({
         inputEl: '#calendar-input-supplier-return',
         openIn: 'customModal',
         footer: true,
         dateFormat: 'MM yyyy',
-        value: [new Date()],
+        value: [initialDate],
         on: {
           monthYearChangeStart: (cal) => toolbarService.updateToolbar($f7, cal),
         },
@@ -499,7 +532,17 @@
 
     $on('pageInit', async () => {
       loadTabbar('index-supplier-returns', $f7)
-      initCalendar()
+
+      const highlightDate = consumeHighlightedSupplierReturnDate()
+      const initialDate = highlightDate ? new Date(highlightDate) : new Date()
+
+      initCalendar(initialDate)
+      if (highlightDate) {
+        toolbarService.setDate(
+          new Date(initialDate.getFullYear(), initialDate.getMonth(), 15),
+        )
+      }
+
       pagination.paginationContainer = document.querySelector(
         '#pagination-links-supplier-return',
       )
@@ -513,6 +556,13 @@
       await toolbarService.refreshInDom($f7)
       recomputeSummary()
       $update()
+      setTimeout(() => {
+        paginator.paginateCards(
+          Array.from(document.querySelectorAll('.return-invoice-card')),
+          pagination,
+        )
+        highlightLinkedSupplierReturn()
+      }, 50)
     })
 
     $onMounted(() => {

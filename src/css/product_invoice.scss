@@ -13,6 +13,11 @@
       box-shadow: 0 4px 16px rgba(13, 40, 71, 0.12);
     }
 
+    &.invoice-card-highlight {
+      box-shadow: 0 0 0 3px rgba(40, 112, 189, 0.35);
+      transform: translateY(-2px);
+    }
+
     .card-header-row {
       display: flex;
       justify-content: space-between;
@@ -86,6 +91,35 @@
     .supplier-missing {
       color: #999;
       font-style: italic;
+    }
+
+    .linked-returns-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .linked-return-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      background: rgba(10, 124, 66, 0.08);
+      color: #0a7c42;
+    }
+
+    .linked-return-link {
+      text-decoration: none;
+      font-weight: 600;
+      width: fit-content;
+      transition: background 0.2s ease;
+
+      &:hover,
+      &:active {
+        background: rgba(10, 124, 66, 0.16);
+      }
     }
 
     .card-footer {

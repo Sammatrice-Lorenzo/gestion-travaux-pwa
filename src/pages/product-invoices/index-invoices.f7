@@ -234,6 +234,24 @@
                     ${invoice.supplier ? invoice.supplier.name : 'Non renseigné'}
                   </span>
                 </li>
+                ${invoice.linkedSupplierReturns?.length ? $h`
+                  <li>
+                    <i class="f7-icons meta-icon">arrow_uturn_left</i>
+                    <span class="meta-label">Avoir${invoice.linkedSupplierReturns.length > 1 ? 's' : ''}</span>
+                    <span class="meta-value linked-returns-list">
+                      ${invoice.linkedSupplierReturns.map((linkedReturn) => $h`
+                        <a
+                          href="#"
+                          class="linked-return-tag linked-return-link"
+                          @click="${(e) => goToLinkedSupplierReturn(e, linkedReturn.id, linkedReturn.date)}"
+                        >
+                          <i class="f7-icons" style="font-size: 0.75rem;">doc</i>
+                          ${linkedReturn.name} (${Number(linkedReturn.creditAmount).toFixed(2)} €)
+                        </a>
+                      `)}
+                    </span>
+                  </li>
+                ` : ''}
               </ul>
             </div>
             <div class="card-footer">
@@ -347,6 +365,27 @@
   import Supplier from '../../js/Supplier.ts'
   import productInvoiceStore from '../../js/store/productInvoiceStore'
   import Pagination from '../../js/service/Pagination.ts'
+  import { consumeHighlightedProductInvoiceId, navigateToLinkedSupplierReturn } from '../../js/service/supplierReturns/supplierReturnLinkedInvoiceHelper.ts'
+
+  const highlightLinkedProductInvoice = () => {
+    const highlightId = consumeHighlightedProductInvoiceId()
+    if (!highlightId) {
+      return
+    }
+
+    setTimeout(() => {
+      const card = document.querySelector(
+        `[data-testid="invoice-card-${highlightId}"]`,
+      )
+      if (!card) {
+        return
+      }
+
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      card.classList.add('invoice-card-highlight')
+      window.setTimeout(() => card.classList.remove('invoice-card-highlight'), 2500)
+    }, 300)
+  }
 
   export default async (props, { $, $on, $el, $f7, $onMounted, $update }) => {
     const invoicePaginatorService = new InvoicePaginatorService()
@@ -398,6 +437,11 @@
       await refreshInvoices()
     }
 
+    const goToLinkedSupplierReturn = (event, returnId, returnDate) => {
+      event.preventDefault()
+      navigateToLinkedSupplierReturn($f7, returnId, returnDate)
+    }
+
     $on('pageInit', async function (page) {
       loadTabbar('index-invoices', $f7)
       createCalendar($f7, new Date(), toolbarCalendarProductInvoiceService)
@@ -421,6 +465,7 @@
         setTimeout(() => {
           const freshCards = Array.from(document.querySelectorAll('.invoice-card'))
           invoicePaginatorService.paginateCards(freshCards, pagination)
+          highlightLinkedProductInvoice()
         }, 50)
       }
     })
