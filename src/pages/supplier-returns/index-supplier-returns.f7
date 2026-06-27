@@ -1,0 +1,537 @@
+<template>
+  <div id="index-supplier-returns" class="page">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="title">Retours fournisseur</div>
+        <div class="right">
+          <a class="link icon-only panel-open ripple-inset" data-panel="right">
+            <i class="icon material-icons md-only">menu</i>
+            <i class="icon f7-icons if-not-md">menu</i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="fab fab-right-bottom" style="margin-bottom: 4.5rem;">
+      <a href="#">
+        <i class="icon f7-icons if-not-md">plus</i>
+        <i class="icon f7-icons if-not-md">xmark</i>
+        <i class="icon material-icons md-only">add</i>
+        <i class="icon material-icons md-only">close</i>
+      </a>
+      <div class="fab-buttons fab-buttons-top">
+        <a class="fab-label-button" @click="${() => uploadSheet?.open()}" data-tooltip="Importer un avoir">
+          <span><i class="f7-icons">cloud_upload</i></span>
+          <span class="fab-label">Importer un avoir</span>
+        </a>
+        <a class="fab-label-button color-green" @click="${downloadSelectedZip}">
+          <span><i class="f7-icons">archivebox</i></span>
+          <span class="fab-label">Télécharger ZIP</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="page-content">
+      <div class="block-title">Avoirs & retours — ${getMontYear(toolbarService.getDate())}</div>
+
+      <div class="block calendar-input-container-modern">
+        <label for="calendar-input-supplier-return" class="calendar-product-invoice-label">
+          <i class="icon f7-icons calendar-icon-modern">calendar</i>
+        </label>
+        <input type="text" id="calendar-input-supplier-return" placeholder="MM/AAAA" readonly="readonly" />
+      </div>
+
+      <div class="block">
+        <div class="display-flex justify-content-space-between align-items-center">
+          <a href="#" class="button button-fill button-small sheet-open" data-sheet="#return-filter-sheet">
+            <i class="f7-icons">ellipsis</i>
+            <span>Filtres</span>
+          </a>
+          <span class="badge color-blue" style="padding: 0.4rem 0.7rem;">
+            ${filteredCount} résultat${filteredCount > 1 ? 's' : ''}
+          </span>
+        </div>
+      </div>
+
+      <div id="return-filter-sheet" class="sheet-modal sheet-modal-bottom">
+        <div class="toolbar bg-color-primary text-color-white">
+          <div class="toolbar-inner justify-content-space-between">
+            <div class="left" style="padding: 3%;">Filtres</div>
+            <div class="right">
+              <a class="link sheet-close text-color-white">
+                <i class="f7-icons">xmark_circle</i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="sheet-modal-inner text-aligns-center">
+          <div class="list no-hairlines-md list inset no-margin">
+            <ul style="margin: 0;">
+              <li class="item-content item-input">
+                <div class="item-media"><i class="f7-icons">search</i></div>
+                <div class="item-inner">
+                  <div class="item-title item-label">Rechercher</div>
+                  <div class="item-input-wrap">
+                    <input
+                      type="search"
+                      placeholder="Nom, fournisseur, date..."
+                      value="${searchTerm}"
+                      @input="${(e) => applyFilters(e.target.value, selectedSupplier)}"
+                    />
+                  </div>
+                </div>
+              </li>
+              <li class="item-content item-input item-input-with-value">
+                <div class="item-media"><i class="f7-icons">building_2</i></div>
+                <div class="item-inner">
+                  <div class="item-title item-label">Fournisseur</div>
+                  <div class="item-input-wrap">
+                    <select value="${selectedSupplier}" @change="${(e) => applyFilters(searchTerm, e.target.value)}">
+                      <option value="">Tous</option>
+                      ${suppliers.map((s) => $h`<option value="${s.id}">${s.name}</option>`)}
+                    </select>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div style="display: flex; gap: 0.5rem; padding: 0.5rem; margin-top: 0.5rem;">
+            <a href="#" class="button button-fill button-small sheet-close" style="flex: 1;" @click="${() => applyFilters(searchTerm, selectedSupplier)}">
+              Appliquer
+            </a>
+            <a href="#" class="button button-outline button-small sheet-close" style="flex: 1;" @click="${resetFilters}">
+              Réinit.
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="display-flex flex-direction-column text-align-center selected-info-returns">
+        <span id="total-return-selected">${selectedIds.length} document(s) sélectionné(s)</span>
+        <span id="pagination-info" class="block text-align-center"></span>
+      </div>
+
+      ${filteredInvoices.length > 0 ? $h`
+        <div class="display-flex justify-content-start selected-all-returns">
+          <label class="checkbox">
+            <input type="checkbox" ?checked="${allSelected}" @change="${toggleSelectAll}" />
+            <i class="icon-checkbox"></i>
+          </label>
+          <span>Sélectionner tous les documents</span>
+        </div>
+      ` : ''}
+
+      <div class="toolbar toolbar-bottom tabbar labels-fixed toolbar-bottom-return-actions">
+        <div class="toolbar-inner">
+          <a href="#" class="link" @click="${downloadSelectedZip}">
+            <i class="f7-icons">archivebox</i>
+            <span>Télécharger ZIP</span>
+          </a>
+          <a href="#" class="link color-red" @click="${deleteSelected}">
+            <i class="f7-icons">trash</i>
+            <span>Supprimer</span>
+          </a>
+        </div>
+      </div>
+
+      ${filteredInvoices.length === 0 ? $h`
+        <div class="block">
+          <div class="card empty-state-card inset">
+            <div class="card-content">
+              <div class="empty-icon"><i class="f7-icons">arrow_uturn_left_circle</i></div>
+              <p class="empty-title">Aucun avoir ce mois-ci</p>
+              <p class="empty-desc">Importez vos factures de retour ou notes de crédit fournisseur pour les transmettre à la comptabilité.</p>
+              <a href="#" class="button button-fill button-round" @click="${() => uploadSheet?.open()}">
+                <i class="f7-icons">cloud_upload</i>
+                Importer un document
+              </a>
+            </div>
+          </div>
+        </div>
+      ` : ''}
+
+      <div class="grid grid-cols-1 medium-grid-cols-2 large-grid-cols-3 gap">
+        ${filteredInvoices.map((inv) => $h`
+          <div class="card return-invoice-card tooltip-init" data-id="${inv.id}">
+            <div class="card-content">
+              <div class="card-header-row">
+                <span class="credit-badge">
+                  <i class="f7-icons">arrow_uturn_left</i>
+                  Avoir
+                </span>
+                <a
+                  class="link icon-only popover-open"
+                  data-popover="#return-popover-${inv.id}"
+                  data-tooltip="Plus d'actions"
+                >
+                  <i class="f7-icons">ellipsis</i>
+                </a>
+              </div>
+
+              <label class="checkbox" style="margin-bottom: 0.75rem;">
+                <input
+                  type="checkbox"
+                  ?checked="${selectedIds.includes(inv.id)}"
+                  @change="${() => toggleSelect(inv.id)}"
+                />
+                <i class="icon-checkbox"></i>
+                <span style="margin-left: 0.5rem; font-size: 0.85rem; color: #666;">Sélectionner</span>
+              </label>
+
+              <ul class="return-meta">
+                <li>
+                  <i class="f7-icons meta-icon">calendar</i>
+                  <span class="meta-label">Date</span>
+                  <span class="meta-value">${new Date(inv.date).toLocaleDateString('fr-FR')}</span>
+                </li>
+                <li>
+                  <i class="f7-icons meta-icon">doc_text</i>
+                  <span class="meta-label">Document</span>
+                  <span class="meta-value">${inv.name}</span>
+                </li>
+                <li>
+                  <i class="f7-icons meta-icon">eurosign_circle</i>
+                  <span class="meta-label">Crédit</span>
+                  <span class="meta-value credit-amount-value">${Number(inv.creditAmount).toFixed(2)} €</span>
+                </li>
+                <li>
+                  <i class="f7-icons meta-icon">building_2</i>
+                  <span class="meta-label">Fournisseur</span>
+                  <span class="meta-value ${inv.supplier ? '' : 'supplier-missing'}">
+                    ${inv.supplier ? inv.supplier.name : 'Non renseigné'}
+                  </span>
+                </li>
+                ${inv.linkedProductInvoice ? $h`
+                  <li>
+                    <i class="f7-icons meta-icon">link</i>
+                    <span class="meta-label">Facture liée</span>
+                    <span class="meta-value">
+                      <span class="linked-invoice-tag">
+                        <i class="f7-icons" style="font-size: 0.75rem;">doc</i>
+                        ${inv.linkedProductInvoice.name}
+                      </span>
+                    </span>
+                  </li>
+                ` : ''}
+              </ul>
+            </div>
+            <div class="card-footer">
+              <div class="display-flex justify-content-start">
+                <a
+                  class="link icon-only tooltip-init"
+                  @click="${() => openPdfPreviewFromUrl($f7, inv.id, pdfPreviewPopup, 'supplier_return_invoice_files')}"
+                  data-tooltip="Aperçu"
+                >
+                  <i class="f7-icons">eye_fill</i>
+                </a>
+              </div>
+              <div class="display-flex justify-content-end">
+                <a
+                  href="#"
+                  class="link icon-only tooltip-init"
+                  @click="${() => supplierReturnFormService.handleOpenPopupEditSupplierReturnFile($f7, inv, suppliers)}"
+                  data-tooltip="Modifier"
+                >
+                  <i class="f7-icons">square_pencil_fill</i>
+                </a>
+                <a
+                  class="link icon-only color-red tooltip-init"
+                  @click="${() => handleDelete(inv)}"
+                  data-tooltip="Supprimer"
+                >
+                  <i class="f7-icons">trash</i>
+                </a>
+              </div>
+            </div>
+
+            <div id="return-popover-${inv.id}" class="popover popover-action">
+              <div class="popover-inner">
+                <div class="list">
+                  <ul>
+                    <li>
+                      <a class="item-link popover-close" href="#" @click="${() => openPdfPreviewFromUrl($f7, inv.id, pdfPreviewPopup, 'supplier_return_invoice_files')}">
+                        <div class="item-content">
+                          <div class="item-media"><i class="f7-icons">eye</i></div>
+                          <div class="item-inner"><div class="item-title">Aperçu PDF</div></div>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        class="item-link popover-close"
+                        href="#"
+                        @click="${() => supplierReturnFormService.handleOpenPopupEditSupplierReturnFile($f7, inv, suppliers)}"
+                      >
+                        <div class="item-content">
+                          <div class="item-media"><i class="f7-icons">square_pencil</i></div>
+                          <div class="item-inner"><div class="item-title">Modifier</div></div>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <a class="item-link popover-close" href="#" @click="${() => downloadSupplierReturnInvoice($f7, inv)}">
+                        <div class="item-content">
+                          <div class="item-media"><i class="f7-icons">arrow_down_circle</i></div>
+                          <div class="item-inner"><div class="item-title">Télécharger</div></div>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        `)}
+      </div>
+
+      ${filteredInvoices.length > 0 ? $h`
+        <div class="display-flex justify-content-center">
+          <div class="card summary-credits-card margin-vertical inset">
+            <div class="card-content text-align-center">
+              <p class="summary-label">Total des crédits (filtre actif)</p>
+              <p class="summary-amount">${totalCredits} €</p>
+              <p class="summary-hint">${filteredCount} document${filteredCount > 1 ? 's' : ''} affiché${filteredCount > 1 ? 's' : ''}</p>
+            </div>
+          </div>
+        </div>
+      ` : ''}
+
+      <div class="pagination" style="bottom: calc(var(--f7-fab-margin) + var(--f7-safe-area-right));">
+        <a id="supplier-return-prev" href="#" class="btn-prev" @click="${prevPage}">
+          <i class="f7-icons">chevron_left_circle_fill</i>
+        </a>
+        <div id="pagination-links-supplier-return" class="pagination-links"></div>
+        <a id="supplier-return-next" href="#" class="btn-next" @click="${nextPage}">
+          <i class="f7-icons">chevron_right_circle_fill</i>
+        </a>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+  import { loadTabbar } from '../../js/components/tabbar.js'
+  import { createSheet } from '../../js/components/modalUploadFiles.ts'
+  import sheetModalSupplierReturnFormatter from '../../js/formatter/sheetModalSupplierReturnFormatter.ts'
+  import { pdfPreviewPopup } from '../../js/components/pdfPreviewPopup.ts'
+  import { getMontYear } from '../../js/helper/date.ts'
+  import { CONFIRMATION_TO_DELETE } from '../../js/messages'
+  import { openPdfPreviewFromUrl } from '../../js/service/productInvoices/previewPdfService'
+  import InvoicePaginatorService from '../../js/service/productInvoices/InvoicePaginatorService.ts'
+  import SupplierReturnFileManagement from '../../js/service/supplierReturns/SupplierReturnFileManagement.ts'
+  import SupplierReturnFormService from '../../js/service/supplierReturns/SupplierReturnFormService.ts'
+  import SupplierReturnToolbarService from '../../js/service/supplierReturns/SupplierReturnToolbarService.ts'
+  import Pagination from '../../js/service/Pagination.ts'
+  import Supplier from '../../js/Supplier.ts'
+  import supplierReturnInvoiceStore from '../../js/store/supplierReturnInvoiceStore'
+  import {
+    deleteSupplierReturnInvoice,
+    downloadSupplierReturnInvoice,
+    downloadSupplierReturnZIP,
+  } from '../../js/supplierReturnInvoice.ts'
+
+  export default async (props, { $, $on, $f7, $onMounted, $update }) => {
+    const pagination = new Pagination(10)
+    const paginator = new InvoicePaginatorService()
+    paginator.itemLabel = 'documents'
+    const toolbarService = new SupplierReturnToolbarService($update)
+    toolbarService.invoicePaginatorService = paginator
+
+    const supplierManager = new Supplier($f7)
+    const suppliers = await supplierManager.getSuppliersByUser()
+    const fileManagement = new SupplierReturnFileManagement($f7)
+    let supplierReturnFormService
+
+    let searchTerm = ''
+    let selectedSupplier = ''
+    let selectedIds = []
+    let uploadSheet
+
+    const getFiltered = () => supplierReturnInvoiceStore.getters.getFilteredInvoices.value
+
+    let filteredInvoices = getFiltered()
+    let filteredCount = filteredInvoices.length
+    let totalCredits = '0.00'
+    let allSelected = false
+
+    const updateSelectionLabel = () => {
+      const el = document.getElementById('total-return-selected')
+      if (el) {
+        el.textContent = `${selectedIds.length} document(s) sélectionné(s)`
+      }
+      allSelected =
+        filteredInvoices.length > 0 &&
+        filteredInvoices.every((inv) => selectedIds.includes(inv.id))
+    }
+
+    const recomputeSummary = () => {
+      filteredInvoices = getFiltered()
+      filteredCount = filteredInvoices.length
+      totalCredits = filteredInvoices
+        .reduce((acc, i) => acc + Number(i.creditAmount), 0)
+        .toFixed(2)
+      updateSelectionLabel()
+    }
+
+    supplierReturnFormService = new SupplierReturnFormService(() => {
+      recomputeSummary()
+      $update()
+    })
+
+    const applyFilters = (search, supplierId) => {
+      searchTerm = search || ''
+      selectedSupplier = supplierId || ''
+      const all = supplierReturnInvoiceStore.getters.getInvoices.value
+      const filtered = all.filter((inv) => {
+        const matchSupplier =
+          !selectedSupplier || inv.supplier?.id === Number(selectedSupplier)
+        const q = searchTerm.toLowerCase()
+        const matchSearch =
+          !q ||
+          inv.name.toLowerCase().includes(q) ||
+          inv.supplier?.name?.toLowerCase().includes(q) ||
+          new Date(inv.date).toLocaleDateString('fr-FR').includes(q)
+        return matchSupplier && matchSearch
+      })
+      supplierReturnInvoiceStore.dispatch('setFilteredInvoices', filtered)
+      selectedIds = selectedIds.filter((id) => filtered.some((inv) => inv.id === id))
+      pagination.totalItems = filtered.length
+      pagination.currentPage = 1
+      recomputeSummary()
+      $update()
+      setTimeout(
+        () =>
+          paginator.paginateCards(
+            Array.from(document.querySelectorAll('.return-invoice-card')),
+            pagination,
+          ),
+        50,
+      )
+    }
+
+    const resetFilters = () => {
+      searchTerm = ''
+      selectedSupplier = ''
+      supplierReturnInvoiceStore.dispatch(
+        'setFilteredInvoices',
+        supplierReturnInvoiceStore.getters.getInvoices.value,
+      )
+      pagination.totalItems = getFiltered().length
+      recomputeSummary()
+      $update()
+    }
+
+    const toggleSelect = (id) => {
+      if (selectedIds.includes(id)) {
+        selectedIds = selectedIds.filter((x) => x !== id)
+      } else {
+        selectedIds = [...selectedIds, id]
+      }
+      updateSelectionLabel()
+      $update()
+    }
+
+    const toggleSelectAll = (e) => {
+      if (e.target.checked) {
+        selectedIds = filteredInvoices.map((inv) => inv.id)
+      } else {
+        selectedIds = []
+      }
+      updateSelectionLabel()
+      $update()
+    }
+
+    const downloadSelectedZip = async () => {
+      if (!selectedIds.length) {
+        $f7.toast
+          .create({ text: 'Sélectionnez au moins un document', closeTimeout: 2500 })
+          .open()
+        return
+      }
+      await downloadSupplierReturnZIP($f7, selectedIds, toolbarService.getDate())
+    }
+
+    const deleteSelected = () => {
+      if (!selectedIds.length) {
+        $f7.toast
+          .create({ text: 'Sélectionnez au moins un document', closeTimeout: 2500 })
+          .open()
+        return
+      }
+      $f7.dialog.confirm(CONFIRMATION_TO_DELETE, async () => {
+        for (const id of [...selectedIds]) {
+          await deleteSupplierReturnInvoice($f7, id)
+          supplierReturnInvoiceStore.dispatch('removeInvoice', id)
+        }
+        selectedIds = []
+        await toolbarService.refreshInDom($f7)
+        recomputeSummary()
+        $update()
+      })
+    }
+
+    const handleDelete = (inv) => {
+      $f7.dialog.confirm(CONFIRMATION_TO_DELETE, async () => {
+        await deleteSupplierReturnInvoice($f7, inv.id)
+        supplierReturnInvoiceStore.dispatch('removeInvoice', inv.id)
+        selectedIds = selectedIds.filter((x) => x !== inv.id)
+        recomputeSummary()
+        $update()
+      })
+    }
+
+    const prevPage = () =>
+      pagination.previousElement($('#supplier-return-prev'), $('#supplier-return-next'))
+    const nextPage = () =>
+      pagination.nextElement($('#supplier-return-prev'), $('#supplier-return-next'))
+
+    const initCalendar = () => {
+      $f7.calendar.create({
+        inputEl: '#calendar-input-supplier-return',
+        openIn: 'customModal',
+        footer: true,
+        dateFormat: 'MM yyyy',
+        value: [new Date()],
+        on: {
+          monthYearChangeStart: (cal) => toolbarService.updateToolbar($f7, cal),
+        },
+      })
+    }
+
+    $on('pageInit', async () => {
+      loadTabbar('index-supplier-returns', $f7)
+      initCalendar()
+      pagination.paginationContainer = document.querySelector(
+        '#pagination-links-supplier-return',
+      )
+      pagination.setUpdateContentCallBack(() => {
+        paginator.paginateCards(
+          Array.from(document.querySelectorAll('.return-invoice-card')),
+          pagination,
+        )
+      })
+      toolbarService.pagination = pagination
+      await toolbarService.refreshInDom($f7)
+      recomputeSummary()
+      $update()
+    })
+
+    $onMounted(() => {
+      uploadSheet = createSheet(
+        $f7,
+        sheetModalSupplierReturnFormatter,
+        () =>
+          fileManagement.sendFiles(
+            toolbarService.getDate(),
+            toolbarService,
+            () => {
+              recomputeSummary()
+              $update()
+            },
+          ),
+        suppliers,
+      )
+    })
+
+    return $render
+  }
+</script>

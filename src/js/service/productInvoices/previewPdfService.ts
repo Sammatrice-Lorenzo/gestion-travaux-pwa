@@ -27,19 +27,33 @@ async function openPdfPreviewFromUrl(
   app: Framework7,
   id: number,
   pdfPreviewPopup: (app: Framework7) => Popup.Popup,
+  apiResource = 'product_invoice_files',
 ): Promise<void> {
-  const url: URL = getUrl(`/api/product_invoice_files/${id}/download/`)
+  const url: URL = getUrl(`/api/${apiResource}/${id}/download`)
 
   try {
     const response = await fetch(url, {
       method: 'GET',
       credentials: apiCredentials,
-      headers: {
-        'Content-Type': 'application/pdf',
-      },
     })
 
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`)
+    }
+
     const pdfBlob: Blob = await response.blob()
+    if (
+      pdfBlob.size === 0 ||
+      (pdfBlob.type &&
+        !pdfBlob.type.includes('pdf') &&
+        pdfBlob.type.includes('json'))
+    ) {
+      throw new Error('Réponse invalide (fichier PDF introuvable)')
+    }
+
+    scale = 1
+    pdfDoc = null
+
     const pdfData: ArrayBuffer = await pdfBlob.arrayBuffer()
 
     const popup: Popup.Popup = pdfPreviewPopup(app)
@@ -49,6 +63,7 @@ async function openPdfPreviewFromUrl(
       'pdf-pages-container',
     )
     if (container) {
+      container.innerHTML = ''
       await displayPdfInCanvas(pdfData, container)
     }
   } catch (error) {

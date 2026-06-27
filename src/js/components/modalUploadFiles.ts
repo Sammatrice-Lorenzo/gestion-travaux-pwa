@@ -2,16 +2,44 @@ import type { Sheet } from 'framework7/types'
 import type Framework7 from 'framework7/types'
 import type SheetModalInterface from '../../intefaces/SheetModalInterface'
 
+type SupplierOption = {
+  id: number
+  name: string
+}
+
+const SUPPLIER_SELECT_ID = 'supplier-return-supplier'
+
+const buildSupplierSelectHtml = (suppliers: SupplierOption[]): string => {
+  const options = suppliers
+    .map((s) => `<option value="${s.id}">${s.name}</option>`)
+    .join('')
+
+  return `
+    <div class="upload-sheet-supplier-wrap">
+      <label for="${SUPPLIER_SELECT_ID}">
+        Fournisseur (recommandé)
+      </label>
+      <select id="${SUPPLIER_SELECT_ID}">
+        <option value="">— Sélectionner —</option>
+        ${options}
+      </select>
+    </div>
+  `
+}
+
 const createSheet = (
   app: Framework7,
   sheetModal: SheetModalInterface,
   sendFiles: CallableFunction,
+  suppliers?: SupplierOption[],
 ): Sheet.Sheet => {
-  let isListenerAdded = false
+  const supplierBlock = suppliers?.length
+    ? buildSupplierSelectHtml(suppliers)
+    : ''
 
   return app.sheet.create({
     content: `
-      <div class="sheet-modal">
+      <div class="sheet-modal sheet-upload-modal">
         <div class="toolbar bg-color-primary text-color-white">
           <div class="toolbar-inner justify-content-space-between">
             <div class="left" style="padding: 3%;">${sheetModal.title}</div>
@@ -23,18 +51,24 @@ const createSheet = (
           </div>
         </div>
         <div class="sheet-modal-inner text-aligns-center">
-          <form id=${sheetModal.formId}>
-            <div class="display-flex justify-content-center flex-direction-column">
-              <p class="text-align-center text-color-gray" style="padding: 0.3rem">${sheetModal.description}</p>
-              <div style="margin: auto;">
-                <label class="item-input item-input-outline" style="width: 100%;">
-                  <input id=${sheetModal.inputId} type="file" name=${sheetModal.nameInput} multiple accept="${sheetModal.acceptFiles}" style="padding: 10px; text-align: center;">
-                </label>
-              </div>
+          <form id="${sheetModal.formId}">
+            <p class="text-align-center text-color-gray upload-sheet-desc">${sheetModal.description}</p>
+            <div class="upload-sheet-file-wrap">
+              <label class="item-input item-input-outline upload-sheet-file-label">
+                <span class="upload-sheet-file-hint">Appuyez pour choisir un ou plusieurs PDF</span>
+                <input
+                  id="${sheetModal.inputId}"
+                  type="file"
+                  name="${sheetModal.nameInput}"
+                  multiple
+                  accept="${sheetModal.acceptFiles}"
+                />
+              </label>
             </div>
-            <div class="block display-flex justify-content-center margin-top">
-              <a href="#" id="btn-send-files" class="button button-tonal button-small button-round" style="width: 35%; gap: 0.5rem">
-                <i class="f7-icons" style="font-size: 1.3rem;">tray_arrow_up_fill</i>
+            ${supplierBlock}
+            <div class="upload-sheet-actions">
+              <a href="#" id="btn-send-${sheetModal.formId}" class="button button-fill button-small button-round upload-sheet-submit">
+                <i class="f7-icons">tray_arrow_up_fill</i>
                 Uploader
               </a>
             </div>
@@ -49,19 +83,21 @@ const createSheet = (
         ) as HTMLInputElement
         if (filesInput) filesInput.value = ''
 
-        const btn: HTMLElement | null =
-          document.getElementById('btn-send-files')
-        if (!isListenerAdded && btn) {
-          btn.addEventListener('click', (event: MouseEvent) => {
+        const supplierSelect = document.getElementById(
+          SUPPLIER_SELECT_ID,
+        ) as HTMLSelectElement | null
+        if (supplierSelect) supplierSelect.value = ''
+
+        const btn = document.getElementById(`btn-send-${sheetModal.formId}`)
+        if (btn) {
+          btn.onclick = (event: MouseEvent) => {
             event.preventDefault()
             sendFiles()
-          })
-
-          isListenerAdded = true
+          }
         }
       },
     },
   })
 }
 
-export { createSheet }
+export { createSheet, SUPPLIER_SELECT_ID }

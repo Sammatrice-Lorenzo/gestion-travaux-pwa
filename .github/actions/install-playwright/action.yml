@@ -1,5 +1,5 @@
 name: Install Playwright browsers
-description: Install Playwright browsers with cache (chromium only, no apt here)
+description: Install Playwright Chromium with cache (no apt)
 
 inputs:
   browsers:
@@ -27,6 +27,4 @@ runs:
     - name: Install Playwright browsers
       if: steps.playwright-cache.outputs.cache-hit != 'true'
       shell: bash
-      env:
-        PLAYWRIGHT_DOWNLOAD_CONNECTION_TIMEOUT: '600000'
       run: yarn playwright install ${{ inputs.browsers }}

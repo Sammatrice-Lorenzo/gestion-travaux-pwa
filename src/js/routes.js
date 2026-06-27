@@ -5,6 +5,7 @@ import ClientsIndex from '../pages/clients/index-clients.f7'
 import ShowClient from '../pages/clients/show-client.f7'
 import HomePage from '../pages/home.f7'
 import IndexInvoices from '../pages/product-invoices/index-invoices.f7'
+import IndexSupplierReturns from '../pages/supplier-returns/index-supplier-returns.f7'
 import ShowSupplier from '../pages/suppliers//show-supplier.f7'
 import FormSupplier from '../pages/suppliers/form-supplier.f7'
 import IndexSuppliers from '../pages/suppliers/index-suppliers.f7'
@@ -76,6 +77,10 @@ const routes = [
   {
     path: '/product/invoices/',
     component: IndexInvoices,
+  },
+  {
+    path: '/supplier/returns/',
+    component: IndexSupplierReturns,
   },
   {
     path: '/suppliers/',
