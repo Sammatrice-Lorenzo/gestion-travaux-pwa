@@ -38,7 +38,7 @@ export default class ProductInvoiceManagerService {
   }
 
   public totalAmountProductInvoices(): string {
-    const productInvoices = productInvoiceStore.getters.getInvoices
+    const productInvoices = productInvoiceStore.getters.getFilteredInvoices
       .value as ProductInvoiceInterface[]
 
     return productInvoices.length >= 1
@@ -46,7 +46,7 @@ export default class ProductInvoiceManagerService {
           .map((invoice) => invoice.totalAmount)
           .reduce((accumulator, current) => accumulator + current)
           .toFixed(2)
-      : '0'
+      : '0.00'
   }
 
   public getTVAOfTotalAmountProductInvoiceFiles(): string {

@@ -1,9 +1,9 @@
-#index-invoices {
+#index-supplier-returns {
   .card {
     border-radius: 15px;
   }
 
-  .invoice-card {
+  .return-invoice-card {
     position: relative;
     border-left: 4px solid var(--f7-theme-color);
     overflow: hidden;
@@ -13,8 +13,8 @@
       box-shadow: 0 4px 16px rgba(13, 40, 71, 0.12);
     }
 
-    &.invoice-card-highlight {
-      box-shadow: 0 0 0 3px rgba(40, 112, 189, 0.35);
+    &.return-invoice-card-highlight {
+      box-shadow: 0 0 0 3px rgba(10, 124, 66, 0.35);
       transform: translateY(-2px);
     }
 
@@ -26,7 +26,7 @@
       gap: 0.5rem;
     }
 
-    .invoice-badge {
+    .credit-badge {
       display: inline-flex;
       align-items: center;
       gap: 0.25rem;
@@ -44,7 +44,7 @@
       }
     }
 
-    .invoice-meta {
+    .return-meta {
       margin: 0;
       padding: 0;
       list-style: none;
@@ -82,8 +82,8 @@
       }
     }
 
-    .total-amount-value {
-      color: var(--f7-theme-color);
+    .credit-amount-value {
+      color: #0a7c42;
       font-weight: 700;
       font-size: 1.05rem;
     }
@@ -93,32 +93,26 @@
       font-style: italic;
     }
 
-    .linked-returns-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.35rem;
-    }
-
-    .linked-return-tag {
+    .linked-invoice-tag {
       display: inline-flex;
       align-items: center;
       gap: 0.25rem;
       padding: 0.15rem 0.5rem;
       border-radius: 6px;
       font-size: 0.8rem;
-      background: rgba(10, 124, 66, 0.08);
-      color: #0a7c42;
+      background: rgba(13, 40, 71, 0.06);
+      color: #444;
     }
 
-    .linked-return-link {
+    .linked-invoice-link {
       text-decoration: none;
+      color: var(--f7-theme-color);
       font-weight: 600;
-      width: fit-content;
       transition: background 0.2s ease;
 
       &:hover,
       &:active {
-        background: rgba(10, 124, 66, 0.16);
+        background: rgba(40, 112, 189, 0.12);
       }
     }
 
@@ -131,14 +125,14 @@
     }
   }
 
-  .summary-total-card {
+  .summary-credits-card {
     border-radius: 12px;
     background: linear-gradient(
       135deg,
-      rgba(40, 112, 189, 0.1),
-      rgba(13, 40, 71, 0.06)
+      rgba(10, 124, 66, 0.08),
+      rgba(40, 112, 189, 0.06)
     );
-    border: 1px solid rgba(40, 112, 189, 0.22);
+    border: 1px solid rgba(10, 124, 66, 0.2);
 
     .summary-label {
       font-size: 0.85rem;
@@ -149,7 +143,7 @@
     .summary-amount {
       font-size: 1.35rem;
       font-weight: 700;
-      color: var(--f7-theme-color);
+      color: #0a7c42;
       margin: 0;
     }
 
@@ -160,22 +154,59 @@
     }
   }
 
-  .toolbar-bottom-invoice-actions {
+  .empty-state-card {
+    border-radius: 16px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.9);
+
+    .empty-icon {
+      font-size: 3rem;
+      color: var(--f7-theme-color);
+      opacity: 0.5;
+      margin-bottom: 0.75rem;
+    }
+
+    .empty-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 0 0 0.5rem;
+      color: #333;
+    }
+
+    .empty-desc {
+      font-size: 0.9rem;
+      color: #777;
+      margin: 0 0 1.25rem;
+    }
+  }
+
+  .toolbar-bottom-return-actions {
     position: fixed;
     bottom: env(safe-area-inset-bottom);
     width: 100%;
     z-index: 999;
   }
 
-  .selected-all-product-invoices {
+  .selected-all-returns {
     gap: 1.2rem;
     padding-left: 2rem;
     margin-bottom: 0.5rem;
   }
 
-  .selected-info {
+  .selected-info-returns {
     margin-top: 0.5rem;
     margin-bottom: 0.25rem;
+  }
+
+  #calendar-input-supplier-return {
+    border: none;
+    background: none;
+    font-size: 16px;
+    color: #424242;
+    outline: none;
+    width: 100%;
+    text-align: left;
   }
 
   .page-content {
