@@ -8,7 +8,7 @@ import {
   createWorkEventDay,
   deleteWorkEventDay,
   updateWorkEventDay,
-} from '../../workEventDay.js'
+} from '../../workEventDay.ts'
 import { handleSubmitForm } from '../form/formErrorInputs.ts'
 import { FormWorkEventDaySchema } from '../schema/workEventDay/workEventDaySchema.ts'
 import {

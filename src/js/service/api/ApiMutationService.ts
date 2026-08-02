@@ -138,6 +138,42 @@ export class ApiMutationService {
     }
   }
 
+  public async fetchJson<T>(routeDTO: RouteDTO): Promise<T[]> {
+    try {
+      const response = await fetch(routeDTO.getUrlAPI(), {
+        method: routeDTO.getMethod(),
+        credentials: apiCredentials,
+        headers: this.getHeaders(),
+        body: routeDTO.getBody(),
+      })
+
+      if (response.status === 200) {
+        return response.json()
+      }
+
+      if (response.status === 401) {
+        this.handleErrorResponse(response.status)
+        return []
+      }
+
+      if (response.status === 422) {
+        const data = await response.json()
+        toastError(
+          this._app,
+          data['hydra:description'] || messages.ERROR_SERVER,
+        )
+        return []
+      }
+
+      toastError(this._app, messages.ERROR_SERVER)
+      return []
+    } catch (error) {
+      console.error(error)
+      toastError(this._app, messages.ERROR_SERVER)
+      return []
+    }
+  }
+
   public async download(routeDTO: RouteDTO, fileName: string): Promise<void> {
     try {
       const response = await fetch(routeDTO.getUrlAPI(), {
