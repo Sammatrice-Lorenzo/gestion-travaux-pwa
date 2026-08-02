@@ -13,6 +13,7 @@ import App from '../app.f7'
 import { checkAndClearCache } from './cache.ts'
 import { reloadPage } from './helper/routerHelper.js'
 import routes from './routes.js'
+import { fetchCurrentUser } from './service/SessionService'
 import { setupServicesWorkers } from './serviceWorker.js'
 
 const app = new Framework7({
@@ -40,6 +41,8 @@ const app = new Framework7({
 
 askUserPermissionForSendANotificationPush()
 setupServicesWorkers()
-reloadPage(app, '/prestation/')
+fetchCurrentUser().finally(() => {
+  reloadPage(app, '/prestation/')
+})
 
 export default app

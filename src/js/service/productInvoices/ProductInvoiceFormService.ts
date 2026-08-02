@@ -67,6 +67,7 @@ export default class ProductInvoiceFormService {
           : null,
         name: '',
       },
+      linkedSupplierReturns: productInvoice.linkedSupplierReturns,
     }
     productInvoiceStore.dispatch('updateInvoice', updatedInvoice)
   }

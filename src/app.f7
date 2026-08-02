@@ -38,6 +38,16 @@
                   </a>
                 </li>
                 <li>
+                  <a href="/supplier/returns/" class="item-content item-link">
+                    <div class="item-media">
+                      <i class="f7-icons md icon-size">arrow_uturn_left_circle</i>
+                    </div>
+                    <div class="item-inner">
+                      <div class="item-title">Retours fournisseur</div>
+                    </div>
+                  </a>
+                </li>
+                <li>
                   <a href="/clients/" class="item-content item-link">
                     <div class="item-media">
                       <i class="f7-icons md icon-size">person_2</i>

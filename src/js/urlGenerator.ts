@@ -2,20 +2,25 @@ const URL_USER: string = '/api/user/'
 
 type URLParameters = Record<string, string | number | (string | number)[]>
 
-function getUrl(url: string): URL {
+function getBaseUrl(): string {
+  if (typeof window !== 'undefined' && window.location?.origin) {
+    return window.location.origin
+  }
   // @ts-ignore
-  return new URL(url, API_URL)
+  return API_URL as string
+}
+
+function getUrl(url: string): URL {
+  return new URL(url, getBaseUrl())
 }
 
 function getUrlById(url: string | URL, id: string | number): URL {
   const fullUrl = typeof url === 'string' ? url : url.toString()
-  // @ts-ignore
-  return new URL(fullUrl + id, API_URL)
+  return new URL(fullUrl + id, getBaseUrl())
 }
 
 function getUrlUser(): URL {
-  // @ts-ignore
-  return new URL(URL_USER, API_URL)
+  return new URL(URL_USER, getBaseUrl())
 }
 
 /**
@@ -39,8 +44,7 @@ function getUrlWithParameters(url: string, parameters: URLParameters): URL {
 
   route = route + searchParams.toString()
 
-  // @ts-ignore
-  return new URL(route, API_URL)
+  return new URL(route, getBaseUrl())
 }
 
 export { getUrl, getUrlById, getUrlUser, getUrlWithParameters }

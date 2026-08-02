@@ -1,0 +1,69 @@
+name: Setup Symfony Backend
+description: Installe les dépendances backend pour les tests e2e Playwright
+
+inputs:
+    backend_path:
+        required: false
+        default: backend
+
+runs:
+    using: composite
+    steps:
+        - name: Setup PHP extensions
+          uses: shivammathur/setup-php@v2
+          with:
+              php-version: '8.3'
+              extensions: gd, sodium, curl, zip, pdo_mysql
+              tools: composer
+              coverage: none
+
+        - name: Cache Composer dependencies
+          uses: actions/cache@v4
+          with:
+              path: ${{ inputs.backend_path }}/vendor
+              key: composer-${{ runner.os }}-${{ hashFiles(format('{0}/composer.lock', inputs.backend_path)) }}
+              restore-keys: |
+                  composer-${{ runner.os }}-
+
+        - name: Cache Symfony CLI
+          uses: actions/cache@v4
+          id: symfony-cli-cache
+          with:
+              path: ~/.symfony5
+              key: symfony-cli-${{ runner.os }}-v1
+
+        - name: Configure Git safe.directory
+          shell: bash
+          run: git config --global --add safe.directory "${GITHUB_WORKSPACE}/${{ inputs.backend_path }}"
+
+        - name: Composer install
+          shell: bash
+          run: composer install --prefer-dist --no-progress --no-scripts --working-dir="${GITHUB_WORKSPACE}/${{ inputs.backend_path }}"
+
+        - name: Update permissions on vendor
+          run: sudo chmod -R 777 "${GITHUB_WORKSPACE}/${{ inputs.backend_path }}/vendor/"
+          shell: bash
+
+        - name: Install backend Yarn dependencies
+          shell: bash
+          run: yarn install --frozen-lockfile --ignore-scripts
+          working-directory: ${{ inputs.backend_path }}
+
+        - name: Install Symfony CLI
+          if: steps.symfony-cli-cache.outputs.cache-hit != 'true'
+          shell: bash
+          run: |
+              curl -sS https://get.symfony.com/cli/installer | bash
+              mv ~/.symfony*/bin/symfony /usr/local/bin/symfony
+
+        - name: Link Symfony CLI from cache
+          if: steps.symfony-cli-cache.outputs.cache-hit == 'true'
+          shell: bash
+          run: |
+              SYMFONY_BIN=$(find "${HOME}/.symfony5" -name symfony -type f | head -1)
+              sudo ln -sf "${SYMFONY_BIN}" /usr/local/bin/symfony
+
+        - name: Install JWT keys
+          shell: bash
+          run: php bin/console lexik:jwt:generate-keypair --skip-if-exists
+          working-directory: ${{ inputs.backend_path }}

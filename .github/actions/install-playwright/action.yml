@@ -1,0 +1,30 @@
+name: Install Playwright browsers
+description: Install Playwright Chromium with cache (no apt)
+
+inputs:
+  browsers:
+    description: Space-separated browser names to install
+    required: false
+    default: chromium
+
+runs:
+  using: composite
+  steps:
+    - name: Get Playwright version
+      id: playwright-version
+      shell: bash
+      run: |
+        VERSION=$(node -p "require('@playwright/test/package.json').version")
+        echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+    - name: Cache Playwright browsers
+      id: playwright-cache
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/ms-playwright
+        key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}-${{ inputs.browsers }}
+
+    - name: Install Playwright browsers
+      if: steps.playwright-cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: yarn playwright install ${{ inputs.browsers }}

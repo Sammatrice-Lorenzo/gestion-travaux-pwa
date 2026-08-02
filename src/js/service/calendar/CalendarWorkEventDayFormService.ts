@@ -8,13 +8,12 @@ import {
   createWorkEventDay,
   deleteWorkEventDay,
   updateWorkEventDay,
-} from '../../workEventDay.js'
+} from '../../workEventDay.ts'
 import { handleSubmitForm } from '../form/formErrorInputs.ts'
 import { FormWorkEventDaySchema } from '../schema/workEventDay/workEventDaySchema.ts'
 import {
   getElementEdit,
   getEventSelected,
-  getMaxId,
   getWorkDayCalendar,
 } from './calendarForm.ts'
 import { createColorPickerForEventCalendar } from './colorPickerEventCalendar.ts'
@@ -87,10 +86,13 @@ export class CalendarWorkEventDayFormService {
       await updateWorkEventDay(workEventDay, id, app)
       $(this._selectorForm).removeClass('edit')
     } else {
-      const futureId = getMaxId(this._events) + 1
-      workEventDay.id = futureId
+      const created = (await createWorkEventDay(workEventDay, app)) as {
+        id?: number
+      } | null
+      if (created?.id) {
+        workEventDay.id = created.id
+      }
       this._events.push(workEventDay)
-      await createWorkEventDay(workEventDay, app)
     }
 
     popup.close()
@@ -107,7 +109,12 @@ export class CalendarWorkEventDayFormService {
     $(this._selectorForm).find('.block-title').children().text(textUpdate)
     $('.title-popup').text(textUpdate)
 
-    const formCalendar = getEventSelected(idElement, this._eventItems, app)
+    const formCalendar = getEventSelected(
+      idElement,
+      this._eventItems,
+      this._events,
+      app,
+    )
     this._colorPickerSpectrum = createColorPickerForEventCalendar(
       app,
       formCalendar.color,

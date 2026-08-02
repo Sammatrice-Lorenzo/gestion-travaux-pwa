@@ -10,6 +10,15 @@
           </a>
         </div>
         <div class="right">
+          <a
+            href="#"
+            class="link icon-only popup-open"
+            data-popup=".popup-search-work-event-day"
+            data-tooltip="Rechercher des prestations"
+            data-testid="open-search-work-event-day"
+          >
+            <i class="icon f7-icons">search</i>
+          </a>
           <a href="#" download class="link icon-only" @click="${downloadCalendar}">
             <i class="icon f7-icons">arrow_down_circle_fill</i>
           </a>
@@ -18,6 +27,155 @@
     </div>
     <div class="page-content">
       <div id="calendar" class="block block-strong no-padding no-margin no-hairline-top"></div>
+
+      <div class="popup popup-search-work-event-day">
+        <div class="page">
+          <div class="navbar">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner">
+              <div class="title">Rechercher des prestations</div>
+              <div class="right">
+                <a class="link popup-close">
+                  <i class="f7-icons">xmark_circle</i>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="page-content">
+            <form id="form-work-event-day-search" class="block">
+              <div class="list no-hairlines-md list inset no-margin">
+                <ul style="margin: 0;">
+                  <li class="item-content item-input">
+                    <div class="item-media"><i class="f7-icons">search</i></div>
+                    <div class="item-inner">
+                      <div class="item-title item-label">Rechercher (expression régulière)</div>
+                      <div class="item-input-wrap">
+                        <input
+                          name="search"
+                          type="search"
+                          placeholder="^Peinture.*"
+                          value="${searchCriteria.search}"
+                          @input="${(e) => updateSearchCriteria('search', e.target.value)}"
+                        />
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content item-input item-input-with-value">
+                    <div class="item-media"><i class="f7-icons">person_alt_circle</i></div>
+                    <div class="item-inner">
+                      <div class="item-title item-label">Client</div>
+                      <div class="item-input-wrap">
+                        <select name="client" value="${searchCriteria.client}" @change="${(e) => updateSearchCriteria('client', e.target.value)}">
+                          <option value="">Tous</option>
+                          ${clients.map((client) => $h`<option value="${client.id}">${client.name}</option>`)}
+                        </select>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content item-input item-input-with-value">
+                    <div class="item-media"><i class="f7-icons">calendar</i></div>
+                    <div class="item-inner">
+                      <div class="item-title item-label">Date début</div>
+                      <div class="item-input-wrap">
+                        <input
+                          name="startDate"
+                          type="date"
+                          value="${searchCriteria.startDate}"
+                          @change="${(e) => updateSearchCriteria('startDate', e.target.value)}"
+                        />
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content item-input item-input-with-value">
+                    <div class="item-media"><i class="f7-icons">calendar</i></div>
+                    <div class="item-inner">
+                      <div class="item-title item-label">Date fin</div>
+                      <div class="item-input-wrap">
+                        <input
+                          name="endDate"
+                          type="date"
+                          value="${searchCriteria.endDate}"
+                          @change="${(e) => updateSearchCriteria('endDate', e.target.value)}"
+                        />
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="display-flex justify-content-center margin-top">
+                <a
+                  href="#"
+                  class="button button-fill button-round"
+                  data-testid="submit-search-work-event-day"
+                  @click="${searchWorkEventDaysInPopup}"
+                >
+                  <i class="f7-icons">search</i>
+                  Rechercher
+                </a>
+              </div>
+            </form>
+
+            ${searchResults !== null && $h`
+              <div class="block-title" data-testid="search-work-event-day-count">${searchResults.length} résultat${searchResults.length > 1 ? 's' : ''}</div>
+              <div class="list no-hairlines-md list inset">
+                <ul>
+                  ${searchResults.length === 0 && $h`
+                    <li class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title text-color-gray">Aucune prestation ne correspond à cette recherche</div>
+                      </div>
+                    </li>
+                  `}
+                  ${searchResults.map((result) => $h`
+                    <li class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title-row">
+                          <div class="item-title">${result.title}</div>
+                        </div>
+                        <div class="item-subtitle">
+                          ${new Date(result.startDate).toLocaleDateString('fr-FR')} → ${new Date(result.endDate).toLocaleDateString('fr-FR')}
+                        </div>
+                        <div class="item-text">${result.client ? result.client.name : 'Aucun client'}</div>
+                      </div>
+                    </li>
+                  `)}
+                </ul>
+              </div>
+
+              <div class="list no-hairlines-md list inset no-margin">
+                <ul style="margin: 0;">
+                  <li class="item-content item-input item-input-with-value">
+                    <div class="item-inner">
+                      <div class="item-title item-label">Format d'export</div>
+                      <div class="item-input-wrap">
+                        <select
+                          name="export-format"
+                          value="${exportFormat}"
+                          @change="${(e) => { exportFormat = e.target.value; $update() }}"
+                        >
+                          <option value="pdf">PDF</option>
+                          <option value="xlsx">Excel</option>
+                        </select>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="display-flex justify-content-center margin-top" style="padding-bottom: 1rem;">
+                <a
+                  href="#"
+                  class="button button-fill button-round color-green ${searchResults.length === 0 ? 'disabled' : ''}"
+                  data-testid="export-search-work-event-day"
+                  @click="${exportWorkEventDaySearch}"
+                >
+                  <i class="f7-icons">arrow_down_circle</i>
+                  Exporter
+                </a>
+              </div>
+            `}
+          </div>
+        </div>
+      </div>
       <div class="popup popup-swipe">
         <div class="page">
           <div class="navbar">
@@ -138,7 +296,10 @@
                 <a class="edit-event" href="#" @click="${edit}">
                   <i class="f7-icons">square_pencil</i>
                 </a>
-                <a class="swipeout-delete" @click="${async (e) => await calendarWorkEventDayService.removeEvent(e, $f7)}">
+                <a class="swipeout-delete" @click="${async (e) => {
+                  await calendarWorkEventDayService.removeEvent(e, $f7)
+                  await refreshEvents()
+                }}">
                   <i class="f7-icons">trash</i>
                 </a>
               </div>
@@ -176,20 +337,37 @@
     getWorkEventDayByUser,
     updateWorkEventDay,
     downloadCalendarEvents
-  } from '../../js/workEventDay.js'
+  } from '../../js/workEventDay.ts'
   import { getEventsFormatted } from '../../js/formatter/eventsFormatter.js'
   import { getClientsByUser } from '../../js/client/client.js'
+  import { CalendarWorkEventDaySearchService } from '../../js/service/calendar/CalendarWorkEventDaySearchService.ts'
+
+  const toDateInputValue = (date) => date.toISOString().slice(0, 10)
 
   export default async (props, { $f7, $, $el, $update, $on, $onMounted }) => {
     const clients = await getClientsByUser($f7)
     const workEventDays = await getWorkEventDayByUser($f7)
     let events = getEventsFormatted(workEventDays)
     const calendarWorkEventDayService = new CalendarWorkEventDayFormService(events)
+    const calendarWorkEventDaySearchService = new CalendarWorkEventDaySearchService()
 
     let calendar
     let popupSwipe
     let colorPickerSpectrum
     let eventItems = []
+
+    const today = new Date()
+    const inAWeek = new Date(today)
+    inAWeek.setDate(inAWeek.getDate() + 7)
+
+    let searchCriteria = {
+      client: '',
+      search: '',
+      startDate: toDateInputValue(today),
+      endDate: toDateInputValue(inAWeek),
+    }
+    let searchResults = null
+    let exportFormat = 'pdf'
 
     const renderEvents = async (calendar, isMonthUpdated = false) => {
       if (isMonthUpdated) {
@@ -204,6 +382,17 @@
       $update()
     }
 
+    const refreshEvents = async () => {
+      const eventsDay = await getWorkEventDayByUser($f7, calendar)
+      events = getEventsFormatted(eventsDay)
+      calendar.params.events = events
+      calendar.update()
+      calendarWorkEventDayService.setEvents(events)
+      eventItems = await renderEventsCalendar(calendar, events)
+      calendarWorkEventDayService.setEventItems(eventItems)
+      $update()
+    }
+
     $on('pageInit', async () => {
       calendar = await createCalendar($f7, renderEvents, events)
       colorPickerSpectrum = createColorPickerForEventCalendar($f7)
@@ -212,9 +401,7 @@
     const send = async (e) => {
       e.preventDefault()
       await calendarWorkEventDayService.send($f7, popupSwipe)
-      eventItems = await renderEventsCalendar(calendar, calendarWorkEventDayService.getEvents())
-      calendarWorkEventDayService.setEventItems(eventItems)
-      $update()
+      await refreshEvents()
     }
 
     const edit = (element) => {
@@ -224,11 +411,38 @@
 
     const downloadCalendar = async () => await downloadCalendarEvents(calendar, $f7)
 
+    const updateSearchCriteria = (field, value) => {
+      searchCriteria = { ...searchCriteria, [field]: value }
+      $update()
+    }
+
+    const searchWorkEventDaysInPopup = async (e) => {
+      e.preventDefault()
+      searchResults = await calendarWorkEventDaySearchService.search(
+        $f7,
+        searchCriteria,
+        'form-work-event-day-search',
+      )
+      $update()
+    }
+
+    const exportWorkEventDaySearch = async (e) => {
+      e.preventDefault()
+      if (!searchResults || searchResults.length === 0) {
+        return
+      }
+      await calendarWorkEventDaySearchService.export($f7, searchCriteria, exportFormat)
+    }
+
     handleEditClassForm($f7)
 
     $onMounted(() => {
       popupSwipe = $f7.popup.create({
         el: '.popup-swipe',
+        swipeToClose: true,
+      })
+      $f7.popup.create({
+        el: '.popup-search-work-event-day',
         swipeToClose: true,
       })
     })

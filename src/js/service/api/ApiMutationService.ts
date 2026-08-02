@@ -5,8 +5,8 @@ import toastError from '../../components/toastError.js'
 import type { RouteDTO } from '../../dto/RouteDTO'
 import { downloadFile } from '../../helper/fileHelper'
 import * as messages from '../../messages.js'
-import { getToken, logout } from '../../token'
 import { getUrlById } from '../../urlGenerator'
+import { apiCredentials, clearSession, logout } from '../SessionService'
 
 export class ApiMutationService {
   private _dialog: Dialog.AppMethods['dialog']
@@ -18,16 +18,15 @@ export class ApiMutationService {
   }
 
   private getHeaders(type = 'application/json') {
-    const token = getToken()
     return {
       'Content-Type': type,
       Accept: type,
-      Authorization: `Bearer ${token}`,
     }
   }
 
   private handleErrorResponse(statusCode: number): void {
     if (statusCode === 401) {
+      clearSession()
       this._dialog.alert(messages.TOKEN_EXPIRED, '', async () => {
         await logout(this._app)
       })
@@ -40,7 +39,8 @@ export class ApiMutationService {
     response: Response,
     successMessage: string,
     route: string,
-  ): Promise<void> {
+    skipNavigation = false,
+  ): Promise<unknown> {
     const status = response.status
 
     const isRequestExectuedWith =
@@ -48,23 +48,34 @@ export class ApiMutationService {
     if (isRequestExectuedWith) {
       await clearCache()
       this._dialog.alert(successMessage)
-      this._app.views.main.router.navigate(route)
-    } else if (status === 422) {
+      if (!skipNavigation) {
+        this._app.views.main.router.navigate(route)
+      }
+
+      const contentType = response.headers.get('content-type') ?? ''
+      if (contentType.includes('json') && status !== 204) {
+        return response.json()
+      }
+
+      return null
+    }
+
+    if (status === 422) {
       const data = await response.json()
       toastError(this._app, data['hydra:description'] || messages.ERROR_SERVER)
-    } else {
-      this.handleErrorResponse(status)
+      return
     }
+
+    this.handleErrorResponse(status)
   }
 
   public async post(routeDTO: RouteDTO, isFormData = false): Promise<void> {
-    const headers = isFormData
-      ? { Authorization: `Bearer ${getToken()}` }
-      : this.getHeaders()
+    const headers = isFormData ? {} : this.getHeaders()
 
     try {
       const response = await fetch(routeDTO.getUrlAPI(), {
         method: 'POST',
+        credentials: apiCredentials,
         headers,
         body: routeDTO.getBody(),
       })
@@ -80,21 +91,28 @@ export class ApiMutationService {
     }
   }
 
-  public async generic(routeDTO: RouteDTO): Promise<void> {
+  public async generic(routeDTO: RouteDTO): Promise<unknown> {
     const method = routeDTO.getMethod()
     const message = messages.getTypeMessageByMethodAPI(method)
 
     try {
       const response = await fetch(routeDTO.getUrlAPI(), {
         method,
+        credentials: apiCredentials,
         headers: this.getHeaders(),
         body: routeDTO.getBody(),
       })
 
-      await this.handleResponse(response, message, routeDTO.getRoute())
+      return await this.handleResponse(
+        response,
+        message,
+        routeDTO.getRoute(),
+        routeDTO.getSkipNavigation(),
+      )
     } catch (error) {
       console.error(error)
       this._dialog.alert(messages.ERROR_SERVER)
+      return null
     }
   }
 
@@ -104,6 +122,7 @@ export class ApiMutationService {
     try {
       const response = await fetch(url, {
         method: 'DELETE',
+        credentials: apiCredentials,
         headers: this.getHeaders('application/ld+json'),
       })
 
@@ -111,6 +130,7 @@ export class ApiMutationService {
         response,
         messages.SUCCESS_DELETE_FORM,
         routeDTO.getRoute(),
+        routeDTO.getSkipNavigation(),
       )
     } catch (error) {
       console.error(error)
@@ -118,10 +138,47 @@ export class ApiMutationService {
     }
   }
 
+  public async fetchJson<T>(routeDTO: RouteDTO): Promise<T[]> {
+    try {
+      const response = await fetch(routeDTO.getUrlAPI(), {
+        method: routeDTO.getMethod(),
+        credentials: apiCredentials,
+        headers: this.getHeaders(),
+        body: routeDTO.getBody(),
+      })
+
+      if (response.status === 200) {
+        return response.json()
+      }
+
+      if (response.status === 401) {
+        this.handleErrorResponse(response.status)
+        return []
+      }
+
+      if (response.status === 422) {
+        const data = await response.json()
+        toastError(
+          this._app,
+          data['hydra:description'] || messages.ERROR_SERVER,
+        )
+        return []
+      }
+
+      toastError(this._app, messages.ERROR_SERVER)
+      return []
+    } catch (error) {
+      console.error(error)
+      toastError(this._app, messages.ERROR_SERVER)
+      return []
+    }
+  }
+
   public async download(routeDTO: RouteDTO, fileName: string): Promise<void> {
     try {
       const response = await fetch(routeDTO.getUrlAPI(), {
         method: routeDTO.getMethod(),
+        credentials: apiCredentials,
         headers: this.getHeaders(),
         body: routeDTO.getBody(),
       })
