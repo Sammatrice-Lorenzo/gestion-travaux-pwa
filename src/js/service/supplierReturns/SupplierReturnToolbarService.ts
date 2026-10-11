@@ -3,7 +3,7 @@ import type { Calendar } from 'framework7/components/calendar'
 import type SupplierReturnInvoiceInterface from '../../../intefaces/SupplierReturn/SupplierReturnInvoiceInterface'
 import { monthsEnum } from '../../enum/monthEnum'
 import supplierReturnInvoiceStore from '../../store/supplierReturnInvoiceStore'
-import { getSupplierReturnInvoicesByUser } from '../../supplierReturnInvoice.ts'
+import { getSupplierReturnInvoicesByUser } from '../../supplierReturnInvoice'
 import type Pagination from '../Pagination'
 import type InvoicePaginatorService from '../productInvoices/InvoicePaginatorService'
 

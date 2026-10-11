@@ -20,13 +20,17 @@ const baseURL: string = 'http://localhost:5173'
 export default defineConfig({
   timeout: process.env.CI ? 60_000 : 120_000,
   testDir: './tests',
-  /* Run tests in files in parallel */
-  fullyParallel: true,
+  /*
+   * Tests share one backend database (e.g. 'Update Work' edits the first card
+   * that 'Create Work' may have added) and the Vite dev server times out under
+   * parallel cold loads: run serially until each test gets isolated fixtures.
+   */
+  fullyParallel: false,
   outputDir: './tests/test-results/',
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: 1,
 
   reporter: process.env.CI ? 'github' : 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */

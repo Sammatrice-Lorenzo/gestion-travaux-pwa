@@ -326,21 +326,21 @@
   </div>
 </template>
 <script>
-  import { formatDate } from '../../js/helper/date.ts'
-  import { monthsEnum } from '../../js/enum/monthEnum.ts'
-  import { renderEventsCalendar, showNameEvent } from '../../js/service/calendar/renderCalendarService.ts'
-  import { CalendarWorkEventDayFormService } from '../../js/service/calendar/CalendarWorkEventDayFormService.ts'
-  import { createCalendar } from '../../js/service/calendar/createCalendarService.ts'
-  import { handleEditClassForm } from '../../js/service/calendar/calendarForm.ts'
-  import { createColorPickerForEventCalendar } from '../../js/service/calendar/colorPickerEventCalendar.ts'
+  import { formatDate } from '../../js/helper/date'
+  import { monthsEnum } from '../../js/enum/monthEnum'
+  import { renderEventsCalendar, showNameEvent } from '../../js/service/calendar/renderCalendarService'
+  import { CalendarWorkEventDayFormService } from '../../js/service/calendar/CalendarWorkEventDayFormService'
+  import { createCalendar } from '../../js/service/calendar/createCalendarService'
+  import { handleEditClassForm } from '../../js/service/calendar/calendarForm'
+  import { createColorPickerForEventCalendar } from '../../js/service/calendar/colorPickerEventCalendar'
   import {
     getWorkEventDayByUser,
     updateWorkEventDay,
     downloadCalendarEvents
-  } from '../../js/workEventDay.ts'
-  import { getEventsFormatted } from '../../js/formatter/eventsFormatter.ts'
-  import { getClientsByUser } from '../../js/client/client.ts'
-  import { CalendarWorkEventDaySearchService } from '../../js/service/calendar/CalendarWorkEventDaySearchService.ts'
+  } from '../../js/workEventDay'
+  import { getEventsFormatted } from '../../js/formatter/eventsFormatter'
+  import { getClientsByUser } from '../../js/client/client'
+  import { CalendarWorkEventDaySearchService } from '../../js/service/calendar/CalendarWorkEventDaySearchService'
 
   const toDateInputValue = (date) => date.toISOString().slice(0, 10)
 

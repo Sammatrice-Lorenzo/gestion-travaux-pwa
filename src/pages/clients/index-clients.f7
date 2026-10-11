@@ -47,9 +47,9 @@
 <script>
   import Framework7 from 'framework7/bundle'
 
-  import { getPhoneNumberInString } from '../../js/helper/phoneNumberHelper.ts'
-  import { getClientsByUser } from '../../js/client/client.ts'
-  import { loadTabbar } from '../../js/components/tabbar.ts'
+  import { getPhoneNumberInString } from '../../js/helper/phoneNumberHelper'
+  import { getClientsByUser } from '../../js/client/client'
+  import { loadTabbar } from '../../js/components/tabbar'
 
   export default async (props, { $, $on, $f7 }) => {
     const clients = await getClientsByUser($f7)

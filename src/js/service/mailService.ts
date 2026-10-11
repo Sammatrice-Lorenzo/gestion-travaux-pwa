@@ -1,5 +1,5 @@
-import { getMontYear } from '../helper/date.ts'
-import { getCurrentUser } from '../token.ts'
+import { getMontYear } from '../helper/date'
+import { getCurrentUser } from '../token'
 
 /**
  * @param { Date } date

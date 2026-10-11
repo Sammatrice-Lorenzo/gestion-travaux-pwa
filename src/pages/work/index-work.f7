@@ -157,16 +157,16 @@
 <script>
   import Framework7 from 'framework7/bundle'
 
-  import { formatDate } from '../../js/helper/date.ts'
-  import { getProgressColor } from '../../js/helper/statusHelper.ts'
-  import { getWorkByUser } from '../../js/work.ts'
+  import { formatDate } from '../../js/helper/date'
+  import { getProgressColor } from '../../js/helper/statusHelper'
+  import { getWorkByUser } from '../../js/work'
   import { sendNotificationPushForProgression } from '../../js/notification'
-  import { loadTabbar } from '../../js/components/tabbar.ts'
+  import { loadTabbar } from '../../js/components/tabbar'
   import { totalAmountTVA, tvaOnAmount } from '../../js/helper/priceWorkHelper'
-  import { tvaEnum } from '../../js/enum/tvaEnum.ts'
-  import Pagination from '../../js/service/Pagination.ts'
+  import { tvaEnum } from '../../js/enum/tvaEnum'
+  import Pagination from '../../js/service/Pagination'
 
-  export default async (props, { $, $on, $f7, $update }) => {
+  export default async (props, { $, $on, $f7, $update, $onBeforeUnmount }) => {
     const pagination = new Pagination(10)
 
     const response = await getWorkByUser($f7, 1)
@@ -196,9 +196,13 @@
       await pagination.previousElement($('.btn-prev'), $('.btn-next'))
     }
 
-    setTimeout(() => {
+    const progressionTimer = setTimeout(() => {
       sendNotificationPushForProgression($f7)
     }, 60000)
+
+    $onBeforeUnmount(() => {
+      clearTimeout(progressionTimer)
+    })
 
     return $render
   }

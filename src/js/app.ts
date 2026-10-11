@@ -1,6 +1,6 @@
 import Framework7 from 'framework7/bundle'
 
-import { askUserPermissionForSendANotificationPush } from './notification.ts'
+import { askUserPermissionForSendANotificationPush } from './notification'
 
 // Import F7 Styles
 import 'framework7/css/bundle'
@@ -10,10 +10,10 @@ import '../css/icons.css'
 import '../css/app.scss'
 
 import App from '../app.f7'
-import { checkAndClearCache } from './cache.ts'
-import { reloadPage } from './helper/routerHelper.ts'
-import routes from './routes.ts'
-import { setupServicesWorkers } from './serviceWorker.ts'
+import { checkAndClearCache } from './cache'
+import { checkAppVersionOnPageChange } from './helper/routerHelper'
+import routes from './routes'
+import { setupServicesWorkers } from './serviceWorker'
 
 const app = new Framework7({
   name: 'Gestion Travaux',
@@ -38,10 +38,8 @@ const app = new Framework7({
   // } : {},
 })
 
-// Registered synchronously right after app creation, before any await, so it
-// is guaranteed to catch the initial 'pageBeforeIn' fired for the '/' route
-// (page components mount asynchronously) instead of racing a network call.
-reloadPage(app, '/prestation/')
+// Session restore on '/' is handled by the async route (see routes.ts)
+checkAppVersionOnPageChange(app)
 
 askUserPermissionForSendANotificationPush()
 setupServicesWorkers()

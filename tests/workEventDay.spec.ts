@@ -1,4 +1,3 @@
-import { describe } from 'node:test'
 import { type Locator, type Page, expect, test } from '@playwright/test'
 import { goToHome } from './helper/homeHelper'
 
@@ -9,12 +8,12 @@ interface Box {
   height: number
 }
 
-describe('WorkEventDay test', () => {
+test.describe('WorkEventDay test', () => {
   test.beforeEach(async ({ page, baseURL }) => {
     await page.goto(baseURL as string)
     await goToHome(page)
 
-    page.getByRole('link', { name: 'calendar Calendrier' }).click()
+    await page.getByRole('link', { name: 'calendar Calendrier' }).click()
 
     await page.waitForSelector('#page-calendar-work-event-day', {
       state: 'visible',
@@ -40,7 +39,7 @@ describe('WorkEventDay test', () => {
   })
 
   test('Create WorkEventDay', async ({ page, defaultBrowserType }) => {
-    page.getByTestId('open-modal-work-event-day').click()
+    await page.getByTestId('open-modal-work-event-day').click()
     await page.waitForSelector('#form-calendar')
 
     const title: string = `Présation du jour ${defaultBrowserType}`

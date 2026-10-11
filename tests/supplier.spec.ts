@@ -1,4 +1,3 @@
-import { describe } from 'node:test'
 import {
   type ElementHandle,
   type Locator,
@@ -8,7 +7,7 @@ import {
 } from '@playwright/test'
 import { goToHome } from './helper/homeHelper'
 
-describe('Supplier test', () => {
+test.describe('Supplier test', () => {
   test.beforeEach(async ({ page, baseURL }) => {
     await page.goto(baseURL as string)
     await goToHome(page)

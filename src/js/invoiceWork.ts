@@ -1,7 +1,7 @@
 import { RouteDTO } from './dto/RouteDTO'
-import { ApiMutationService } from './service/api/ApiMutationService.ts'
+import { ApiMutationService } from './service/api/ApiMutationService'
 import { getUrl } from './urlGenerator'
-import { addInvoiceLineForUpdate } from './work/component/invoiceLineComponent.ts'
+import { addInvoiceLineForUpdate } from './work/component/invoiceLineComponent'
 
 /**
  * @param { Dom7 } $$

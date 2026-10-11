@@ -1,10 +1,10 @@
 import type Framework7 from 'framework7'
 import type { Dialog } from 'framework7/components/dialog'
 import { clearCache } from '../../cache'
-import toastError from '../../components/toastError.js'
+import toastError from '../../components/toastError'
 import type { RouteDTO } from '../../dto/RouteDTO'
 import { downloadFile } from '../../helper/fileHelper'
-import * as messages from '../../messages.ts'
+import * as messages from '../../messages'
 import { getUrlById } from '../../urlGenerator'
 import { apiCredentials, clearSession, logout } from '../SessionService'
 

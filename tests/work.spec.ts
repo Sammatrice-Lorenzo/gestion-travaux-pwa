@@ -1,9 +1,8 @@
-import { describe } from 'node:test'
 import { type Locator, type Page, expect, test } from '@playwright/test'
 import { ProgressionEnum } from '../src/js/enum/ProgressionEnum'
 import { goToHome } from './helper/homeHelper'
 
-describe('Work test', () => {
+test.describe('Work test', () => {
   test.beforeEach(async ({ page, baseURL }) => {
     await page.goto(baseURL as string)
     await goToHome(page)
@@ -21,7 +20,7 @@ describe('Work test', () => {
   })
 
   test('Create Work', async ({ page, defaultBrowserType }) => {
-    page.getByText('Ajouter').click()
+    await page.getByText('Ajouter').click()
     await page.waitForSelector('#form-work')
 
     const name: string = `Changement Ballon ${defaultBrowserType}`
@@ -95,7 +94,9 @@ const assertModalSheetWorkImage = async (page: Page) => {
     timeout: 10000,
   })
 
-  const fileInput: Locator = page.locator('input[type="file"]')
+  const fileInput: Locator = page.locator(
+    '#form-work-images input[type="file"]',
+  )
   await fileInput.setInputFiles({
     name: 'work-image.png',
     mimeType: 'image/png',

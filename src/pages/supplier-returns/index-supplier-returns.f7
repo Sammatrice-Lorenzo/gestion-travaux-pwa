@@ -313,26 +313,26 @@
   </div>
 </template>
 <script>
-  import { loadTabbar } from '../../js/components/tabbar.ts'
-  import { createSheet } from '../../js/components/modalUploadFiles.ts'
-  import sheetModalSupplierReturnFormatter from '../../js/formatter/sheetModalSupplierReturnFormatter.ts'
-  import { pdfPreviewPopup } from '../../js/components/pdfPreviewPopup.ts'
-  import { getMontYear } from '../../js/helper/date.ts'
+  import { loadTabbar } from '../../js/components/tabbar'
+  import { createSheet } from '../../js/components/modalUploadFiles'
+  import sheetModalSupplierReturnFormatter from '../../js/formatter/sheetModalSupplierReturnFormatter'
+  import { pdfPreviewPopup } from '../../js/components/pdfPreviewPopup'
+  import { getMontYear } from '../../js/helper/date'
   import { CONFIRMATION_TO_DELETE } from '../../js/messages'
   import { openPdfPreviewFromUrl } from '../../js/service/productInvoices/previewPdfService'
-  import InvoicePaginatorService from '../../js/service/productInvoices/InvoicePaginatorService.ts'
-  import SupplierReturnFileManagement from '../../js/service/supplierReturns/SupplierReturnFileManagement.ts'
-  import SupplierReturnFormService from '../../js/service/supplierReturns/SupplierReturnFormService.ts'
-  import SupplierReturnToolbarService from '../../js/service/supplierReturns/SupplierReturnToolbarService.ts'
-  import { navigateToLinkedProductInvoice, consumeHighlightedSupplierReturnId, consumeHighlightedSupplierReturnDate } from '../../js/service/supplierReturns/supplierReturnLinkedInvoiceHelper.ts'
-  import Pagination from '../../js/service/Pagination.ts'
-  import Supplier from '../../js/Supplier.ts'
+  import InvoicePaginatorService from '../../js/service/productInvoices/InvoicePaginatorService'
+  import SupplierReturnFileManagement from '../../js/service/supplierReturns/SupplierReturnFileManagement'
+  import SupplierReturnFormService from '../../js/service/supplierReturns/SupplierReturnFormService'
+  import SupplierReturnToolbarService from '../../js/service/supplierReturns/SupplierReturnToolbarService'
+  import { navigateToLinkedProductInvoice, consumeHighlightedSupplierReturnId, consumeHighlightedSupplierReturnDate } from '../../js/service/supplierReturns/supplierReturnLinkedInvoiceHelper'
+  import Pagination from '../../js/service/Pagination'
+  import Supplier from '../../js/Supplier'
   import supplierReturnInvoiceStore from '../../js/store/supplierReturnInvoiceStore'
   import {
     deleteSupplierReturnInvoice,
     downloadSupplierReturnInvoice,
     downloadSupplierReturnZIP,
-  } from '../../js/supplierReturnInvoice.ts'
+  } from '../../js/supplierReturnInvoice'
 
   export default async (props, { $, $on, $f7, $onMounted, $update }) => {
     const pagination = new Pagination(10)

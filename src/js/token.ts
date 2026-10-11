@@ -4,4 +4,4 @@ export {
   getCurrentUser,
   isAuthenticated,
   logout,
-} from './service/SessionService.ts'
+} from './service/SessionService'

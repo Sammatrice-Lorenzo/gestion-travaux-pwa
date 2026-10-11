@@ -148,13 +148,13 @@
   import Framework7 from 'framework7/bundle'
   import Dom7 from 'dom7'
 
-  import { getClientsByUser } from '../../js/client/client.ts'
-  import { updateWork } from '../../js/work.ts'
-  import { findWorkById } from '../../js/work.ts'
-  import WorkUpdateService from '../../js/service/work/WorkUpdateService.ts'
-  import WorkCreateFormService from '../../js/service/work/WorkCreateFormService.ts'
+  import { getClientsByUser } from '../../js/client/client'
+  import { updateWork } from '../../js/work'
+  import { findWorkById } from '../../js/work'
+  import WorkUpdateService from '../../js/service/work/WorkUpdateService'
+  import WorkCreateFormService from '../../js/service/work/WorkCreateFormService'
 
-  import * as btnComponent from '../../js/work/component/btnComponent.ts'
+  import * as btnComponent from '../../js/work/component/btnComponent'
   export default async (props, {$, $on, $f7, $onBeforeUnmount } ) => {
 
     let formService

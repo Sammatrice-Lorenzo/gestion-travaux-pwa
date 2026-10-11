@@ -1,6 +1,5 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { describe } from 'node:test'
 import {
   type ElementHandle,
   type Locator,
@@ -12,7 +11,7 @@ import { goToHome } from './helper/homeHelper'
 
 const NAME_FILE: string = 'facture_test.pdf'
 
-describe('Product Invoice test', () => {
+test.describe('Product Invoice test', () => {
   test.beforeEach(async ({ page, baseURL }) => {
     await page.goto(baseURL as string)
     await goToHome(page)
@@ -88,7 +87,7 @@ describe('Product Invoice test', () => {
     const invoiceCard = await getInvoiceCard(page)
     const trashButton: Locator = invoiceCard.locator('.f7-icons:text("trash")')
     await expect(trashButton).toBeVisible({ timeout: 5000 })
-    trashButton.click()
+    await trashButton.click()
 
     const idProductInvoice = (await invoiceCard.getAttribute(
       'data-testid',

@@ -21,7 +21,7 @@ Package manager is **yarn** (yarn.lock is authoritative; a stray `package-lock`/
   - Single file: `yarn test:e2e tests/client.spec.ts`
   - Single test by name: `yarn test:e2e -g "Create client"`
   - The `setup` project (`tests/auth.setup.ts`) runs first and writes `tests/auth.json`, which other projects reuse as `storageState` — don't delete/ignore it when debugging auth-dependent tests.
-- Lint/format: `npx biome check --write .` (Biome is the source of truth; see `biome.json`). `eslint.config.mjs` also exists but only targets `**/src/js/*.js` — Biome is what CI and the pre-commit hook actually run.
+- Lint/format: `npx biome check --write .` (Biome is the only linter; see `biome.json`). It is what CI and the pre-commit hook run.
 - Pre-commit: Husky + lint-staged run `biome check --write --no-errors-on-unmatched` on staged `.ts/.js/.css/.json/.md/.yml/.f7` files automatically — don't bypass with `--no-verify`.
 - CI (`.github/workflows/quality.yml`) runs Biome (via reviewdog) only on changed files on PRs/push to `dev`. `.github/workflows/playwright.yml` runs the e2e suite.
 - **There is no `tsconfig.json`** — `.ts` files are transpiled by Vite/esbuild but never type-checked in CI or locally. Don't rely on `tsc` for verification; correctness has to come from careful typing, Biome, and the Playwright suite.
@@ -34,8 +34,8 @@ Pages and reusable UI live in Framework7's single-file component format: a `<tem
 `$h` tagged-template / lit-html-like syntax and `${...}` bindings) followed by a `<script>` exporting a
 component factory `(props, { $, $on, $f7, $onMounted, $update, $render }) => {...}`.
 
-- Pages: `src/pages/<domain>/*.f7`, routed centrally in `src/js/routes.js` (imported into the Framework7
-  instance created in `src/js/app.js`, which also bootstraps push notifications, the service worker, and
+- Pages: `src/pages/<domain>/*.f7`, routed centrally in `src/js/routes.ts` (imported into the Framework7
+  instance created in `src/js/app.ts`, which also bootstraps push notifications, the service worker, and
   session restore before rendering).
 - The `<script>` block is intentionally thin: it wires DOM events, calls into `src/js/service/**` for
   business logic, reads/writes `src/js/store/**` (Framework7 `createStore`) for shared state, and calls
