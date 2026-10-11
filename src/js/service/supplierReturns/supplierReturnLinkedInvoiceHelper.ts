@@ -1,5 +1,6 @@
 import type Framework7 from 'framework7'
 import type ProductInvoiceInterface from '../../../intefaces/ProductInvoice/ProductInvoiceInterface'
+import { parseApiDate, toDateLocalString } from '../../helper/date'
 
 const HIGHLIGHT_PRODUCT_INVOICE_KEY = 'highlightProductInvoiceId'
 const HIGHLIGHT_SUPPLIER_RETURN_KEY = 'highlightSupplierReturnId'
@@ -53,11 +54,10 @@ export function navigateToLinkedSupplierReturn(
 ): void {
   sessionStorage.setItem(HIGHLIGHT_SUPPLIER_RETURN_KEY, String(returnId))
   if (returnDate) {
-    const date =
-      returnDate instanceof Date
-        ? returnDate.toISOString().slice(0, 10)
-        : returnDate
-    sessionStorage.setItem(HIGHLIGHT_SUPPLIER_RETURN_DATE_KEY, date)
+    sessionStorage.setItem(
+      HIGHLIGHT_SUPPLIER_RETURN_DATE_KEY,
+      toDateLocalString(parseApiDate(returnDate)),
+    )
   } else {
     sessionStorage.removeItem(HIGHLIGHT_SUPPLIER_RETURN_DATE_KEY)
   }

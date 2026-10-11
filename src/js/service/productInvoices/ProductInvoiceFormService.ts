@@ -4,6 +4,7 @@ import type ProductInvoiceUpdateFormInterface from '../../../intefaces/ProductIn
 import type SupplierInterface from '../../../intefaces/Supplier/SupplierInterface'
 import type SupplierReadInterface from '../../../intefaces/Supplier/SupplierReadInterface'
 import { createPopup } from '../../components/popupProductInvoice'
+import { parseApiDate, toDateLocalString } from '../../helper/date'
 import { updateProductInvoice } from '../../productInvoice'
 import productInvoiceStore from '../../store/productInvoiceStore'
 import { handleSubmitForm } from '../form/formErrorInputs'
@@ -15,8 +16,7 @@ export default class ProductInvoiceFormService {
     productInvoice: ProductInvoiceInterface,
     suppliers: SupplierInterface[],
   ): void {
-    const dateInvoice = new Date(productInvoice.date)
-    const formattedDate = dateInvoice.toISOString().slice(0, 10)
+    const formattedDate = toDateLocalString(parseApiDate(productInvoice.date))
 
     const supplier: SupplierReadInterface | null | undefined =
       productInvoice.supplier

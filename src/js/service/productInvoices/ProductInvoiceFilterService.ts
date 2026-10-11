@@ -1,5 +1,6 @@
 import type Framework7 from 'framework7'
 import type ProductInvoiceInterface from '../../../intefaces/ProductInvoice/ProductInvoiceInterface'
+import { parseApiDate } from '../../helper/date'
 import productInvoiceStore from '../../store/productInvoiceStore'
 import type Pagination from '../Pagination'
 import type InvoicePaginatorService from './InvoicePaginatorService'
@@ -33,7 +34,9 @@ export default class ProductInvoiceFilterService {
       const supplierName = inv.supplier?.name
         ? inv.supplier.name.toString().toLowerCase()
         : ''
-      const invoiceDate = new Date(inv.date).toLocaleDateString().toLowerCase()
+      const invoiceDate = parseApiDate(inv.date)
+        .toLocaleDateString()
+        .toLowerCase()
 
       const matchSearch =
         !normalizedSearchTerm ||

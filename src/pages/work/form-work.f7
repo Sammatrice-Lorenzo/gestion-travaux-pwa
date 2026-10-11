@@ -150,6 +150,7 @@
 
   import { getClientsByUser } from '../../js/client/client'
   import { updateWork } from '../../js/work'
+  import { toDatetimeLocalString } from '../../js/helper/date'
   import { findWorkById } from '../../js/work'
   import WorkUpdateService from '../../js/service/work/WorkUpdateService'
   import WorkCreateFormService from '../../js/service/work/WorkCreateFormService'
@@ -165,7 +166,7 @@
       formService = new WorkCreateFormService($f7, 'form-work')
     }
 
-    const now = new Date().toISOString().slice(0, 16)
+    const now = toDatetimeLocalString(new Date())
     const clients = await getClientsByUser($f7)
 
     $on('pageBeforeIn', () => {

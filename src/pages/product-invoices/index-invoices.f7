@@ -215,7 +215,7 @@
                 <li>
                   <i class="f7-icons meta-icon">calendar</i>
                   <span class="meta-label">Date</span>
-                  <span class="meta-value">${new Date(invoice.date).toLocaleDateString('fr-FR')}</span>
+                  <span class="meta-value">${parseApiDate(invoice.date).toLocaleDateString('fr-FR')}</span>
                 </li>
                 <li>
                   <i class="f7-icons meta-icon">doc_text</i>
@@ -354,7 +354,7 @@
   import { createSheet } from '../../js/components/modalUploadFiles'
 
   import { pdfPreviewPopup } from '../../js/components/pdfPreviewPopup'
-  import { getMontYear } from '../../js/helper/date'
+  import { getMontYear, parseApiDate } from '../../js/helper/date'
   import { sendEmail } from '../../js/service/mailService'
   import sheetModalProductInvoiceFormatter from '../../js/formatter/sheetModalProductInvoiceFormatter'
   import ProductInvoiceFormService from '../../js/service/productInvoices/ProductInvoiceFormService'

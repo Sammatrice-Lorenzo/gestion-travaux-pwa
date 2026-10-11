@@ -65,8 +65,7 @@ test.describe('Supplier test', () => {
 })
 
 const assertInformationsForm = async (page: Page, elementToSearch: string) => {
-  const element = page.getByText(elementToSearch)
-  expect(element).not.toBeNull()
+  await expect(page.getByText(elementToSearch).first()).toBeVisible()
 }
 
 const fillFormSupplier = async (page: Page, name: string) => {

@@ -182,7 +182,7 @@
                 <li>
                   <i class="f7-icons meta-icon">calendar</i>
                   <span class="meta-label">Date</span>
-                  <span class="meta-value">${new Date(inv.date).toLocaleDateString('fr-FR')}</span>
+                  <span class="meta-value">${parseApiDate(inv.date).toLocaleDateString('fr-FR')}</span>
                 </li>
                 <li>
                   <i class="f7-icons meta-icon">doc_text</i>
@@ -317,7 +317,7 @@
   import { createSheet } from '../../js/components/modalUploadFiles'
   import sheetModalSupplierReturnFormatter from '../../js/formatter/sheetModalSupplierReturnFormatter'
   import { pdfPreviewPopup } from '../../js/components/pdfPreviewPopup'
-  import { getMontYear } from '../../js/helper/date'
+  import { getMontYear, parseApiDate } from '../../js/helper/date'
   import { CONFIRMATION_TO_DELETE } from '../../js/messages'
   import { openPdfPreviewFromUrl } from '../../js/service/productInvoices/previewPdfService'
   import InvoicePaginatorService from '../../js/service/productInvoices/InvoicePaginatorService'
@@ -394,7 +394,7 @@
           !q ||
           inv.name.toLowerCase().includes(q) ||
           inv.supplier?.name?.toLowerCase().includes(q) ||
-          new Date(inv.date).toLocaleDateString('fr-FR').includes(q)
+          parseApiDate(inv.date).toLocaleDateString('fr-FR').includes(q)
         return matchSupplier && matchSearch
       })
       supplierReturnInvoiceStore.dispatch('setFilteredInvoices', filtered)
@@ -534,7 +534,7 @@
       loadTabbar('index-supplier-returns', $f7)
 
       const highlightDate = consumeHighlightedSupplierReturnDate()
-      const initialDate = highlightDate ? new Date(highlightDate) : new Date()
+      const initialDate = highlightDate ? parseApiDate(highlightDate) : new Date()
 
       initCalendar(initialDate)
       if (highlightDate) {

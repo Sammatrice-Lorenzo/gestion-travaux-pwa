@@ -6,6 +6,7 @@ import type WorkEventDaySearchCriteriaInterface from '../intefaces/WorkEventDay/
 import type WorkEventDaySearchResultInterface from '../intefaces/WorkEventDay/WorkEventDaySearchResultInterface'
 import { checkDataToGetOfAResponseCached, responseIsCached } from './cache'
 import { RouteDTO } from './dto/RouteDTO'
+import { toDateLocalString } from './helper/date'
 import { ApiMutationService } from './service/api/ApiMutationService'
 import { ApiService } from './service/api/ApiService'
 import { getDateCalendarDefaultFormat } from './service/calendar/calendarDateService'
@@ -20,7 +21,7 @@ async function getWorkEventDayByUser(
 ): Promise<WorkEventDayInterface[]> {
   const date = calendar
     ? getDateCalendarDefaultFormat(calendar)
-    : new Date().toISOString().slice(0, 10)
+    : toDateLocalString(new Date())
   const urlWorkEventDay = URL_WORK_EVENT_DAY.slice(0, -1)
   const url = getUrlWithParameters(urlWorkEventDay, { date })
 

@@ -33,9 +33,9 @@ test.describe('WorkEventDay test', () => {
       .first()
       .click()
 
-    expect(
-      await page.getByText("Pas d'événement ce jour").first(),
-    ).not.toBeNull()
+    await expect(
+      page.getByText("Pas d'événement ce jour").first(),
+    ).toBeVisible()
   })
 
   test('Create WorkEventDay', async ({ page, defaultBrowserType }) => {
@@ -82,7 +82,7 @@ const handleSumbitForm = async (
   await page.locator('#btn-send').click()
 
   await page.locator('.dialog-button').click()
-  expect(await page.getByText(title).first()).not.toBeNull()
+  await expect(page.getByText(title).first()).toBeVisible()
 }
 
 const handleSwipeout = async (page: Page): Promise<void> => {

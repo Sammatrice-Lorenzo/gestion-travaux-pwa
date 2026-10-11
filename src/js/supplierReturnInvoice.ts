@@ -3,7 +3,7 @@ import type SupplierReturnInvoiceInterface from '../intefaces/SupplierReturn/Sup
 import { checkDataToGetOfAResponseCached, responseIsCached } from './cache'
 import { SUPPLIER_SELECT_ID } from './components/modalUploadFiles'
 import { RouteDTO } from './dto/RouteDTO'
-import { getMontYear } from './helper/date'
+import { getMontYear, toDateLocalString } from './helper/date'
 import { ApiMutationService } from './service/api/ApiMutationService'
 import { ApiService } from './service/api/ApiService'
 import { handleSubmitFormInputFiles } from './service/form/formErrorInputs'
@@ -28,7 +28,7 @@ async function getSupplierReturnInvoicesByUser(
   $f7: Framework7,
   date: Date,
 ): Promise<SupplierReturnInvoiceInterface[]> {
-  const formattedDate = date.toISOString().slice(0, 10)
+  const formattedDate = toDateLocalString(date)
   const url = getUrlWithParameters(URL_API, { date: formattedDate })
 
   if (await responseIsCached(url)) {
@@ -49,7 +49,7 @@ async function createSupplierReturnInvoices(
     return
   }
 
-  const formattedDate = date.toISOString().slice(0, 10)
+  const formattedDate = toDateLocalString(date)
   const body = getBody(files, formattedDate)
 
   const supplierSelect = document.getElementById(

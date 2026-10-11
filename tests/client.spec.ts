@@ -55,8 +55,9 @@ test.describe('Client test', () => {
 
     await page.locator('.dialog-button').click()
 
-    const element = await page.$(`text="${firstname} ${lastname}"`)
-    expect(element).not.toBeNull()
+    await expect(
+      page.getByText(`${firstname} ${lastname}`, { exact: true }).first(),
+    ).toBeVisible()
   })
 })
 
