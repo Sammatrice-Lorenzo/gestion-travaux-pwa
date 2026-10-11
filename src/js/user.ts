@@ -2,7 +2,7 @@ import Dom7 from 'dom7'
 import { clearCache } from './cache'
 import * as messages from './messages'
 import { apiCredentials } from './service/SessionService'
-import { ApiService } from './service/api/ApiService.ts'
+import { ApiService } from './service/api/ApiService'
 import { getUrl, getUrlById, getUrlUser } from './urlGenerator'
 
 export async function showUser($f7) {

@@ -1,11 +1,11 @@
 import Framework7 from 'framework7'
 import { checkDataToGetOfAResponseCached, responseIsCached } from './cache'
 import { RouteDTO } from './dto/RouteDTO'
-import { getMontYear } from './helper/date.ts'
-import { ApiMutationService } from './service/api/ApiMutationService.ts'
+import { getMontYear, toDateLocalString } from './helper/date'
+import { ApiMutationService } from './service/api/ApiMutationService'
 import { ApiService } from './service/api/ApiService'
-import { handleSubmitFormInputFiles } from './service/form/formErrorInputs.ts'
-import { formProductInvoiceFilesSchema } from './service/schema/productInvoice/formProductInvoiceFilesSchema.ts'
+import { handleSubmitFormInputFiles } from './service/form/formErrorInputs'
+import { formProductInvoiceFilesSchema } from './service/schema/productInvoice/formProductInvoiceFilesSchema'
 import { getUrl, getUrlById, getUrlWithParameters } from './urlGenerator'
 
 const URL_PRODUCT_INVOICE = '/api/product_invoice_files'
@@ -17,7 +17,7 @@ const URL_TO_REDIRECT = '/product/invoices/'
  * @returns { Promise<ProductInvoiceInterface[]> }
  */
 async function getProductsInvoicesByUser($f7, date) {
-  const formattedDate = date.toISOString().slice(0, 10)
+  const formattedDate = toDateLocalString(date)
   const url = getUrlWithParameters(URL_PRODUCT_INVOICE, {
     date: formattedDate,
   })
@@ -32,7 +32,7 @@ async function getProductsInvoicesByUser($f7, date) {
 
 async function createProductInvoices(date, app) {
   const files = document.getElementById('files').files
-  const formattedDate = date.toISOString().slice(0, 10)
+  const formattedDate = toDateLocalString(date)
 
   const url = getUrl(URL_PRODUCT_INVOICE)
   const body = getBody(files, formattedDate)

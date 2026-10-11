@@ -1,13 +1,13 @@
 import type Framework7 from 'framework7'
 import type SupplierReturnInvoiceInterface from '../intefaces/SupplierReturn/SupplierReturnInvoiceInterface'
 import { checkDataToGetOfAResponseCached, responseIsCached } from './cache'
-import { SUPPLIER_SELECT_ID } from './components/modalUploadFiles.ts'
+import { SUPPLIER_SELECT_ID } from './components/modalUploadFiles'
 import { RouteDTO } from './dto/RouteDTO'
-import { getMontYear } from './helper/date.ts'
-import { ApiMutationService } from './service/api/ApiMutationService.ts'
+import { getMontYear, toDateLocalString } from './helper/date'
+import { ApiMutationService } from './service/api/ApiMutationService'
 import { ApiService } from './service/api/ApiService'
-import { handleSubmitFormInputFiles } from './service/form/formErrorInputs.ts'
-import { formSupplierReturnFilesSchema } from './service/schema/supplierReturn/formSupplierReturnFilesSchema.ts'
+import { handleSubmitFormInputFiles } from './service/form/formErrorInputs'
+import { formSupplierReturnFilesSchema } from './service/schema/supplierReturn/formSupplierReturnFilesSchema'
 import { getUrl, getUrlById, getUrlWithParameters } from './urlGenerator'
 
 const URL_API = '/api/supplier_return_invoice_files'
@@ -28,7 +28,7 @@ async function getSupplierReturnInvoicesByUser(
   $f7: Framework7,
   date: Date,
 ): Promise<SupplierReturnInvoiceInterface[]> {
-  const formattedDate = date.toISOString().slice(0, 10)
+  const formattedDate = toDateLocalString(date)
   const url = getUrlWithParameters(URL_API, { date: formattedDate })
 
   if (await responseIsCached(url)) {
@@ -49,7 +49,7 @@ async function createSupplierReturnInvoices(
     return
   }
 
-  const formattedDate = date.toISOString().slice(0, 10)
+  const formattedDate = toDateLocalString(date)
   const body = getBody(files, formattedDate)
 
   const supplierSelect = document.getElementById(

@@ -6,9 +6,9 @@ import ShowClient from '../pages/clients/show-client.f7'
 import HomePage from '../pages/home.f7'
 import IndexInvoices from '../pages/product-invoices/index-invoices.f7'
 import IndexSupplierReturns from '../pages/supplier-returns/index-supplier-returns.f7'
-import ShowSupplier from '../pages/suppliers//show-supplier.f7'
 import FormSupplier from '../pages/suppliers/form-supplier.f7'
 import IndexSuppliers from '../pages/suppliers/index-suppliers.f7'
+import ShowSupplier from '../pages/suppliers/show-supplier.f7'
 import FormUpdateUser from '../pages/user/form-update-user.f7'
 import FormRegister from '../pages/user/form-user.f7'
 import ShowUser from '../pages/user/show-user.f7'
@@ -16,11 +16,12 @@ import FormInvoiceWork from '../pages/work/form-invoice-work.f7'
 import FormWork from '../pages/work/form-work.f7'
 import WorkIndex from '../pages/work/index-work.f7'
 import ShowWork from '../pages/work/show-work.f7'
+import { resolveHomeRoute } from './helper/routerHelper'
 
 const routes = [
   {
     path: '/',
-    component: HomePage,
+    async: resolveHomeRoute(HomePage),
   },
   {
     path: '/register/',

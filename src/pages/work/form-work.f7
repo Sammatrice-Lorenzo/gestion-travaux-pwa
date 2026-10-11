@@ -148,13 +148,14 @@
   import Framework7 from 'framework7/bundle'
   import Dom7 from 'dom7'
 
-  import { getClientsByUser } from '../../js/client/client.js'
-  import { updateWork } from '../../js/work.js'
-  import { findWorkById } from '../../js/work.js'
-  import WorkUpdateService from '../../js/service/work/WorkUpdateService.ts'
-  import WorkCreateFormService from '../../js/service/work/WorkCreateFormService.ts'
+  import { getClientsByUser } from '../../js/client/client'
+  import { updateWork } from '../../js/work'
+  import { toDatetimeLocalString } from '../../js/helper/date'
+  import { findWorkById } from '../../js/work'
+  import WorkUpdateService from '../../js/service/work/WorkUpdateService'
+  import WorkCreateFormService from '../../js/service/work/WorkCreateFormService'
 
-  import * as btnComponent from '../../js/work/component/btnComponent.js'
+  import * as btnComponent from '../../js/work/component/btnComponent'
   export default async (props, {$, $on, $f7, $onBeforeUnmount } ) => {
 
     let formService
@@ -165,7 +166,7 @@
       formService = new WorkCreateFormService($f7, 'form-work')
     }
 
-    const now = new Date().toISOString().slice(0, 16)
+    const now = toDatetimeLocalString(new Date())
     const clients = await getClientsByUser($f7)
 
     $on('pageBeforeIn', () => {

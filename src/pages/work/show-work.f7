@@ -205,17 +205,17 @@
   import Framework7 from 'framework7/bundle'
   import Dom7 from 'dom7'
 
-  import { formatDate } from '../../js/helper/date.ts'
-  import { findWorkById, deleteWork } from '../../js/work.js'
-  import { CONFIRMATION_TO_DELETE } from '../../js/messages.js'
-  import { loadTabbar } from '../../js/components/tabbar.js'
+  import { formatDate } from '../../js/helper/date'
+  import { findWorkById, deleteWork } from '../../js/work'
+  import { CONFIRMATION_TO_DELETE } from '../../js/messages'
+  import { loadTabbar } from '../../js/components/tabbar'
   import { totalAmountTVA, tvaOnAmount } from '../../js/helper/priceWorkHelper'
-  import { tvaEnum } from '../../js//enum/tvaEnum.js'
-  import { getProgressColor } from '../../js/helper/statusHelper.ts'
-  import { createSheet } from '../../js/components/modalUploadFiles.ts'
-  import WorkImageService from '../../js/WorkImageService.ts'
-  import WorkImageBrowserService from '../../js/service/workImage/WorkImageBrowserService.ts'
-  import sheetModalWorkImageFormatter from '../../js/formatter/sheetModalWorkImageFormatter.ts'
+  import { tvaEnum } from '../../js/enum/tvaEnum'
+  import { getProgressColor } from '../../js/helper/statusHelper'
+  import { createSheet } from '../../js/components/modalUploadFiles'
+  import WorkImageService from '../../js/WorkImageService'
+  import WorkImageBrowserService from '../../js/service/workImage/WorkImageBrowserService'
+  import sheetModalWorkImageFormatter from '../../js/formatter/sheetModalWorkImageFormatter'
 
   export default async (props, { $, $on, $f7, $el, $onMounted }) => {
     const $$ = Dom7

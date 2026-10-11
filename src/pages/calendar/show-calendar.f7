@@ -326,23 +326,22 @@
   </div>
 </template>
 <script>
-  import { formatDate } from '../../js/helper/date.ts'
-  import { monthsEnum } from '../../js/enum/monthEnum.js'
-  import { renderEventsCalendar, showNameEvent } from '../../js/service/calendar/renderCalendarService.ts'
-  import { CalendarWorkEventDayFormService } from '../../js/service/calendar/CalendarWorkEventDayFormService.ts'
-  import { createCalendar } from '../../js/service/calendar/createCalendarService.ts'
-  import { handleEditClassForm } from '../../js/service/calendar/calendarForm.ts'
-  import { createColorPickerForEventCalendar } from '../../js/service/calendar/colorPickerEventCalendar.ts'
+  import { formatDate, toDateLocalString } from '../../js/helper/date'
+  import { monthsEnum } from '../../js/enum/monthEnum'
+  import { renderEventsCalendar, showNameEvent } from '../../js/service/calendar/renderCalendarService'
+  import { CalendarWorkEventDayFormService } from '../../js/service/calendar/CalendarWorkEventDayFormService'
+  import { createCalendar } from '../../js/service/calendar/createCalendarService'
+  import { handleEditClassForm } from '../../js/service/calendar/calendarForm'
+  import { createColorPickerForEventCalendar } from '../../js/service/calendar/colorPickerEventCalendar'
   import {
     getWorkEventDayByUser,
     updateWorkEventDay,
     downloadCalendarEvents
-  } from '../../js/workEventDay.ts'
-  import { getEventsFormatted } from '../../js/formatter/eventsFormatter.js'
-  import { getClientsByUser } from '../../js/client/client.js'
-  import { CalendarWorkEventDaySearchService } from '../../js/service/calendar/CalendarWorkEventDaySearchService.ts'
+  } from '../../js/workEventDay'
+  import { getEventsFormatted } from '../../js/formatter/eventsFormatter'
+  import { getClientsByUser } from '../../js/client/client'
+  import { CalendarWorkEventDaySearchService } from '../../js/service/calendar/CalendarWorkEventDaySearchService'
 
-  const toDateInputValue = (date) => date.toISOString().slice(0, 10)
 
   export default async (props, { $f7, $, $el, $update, $on, $onMounted }) => {
     const clients = await getClientsByUser($f7)
@@ -363,8 +362,8 @@
     let searchCriteria = {
       client: '',
       search: '',
-      startDate: toDateInputValue(today),
-      endDate: toDateInputValue(inAWeek),
+      startDate: toDateLocalString(today),
+      endDate: toDateLocalString(inAWeek),
     }
     let searchResults = null
     let exportFormat = 'pdf'

@@ -102,9 +102,9 @@
   import Framework7 from 'framework7/bundle'
   import Dom7 from 'dom7'
 
-  import { createClient } from '../../js/client/client.js'
-  import ClientUpdateService from '../../js/service/client/ClientUpdateService.ts'
-  import ClientCreateService from '../../js/service/client/ClientCreateService.ts'
+  import { createClient } from '../../js/client/client'
+  import ClientUpdateService from '../../js/service/client/ClientUpdateService'
+  import ClientCreateService from '../../js/service/client/ClientCreateService'
 
   export default async (props, {$, $on, $f7, $onBeforeUnmount, page } ) => {
     let formService 

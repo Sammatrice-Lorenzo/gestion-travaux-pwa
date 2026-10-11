@@ -1,6 +1,6 @@
 import type Framework7 from 'framework7'
-import { createSupplierReturnInvoices } from '../../supplierReturnInvoice.ts'
-import type SupplierReturnToolbarService from './SupplierReturnToolbarService.ts'
+import { createSupplierReturnInvoices } from '../../supplierReturnInvoice'
+import type SupplierReturnToolbarService from './SupplierReturnToolbarService'
 
 export default class SupplierReturnFileManagement {
   constructor(private readonly _app: Framework7) {}

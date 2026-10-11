@@ -5,9 +5,10 @@ import type SupplierReadInterface from '../../../intefaces/Supplier/SupplierRead
 import type SupplierReturnInvoiceInterface from '../../../intefaces/SupplierReturn/SupplierReturnInvoiceInterface'
 import type SupplierReturnUpdateFormInterface from '../../../intefaces/SupplierReturn/SupplierReturnUpdateFormInterface'
 import { createPopup } from '../../components/popupSupplierReturn'
-import { getProductsInvoicesByUser } from '../../productInvoice.js'
+import { parseApiDate, toDateLocalString } from '../../helper/date'
+import { getProductsInvoicesByUser } from '../../productInvoice'
 import supplierReturnInvoiceStore from '../../store/supplierReturnInvoiceStore'
-import { updateSupplierReturnInvoice } from '../../supplierReturnInvoice.ts'
+import { updateSupplierReturnInvoice } from '../../supplierReturnInvoice'
 import { handleSubmitForm } from '../form/formErrorInputs'
 import { formSupplierReturnUpdateSchema } from '../schema/supplierReturn/formSupplierReturnUpdateSchema'
 import { getLinkableProductInvoices } from './supplierReturnLinkedInvoiceHelper'
@@ -21,8 +22,7 @@ export default class SupplierReturnFormService {
     suppliers: SupplierInterface[],
     toolbarDate: Date,
   ): Promise<void> {
-    const dateInvoice = new Date(invoice.date)
-    const formattedDate = dateInvoice.toISOString().slice(0, 10)
+    const formattedDate = toDateLocalString(parseApiDate(invoice.date))
 
     const supplier: SupplierReadInterface | null | undefined = invoice.supplier
     const productInvoices = await getProductsInvoicesByUser(app, toolbarDate)
