@@ -81,6 +81,10 @@ test.describe('Product Invoice test', () => {
     await expect(page.locator('#popup-preview-pdf')).toBeVisible({
       timeout: 15000,
     })
+    // pdf.js actually rendered at least one page
+    await expect(
+      page.locator('#pdf-pages-container canvas').first(),
+    ).toBeVisible({ timeout: 15000 })
   })
 
   test('should delete a selected invoice', async ({ page }) => {
