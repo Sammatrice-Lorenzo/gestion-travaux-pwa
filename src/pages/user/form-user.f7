@@ -76,7 +76,7 @@
     import Framework7 from 'framework7/bundle'
     import Dom7 from 'dom7'
 
-    import { createUser } from '../../js/user.js'
+    import { createUser } from '../../js/user.ts'
 
     export default async (props, {$, $on, $f7, $onBeforeUnmount } ) => {
         const send = () => {

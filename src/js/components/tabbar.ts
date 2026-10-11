@@ -1,5 +1,5 @@
 import Framework7 from 'framework7'
-import { logout } from '../../js/token.js'
+import { logout } from '../../js/token.ts'
 
 /**
  * @param { string } selector

@@ -3558,17 +3558,17 @@ framework7-icons@^5.0.5:
   resolved "https://registry.yarnpkg.com/framework7-icons/-/framework7-icons-5.0.5.tgz#a067709755054c69c22318de94c92bca40f3a908"
   integrity sha512-bvHMLyujV9TFuudehd3ORZ/EvNp19Ir3ckVzYAOf3MkLymHba/9oHLsgopCh0x5UsrYZUpkrE+fd7ggj5y4wRw==
 
-framework7@^8.0.3:
-  version "8.3.4"
-  resolved "https://registry.yarnpkg.com/framework7/-/framework7-8.3.4.tgz#b1745106e1df6ab537bf069192eb34603bb53a16"
-  integrity sha512-RKrEeNTxKEzhxJMaw8hLoIZbzHMzLZDFmQlpbxYFUqxyGDH8r6+NFGDCxOFnpkP1VI+L5UsDenrxo8vEzh929Q==
+framework7@^9.1.2:
+  version "9.1.2"
+  resolved "https://registry.yarnpkg.com/framework7/-/framework7-9.1.2.tgz#4765e483034f9be95171f3d508a5f134a51870df"
+  integrity sha512-XXvIeiRri3imFiz4wZZjBgr0b7mqVosFX1rRABM86iUyaWqj1GQEuQsKzaGXFw1nzEuiX7+r39vtF7Fq5bUiJA==
   dependencies:
     dom7 "^4.0.6"
     htm "^3.1.1"
-    path-to-regexp "^6.2.0"
+    path-to-regexp "^6.3.0"
     skeleton-elements "^4.0.1"
-    ssr-window "^4.0.2"
-    swiper "^10.2.0"
+    ssr-window "^5.0.1"
+    swiper "^12.1.2"
 
 fs-extra@^8.1.0:
   version "8.1.0"
@@ -4979,7 +4979,7 @@ path-scurry@^2.0.0:
     lru-cache "^11.0.0"
     minipass "^7.1.2"
 
-path-to-regexp@^6.2.0:
+path-to-regexp@^6.3.0:
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-6.3.0.tgz#2b6a26a337737a8e1416f9272ed0766b1c0389f4"
   integrity sha512-Yhpw4T9C6hPpgPeA28us07OJeqZ5EzQTkbfwuhsUg0c237RomFoETJgmp2sa3F/41gfLE6G5cqcYwznmeEeOlQ==
@@ -5916,10 +5916,15 @@ spdx-license-ids@^3.0.0:
   resolved "https://registry.yarnpkg.com/spdx-license-ids/-/spdx-license-ids-3.0.23.tgz#b069e687b1291a32f126893ed76a27a745ee2133"
   integrity sha512-CWLcCCH7VLu13TgOH+r8p1O/Znwhqv/dbb6lqWy67G+pT1kHmeD/+V36AVb/vq8QMIQwVShJ6Ssl5FPh0fuSdw==
 
-ssr-window@^4.0.0, ssr-window@^4.0.2:
+ssr-window@^4.0.0:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/ssr-window/-/ssr-window-4.0.2.tgz#dc6b3ee37be86ac0e3ddc60030f7b3bc9b8553be"
   integrity sha512-ISv/Ch+ig7SOtw7G2+qkwfVASzazUnvlDTwypdLoPoySv+6MqlOV10VwPSE6EWkGjhW50lUmghPmpYZXMu/+AQ==
+
+ssr-window@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/ssr-window/-/ssr-window-5.0.1.tgz#26c3b5bf6dd5ad21a8ef0545de5bf8662dc1d3ab"
+  integrity sha512-WVXlhQsm54HC+FnJfEbccEgNF7mKXtnFUB8Xn7rx2dsWHOlBdqezdX88Vjh6pVGaa0ZvL+PoSu7rEcBuNmxt6g==
 
 stop-iteration-iterator@^1.1.0:
   version "1.1.0"
@@ -6079,7 +6084,7 @@ svelte-routing@^1.6.0:
   resolved "https://registry.yarnpkg.com/svelte-routing/-/svelte-routing-1.11.0.tgz#8ef3e486f63725ba36d14b491e6e0fc8c2392458"
   integrity sha512-/JlBAB6KxgM+Xl+4J/vOy4i4uYAJpWWbjh7vtRwsuu0MPl5B+ml+N/jCRkfjRa9ulODcS/G6PL8opyhczmrV8Q==
 
-swiper@^10.2.0, swiper@^12.1.2:
+swiper@^12.1.2:
   version "12.1.3"
   resolved "https://registry.yarnpkg.com/swiper/-/swiper-12.1.3.tgz#0fd256e6ee043c85c077b0fa48faef7ed6acb051"
   integrity sha512-XcWlVmkHFICI4fuoJKgbp8PscDcS4i7pBH8nwJRBi3dpQvhCySwsWRYm4bOf/BzKVWkHOYaFw7qz9uBSrY3oug==

@@ -49,7 +49,7 @@ describe('Product Invoice test', () => {
       },
     ])
 
-    const sendButton: Locator = page.locator('#btn-send-files')
+    const sendButton: Locator = page.locator('#btn-send-form-product-invoices')
     await sendButton.click()
 
     await page.locator('.dialog-button').click()

@@ -345,8 +345,8 @@
 </template>
 <script>
   import Framework7 from 'framework7/bundle'
-  import { loadTabbar } from '../../js/components/tabbar.js'
-  import { getProductsInvoicesByUser} from '../../js/productInvoice.js'
+  import { loadTabbar } from '../../js/components/tabbar.ts'
+  import { getProductsInvoicesByUser} from '../../js/productInvoice.ts'
   import DataTableProductInvoiceService from '../../js/service/productInvoices/DataTableProductInvoiceService'
   import { openPdfPreviewFromUrl } from '../../js/service/productInvoices/previewPdfService'
   import ProductInvoiceManagerService from '../../js/service/productInvoices/ProductInvoiceManagerService'

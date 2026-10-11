@@ -22,13 +22,9 @@ async function getWorkByUser($f7, currentPage) {
   const apiService = new ApiService($f7)
 
   const isCachedResponse = await responseIsCached(url)
-  let works
-  if (isCachedResponse) {
-    const responseCached = await checkDataToGetOfAResponseCached(url)
-    works = apiService.extractDataResponse(responseCached)
-  } else {
-    works = await apiService.call(url, 'application/ld+json')
-  }
+  const works = isCachedResponse
+    ? apiService.extractDataResponse(await checkDataToGetOfAResponseCached(url))
+    : await apiService.call(url, 'application/ld+json')
 
   return {
     works,

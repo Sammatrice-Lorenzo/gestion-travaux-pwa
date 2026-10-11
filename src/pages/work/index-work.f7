@@ -159,11 +159,11 @@
 
   import { formatDate } from '../../js/helper/date.ts'
   import { getProgressColor } from '../../js/helper/statusHelper.ts'
-  import { getWorkByUser } from '../../js/work.js'
+  import { getWorkByUser } from '../../js/work.ts'
   import { sendNotificationPushForProgression } from '../../js/notification'
-  import { loadTabbar } from '../../js/components/tabbar.js'
+  import { loadTabbar } from '../../js/components/tabbar.ts'
   import { totalAmountTVA, tvaOnAmount } from '../../js/helper/priceWorkHelper'
-  import { tvaEnum } from '../../js/enum/tvaEnum.js'
+  import { tvaEnum } from '../../js/enum/tvaEnum.ts'
   import Pagination from '../../js/service/Pagination.ts'
 
   export default async (props, { $, $on, $f7, $update }) => {

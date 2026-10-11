@@ -26,8 +26,8 @@
     import Framework7 from 'framework7/bundle';
     import Dom7 from 'dom7';
 
-    import { showUser } from '../../js/user.js'
-    import { loadTabbar } from '../../js/components/tabbar.js'
+    import { showUser } from '../../js/user.ts'
+    import { loadTabbar } from '../../js/components/tabbar.ts'
 
     export default async (props, { $, $on, $f7 }) => {
         const user = await showUser($f7)

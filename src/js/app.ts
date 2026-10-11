@@ -1,6 +1,6 @@
 import Framework7 from 'framework7/bundle'
 
-import { askUserPermissionForSendANotificationPush } from './notification.js'
+import { askUserPermissionForSendANotificationPush } from './notification.ts'
 
 // Import F7 Styles
 import 'framework7/css/bundle'
@@ -11,10 +11,9 @@ import '../css/app.scss'
 
 import App from '../app.f7'
 import { checkAndClearCache } from './cache.ts'
-import { reloadPage } from './helper/routerHelper.js'
-import routes from './routes.js'
-import { fetchCurrentUser } from './service/SessionService'
-import { setupServicesWorkers } from './serviceWorker.js'
+import { reloadPage } from './helper/routerHelper.ts'
+import routes from './routes.ts'
+import { setupServicesWorkers } from './serviceWorker.ts'
 
 const app = new Framework7({
   name: 'Gestion Travaux',
@@ -39,10 +38,12 @@ const app = new Framework7({
   // } : {},
 })
 
+// Registered synchronously right after app creation, before any await, so it
+// is guaranteed to catch the initial 'pageBeforeIn' fired for the '/' route
+// (page components mount asynchronously) instead of racing a network call.
+reloadPage(app, '/prestation/')
+
 askUserPermissionForSendANotificationPush()
 setupServicesWorkers()
-fetchCurrentUser().finally(() => {
-  reloadPage(app, '/prestation/')
-})
 
 export default app

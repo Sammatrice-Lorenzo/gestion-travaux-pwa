@@ -4,7 +4,7 @@ import { clearCache } from '../../cache'
 import toastError from '../../components/toastError.js'
 import type { RouteDTO } from '../../dto/RouteDTO'
 import { downloadFile } from '../../helper/fileHelper'
-import * as messages from '../../messages.js'
+import * as messages from '../../messages.ts'
 import { getUrlById } from '../../urlGenerator'
 import { apiCredentials, clearSession, logout } from '../SessionService'
 

@@ -5,7 +5,7 @@ import type SupplierReadInterface from '../../../intefaces/Supplier/SupplierRead
 import type SupplierReturnInvoiceInterface from '../../../intefaces/SupplierReturn/SupplierReturnInvoiceInterface'
 import type SupplierReturnUpdateFormInterface from '../../../intefaces/SupplierReturn/SupplierReturnUpdateFormInterface'
 import { createPopup } from '../../components/popupSupplierReturn'
-import { getProductsInvoicesByUser } from '../../productInvoice.js'
+import { getProductsInvoicesByUser } from '../../productInvoice.ts'
 import supplierReturnInvoiceStore from '../../store/supplierReturnInvoiceStore'
 import { updateSupplierReturnInvoice } from '../../supplierReturnInvoice.ts'
 import { handleSubmitForm } from '../form/formErrorInputs'

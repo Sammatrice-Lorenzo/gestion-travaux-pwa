@@ -5,7 +5,7 @@ import type WorkEventDayInterface from '../intefaces/WorkEventDay/WorkEventDayIn
 import type WorkEventDaySearchCriteriaInterface from '../intefaces/WorkEventDay/WorkEventDaySearchCriteriaInterface'
 import type WorkEventDaySearchResultInterface from '../intefaces/WorkEventDay/WorkEventDaySearchResultInterface'
 import { checkDataToGetOfAResponseCached, responseIsCached } from './cache'
-import { RouteDTO } from './dto/RouteDTO.js'
+import { RouteDTO } from './dto/RouteDTO.ts'
 import { ApiMutationService } from './service/api/ApiMutationService.ts'
 import { ApiService } from './service/api/ApiService.ts'
 import { getDateCalendarDefaultFormat } from './service/calendar/calendarDateService.ts'

@@ -102,7 +102,7 @@
   import Framework7 from 'framework7/bundle'
   import Dom7 from 'dom7'
 
-  import { createClient } from '../../js/client/client.js'
+  import { createClient } from '../../js/client/client.ts'
   import ClientUpdateService from '../../js/service/client/ClientUpdateService.ts'
   import ClientCreateService from '../../js/service/client/ClientCreateService.ts'
 

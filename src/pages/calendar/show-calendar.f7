@@ -327,7 +327,7 @@
 </template>
 <script>
   import { formatDate } from '../../js/helper/date.ts'
-  import { monthsEnum } from '../../js/enum/monthEnum.js'
+  import { monthsEnum } from '../../js/enum/monthEnum.ts'
   import { renderEventsCalendar, showNameEvent } from '../../js/service/calendar/renderCalendarService.ts'
   import { CalendarWorkEventDayFormService } from '../../js/service/calendar/CalendarWorkEventDayFormService.ts'
   import { createCalendar } from '../../js/service/calendar/createCalendarService.ts'
@@ -338,8 +338,8 @@
     updateWorkEventDay,
     downloadCalendarEvents
   } from '../../js/workEventDay.ts'
-  import { getEventsFormatted } from '../../js/formatter/eventsFormatter.js'
-  import { getClientsByUser } from '../../js/client/client.js'
+  import { getEventsFormatted } from '../../js/formatter/eventsFormatter.ts'
+  import { getClientsByUser } from '../../js/client/client.ts'
   import { CalendarWorkEventDaySearchService } from '../../js/service/calendar/CalendarWorkEventDaySearchService.ts'
 
   const toDateInputValue = (date) => date.toISOString().slice(0, 10)

@@ -52,17 +52,13 @@ function sendNotificationPushForProgression($f7) {
     icon: `${window.location.hostname}/icons/favicon.png`,
   }
 
-  let notificationWithButton
-  if (!notificationWithButton) {
-    notificationWithButton = $f7.notification.create({
-      icon: '<i class="icon icon-f7"></i>',
-      title: 'Progression des prestations',
-      subtitle: "Veuillez mettre à jour l'état des prestations.",
-      text: 'Cliquer sur (x) pour fermer la notification',
-      closeButton: true,
-    })
-  }
-  // Open it
+  const notificationWithButton = $f7.notification.create({
+    icon: '<i class="icon icon-f7"></i>',
+    title: 'Progression des prestations',
+    subtitle: "Veuillez mettre à jour l'état des prestations.",
+    text: 'Cliquer sur (x) pour fermer la notification',
+    closeButton: true,
+  })
   notificationWithButton.open()
 
   new Notification(notificationTitle, notificationOptions)

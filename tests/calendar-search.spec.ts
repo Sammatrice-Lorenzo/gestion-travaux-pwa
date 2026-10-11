@@ -42,7 +42,10 @@ describe('WorkEventDay search test', () => {
 
     const resultCount = page.getByTestId('search-work-event-day-count')
     await expect(resultCount).toBeVisible()
-    await expect(page.getByText(title)).toBeVisible()
+    // Scoped to the popup: the event is also listed in #calendar-events behind it
+    await expect(
+      page.locator('.popup-search-work-event-day').getByText(title),
+    ).toBeVisible()
 
     await page
       .locator('.popup-search-work-event-day select[name="export-format"]')

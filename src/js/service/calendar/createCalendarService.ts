@@ -1,7 +1,7 @@
 import type Framework7 from 'framework7'
 import type { Calendar } from 'framework7/components/calendar'
 import type EventsInterface from '../../../intefaces/WorkEventDay/EventInterface.js'
-import { monthsEnum } from '../../enum/monthEnum.js'
+import { monthsEnum } from '../../enum/monthEnum.ts'
 
 const updateNavbarCalendar = (
   calendar: Calendar.Calendar,

@@ -85,9 +85,9 @@
     import Framework7 from 'framework7/bundle'
     import Dom7 from 'dom7'
 
-    import { createInvoiceWork, isValidForm, showInvoiceForUpdate } from '../../js/invoiceWork.js'
-    import { addInvoiceLine } from '../../js/work/component/invoiceLineComponent.js'
-    import { findWorkById } from '../../js/work.js'
+    import { createInvoiceWork, isValidForm, showInvoiceForUpdate } from '../../js/invoiceWork.ts'
+    import { addInvoiceLine } from '../../js/work/component/invoiceLineComponent.ts'
+    import { findWorkById } from '../../js/work.ts'
 
     export default async (props, {$, $on, $f7, $onBeforeUnmount } ) => {
 

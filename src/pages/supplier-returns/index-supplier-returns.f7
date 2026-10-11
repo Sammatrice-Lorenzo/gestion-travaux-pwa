@@ -313,7 +313,7 @@
   </div>
 </template>
 <script>
-  import { loadTabbar } from '../../js/components/tabbar.js'
+  import { loadTabbar } from '../../js/components/tabbar.ts'
   import { createSheet } from '../../js/components/modalUploadFiles.ts'
   import sheetModalSupplierReturnFormatter from '../../js/formatter/sheetModalSupplierReturnFormatter.ts'
   import { pdfPreviewPopup } from '../../js/components/pdfPreviewPopup.ts'
