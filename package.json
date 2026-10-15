@@ -31,6 +31,7 @@
   ],
   "dependencies": {
     "@isaacs/brace-expansion": "^5.0.1",
+    "@sentry/browser": "^11.7.0",
     "brace-expansion": "^5.0.12",
     "dom7": "^4.0.6",
     "firebase": "^10.14.1",
