@@ -11,9 +11,12 @@ import '../css/app.scss'
 
 import App from '../app.f7'
 import { checkAndClearCache } from './cache'
+import { setupErrorMonitoring } from './errorMonitoring'
 import { checkAppVersionOnPageChange } from './helper/routerHelper'
 import routes from './routes'
 import { setupServicesWorkers } from './serviceWorker'
+
+setupErrorMonitoring()
 
 const app = new Framework7({
   name: 'Gestion Travaux',
