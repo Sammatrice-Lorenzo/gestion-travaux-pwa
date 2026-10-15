@@ -32,7 +32,7 @@
                 <div class="item-inner">
                   <div class="item-title item-label">Adresse : </div>
                   <div class="item-input-wrap">
-                    <input name='address' type="text" placeholder="Rue" required validate />
+                    <input name='address' type="text" placeholder="Rue" />
                   </div>
                 </div>
               </div>
@@ -52,7 +52,7 @@
                 <div class="item-inner">
                   <div class="item-title item-label"> Pays: </div>
                   <div class="item-input-wrap">
-                    <input name='country' type="text" placeholder="France" required validate />
+                    <input name='country' type="text" placeholder="France" />
                   </div>
                 </div>
               </div>
