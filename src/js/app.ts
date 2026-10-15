@@ -1,6 +1,6 @@
 import Framework7 from 'framework7/bundle'
 
-import { askUserPermissionForSendANotificationPush } from './notification.js'
+import { askUserPermissionForSendANotificationPush } from './notification'
 
 // Import F7 Styles
 import 'framework7/css/bundle'
@@ -10,11 +10,13 @@ import '../css/icons.css'
 import '../css/app.scss'
 
 import App from '../app.f7'
-import { checkAndClearCache } from './cache.ts'
-import { reloadPage } from './helper/routerHelper.js'
-import routes from './routes.js'
-import { fetchCurrentUser } from './service/SessionService'
-import { setupServicesWorkers } from './serviceWorker.js'
+import { checkAndClearCache } from './cache'
+import { setupErrorMonitoring } from './errorMonitoring'
+import { checkAppVersionOnPageChange } from './helper/routerHelper'
+import routes from './routes'
+import { setupServicesWorkers } from './serviceWorker'
+
+setupErrorMonitoring()
 
 const app = new Framework7({
   name: 'Gestion Travaux',
@@ -39,10 +41,10 @@ const app = new Framework7({
   // } : {},
 })
 
+// Session restore on '/' is handled by the async route (see routes.ts)
+checkAppVersionOnPageChange(app)
+
 askUserPermissionForSendANotificationPush()
 setupServicesWorkers()
-fetchCurrentUser().finally(() => {
-  reloadPage(app, '/prestation/')
-})
 
 export default app

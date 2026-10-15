@@ -1,16 +1,15 @@
-import { describe } from 'node:test'
 import { type Locator, type Page, expect, test } from '@playwright/test'
 import { ProgressionEnum } from '../src/js/enum/ProgressionEnum'
 import { goToHome } from './helper/homeHelper'
 
-describe('Work test', () => {
+test.describe('Work test', () => {
   test.beforeEach(async ({ page, baseURL }) => {
     await page.goto(baseURL as string)
     await goToHome(page)
   })
 
   test('show work', async ({ page }) => {
-    handleClickFirstCard(page)
+    await handleClickFirstCard(page)
 
     const divShowWork: Locator = page.locator('#show-work')
     await expect(divShowWork).toBeVisible({
@@ -21,7 +20,7 @@ describe('Work test', () => {
   })
 
   test('Create Work', async ({ page, defaultBrowserType }) => {
-    page.getByText('Ajouter').click()
+    await page.getByText('Ajouter').click()
     await page.waitForSelector('#form-work')
 
     const name: string = `Changement Ballon ${defaultBrowserType}`
@@ -29,19 +28,22 @@ describe('Work test', () => {
   })
 
   test('Update Work', async ({ page, defaultBrowserType }) => {
-    handleClickFirstCard(page)
+    await handleClickFirstCard(page)
     await page.waitForSelector('#form-work-edit')
-    page.locator('#form-work-edit').click()
+    await page.locator('#form-work-edit').click()
     await page.waitForSelector('#form-work')
+    // initForm() fills the form asynchronously on pageBeforeIn: wait for it,
+    // otherwise it overwrites the values typed by the test.
+    await expect(page.locator('input[name=name]')).not.toHaveValue('')
 
     const name: string = `Update Changement Ballon ${defaultBrowserType}`
     await submitForm(page, name)
   })
 })
 
-const handleClickFirstCard = (page: Page) => {
+const handleClickFirstCard = async (page: Page) => {
   const workCard: Locator = page.locator('.card').first()
-  workCard.getByRole('link').click()
+  await workCard.getByRole('link').click()
 }
 
 const fillFormWork = async (page: Page, name: string) => {
@@ -84,8 +86,30 @@ const assertModalSheetWorkImage = async (page: Page) => {
     timeout: 10000,
   })
 
-  await page.locator('#btn-send-files').click()
-  await expect(await page.locator('.toast')).toBeVisible({
+  const sendButton: Locator = page.locator('#btn-send-form-work-images')
+
+  // Without file: Zod validation shows an error toast
+  await sendButton.click()
+  await expect(page.locator('.toast')).toBeVisible({
     timeout: 10000,
   })
+
+  const fileInput: Locator = page.locator(
+    '#form-work-images input[type="file"]',
+  )
+  await fileInput.setInputFiles({
+    name: 'work-image.png',
+    mimeType: 'image/png',
+    buffer: Buffer.from(
+      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',
+      'base64',
+    ),
+  })
+
+  // With file: upload succeeds and shows the success dialog
+  await sendButton.click()
+  await expect(page.locator('.dialog')).toContainText(
+    "L'insertion a été bien prise en compte!",
+    { timeout: 10000 },
+  )
 }

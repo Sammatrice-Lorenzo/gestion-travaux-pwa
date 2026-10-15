@@ -4,9 +4,9 @@ import type WorkEventDaySearchResultInterface from '../../../intefaces/WorkEvent
 import {
   downloadWorkEventDaySearchExport,
   searchWorkEventDays,
-} from '../../workEventDay.ts'
-import { handleSubmitForm } from '../form/formErrorInputs.ts'
-import { workEventDaySearchSchema } from '../schema/workEventDay/workEventDaySearchSchema.ts'
+} from '../../workEventDay'
+import { handleSubmitForm } from '../form/formErrorInputs'
+import { workEventDaySearchSchema } from '../schema/workEventDay/workEventDaySearchSchema'
 
 export interface RawWorkEventDaySearchCriteria {
   client: string

@@ -182,7 +182,7 @@
                 <li>
                   <i class="f7-icons meta-icon">calendar</i>
                   <span class="meta-label">Date</span>
-                  <span class="meta-value">${new Date(inv.date).toLocaleDateString('fr-FR')}</span>
+                  <span class="meta-value">${parseApiDate(inv.date).toLocaleDateString('fr-FR')}</span>
                 </li>
                 <li>
                   <i class="f7-icons meta-icon">doc_text</i>
@@ -313,26 +313,26 @@
   </div>
 </template>
 <script>
-  import { loadTabbar } from '../../js/components/tabbar.js'
-  import { createSheet } from '../../js/components/modalUploadFiles.ts'
-  import sheetModalSupplierReturnFormatter from '../../js/formatter/sheetModalSupplierReturnFormatter.ts'
-  import { pdfPreviewPopup } from '../../js/components/pdfPreviewPopup.ts'
-  import { getMontYear } from '../../js/helper/date.ts'
+  import { loadTabbar } from '../../js/components/tabbar'
+  import { createSheet } from '../../js/components/modalUploadFiles'
+  import sheetModalSupplierReturnFormatter from '../../js/formatter/sheetModalSupplierReturnFormatter'
+  import { pdfPreviewPopup } from '../../js/components/pdfPreviewPopup'
+  import { getMontYear, parseApiDate } from '../../js/helper/date'
   import { CONFIRMATION_TO_DELETE } from '../../js/messages'
   import { openPdfPreviewFromUrl } from '../../js/service/productInvoices/previewPdfService'
-  import InvoicePaginatorService from '../../js/service/productInvoices/InvoicePaginatorService.ts'
-  import SupplierReturnFileManagement from '../../js/service/supplierReturns/SupplierReturnFileManagement.ts'
-  import SupplierReturnFormService from '../../js/service/supplierReturns/SupplierReturnFormService.ts'
-  import SupplierReturnToolbarService from '../../js/service/supplierReturns/SupplierReturnToolbarService.ts'
-  import { navigateToLinkedProductInvoice, consumeHighlightedSupplierReturnId, consumeHighlightedSupplierReturnDate } from '../../js/service/supplierReturns/supplierReturnLinkedInvoiceHelper.ts'
-  import Pagination from '../../js/service/Pagination.ts'
-  import Supplier from '../../js/Supplier.ts'
+  import InvoicePaginatorService from '../../js/service/productInvoices/InvoicePaginatorService'
+  import SupplierReturnFileManagement from '../../js/service/supplierReturns/SupplierReturnFileManagement'
+  import SupplierReturnFormService from '../../js/service/supplierReturns/SupplierReturnFormService'
+  import SupplierReturnToolbarService from '../../js/service/supplierReturns/SupplierReturnToolbarService'
+  import { navigateToLinkedProductInvoice, consumeHighlightedSupplierReturnId, consumeHighlightedSupplierReturnDate } from '../../js/service/supplierReturns/supplierReturnLinkedInvoiceHelper'
+  import Pagination from '../../js/service/Pagination'
+  import Supplier from '../../js/Supplier'
   import supplierReturnInvoiceStore from '../../js/store/supplierReturnInvoiceStore'
   import {
     deleteSupplierReturnInvoice,
     downloadSupplierReturnInvoice,
     downloadSupplierReturnZIP,
-  } from '../../js/supplierReturnInvoice.ts'
+  } from '../../js/supplierReturnInvoice'
 
   export default async (props, { $, $on, $f7, $onMounted, $update }) => {
     const pagination = new Pagination(10)
@@ -394,7 +394,7 @@
           !q ||
           inv.name.toLowerCase().includes(q) ||
           inv.supplier?.name?.toLowerCase().includes(q) ||
-          new Date(inv.date).toLocaleDateString('fr-FR').includes(q)
+          parseApiDate(inv.date).toLocaleDateString('fr-FR').includes(q)
         return matchSupplier && matchSearch
       })
       supplierReturnInvoiceStore.dispatch('setFilteredInvoices', filtered)
@@ -534,7 +534,7 @@
       loadTabbar('index-supplier-returns', $f7)
 
       const highlightDate = consumeHighlightedSupplierReturnDate()
-      const initialDate = highlightDate ? new Date(highlightDate) : new Date()
+      const initialDate = highlightDate ? parseApiDate(highlightDate) : new Date()
 
       initCalendar(initialDate)
       if (highlightDate) {

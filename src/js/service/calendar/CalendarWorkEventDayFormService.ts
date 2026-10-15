@@ -1,22 +1,22 @@
 import type Framework7 from 'framework7'
 import type { ColorPicker } from 'framework7/components/color-picker'
 import type { Popup } from 'framework7/components/popup'
-import type EventsInterface from '../../../intefaces/WorkEventDay/EventInterface.ts'
-import type { EventItemInteface } from '../../../intefaces/WorkEventDay/EventItermInterface.ts'
-import type FormWorkEventDayInterface from '../../../intefaces/WorkEventDay/FormWorkEventDayInteface.ts'
+import type EventsInterface from '../../../intefaces/WorkEventDay/EventInterface'
+import type { EventItemInteface } from '../../../intefaces/WorkEventDay/EventItermInterface'
+import type FormWorkEventDayInterface from '../../../intefaces/WorkEventDay/FormWorkEventDayInteface'
 import {
   createWorkEventDay,
   deleteWorkEventDay,
   updateWorkEventDay,
-} from '../../workEventDay.ts'
-import { handleSubmitForm } from '../form/formErrorInputs.ts'
-import { FormWorkEventDaySchema } from '../schema/workEventDay/workEventDaySchema.ts'
+} from '../../workEventDay'
+import { handleSubmitForm } from '../form/formErrorInputs'
+import { FormWorkEventDaySchema } from '../schema/workEventDay/workEventDaySchema'
 import {
   getElementEdit,
   getEventSelected,
   getWorkDayCalendar,
-} from './calendarForm.ts'
-import { createColorPickerForEventCalendar } from './colorPickerEventCalendar.ts'
+} from './calendarForm'
+import { createColorPickerForEventCalendar } from './colorPickerEventCalendar'
 
 export class CalendarWorkEventDayFormService {
   private _selectorForm = '#form-calendar'

@@ -1,4 +1,4 @@
-import { getTime } from '../helper/date.ts'
+import { getTime } from '../helper/date'
 
 const getEventsFormatted = (workEventDays) => {
   return workEventDays.map((event) => {

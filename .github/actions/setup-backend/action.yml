@@ -25,12 +25,12 @@ runs:
               restore-keys: |
                   composer-${{ runner.os }}-
 
+        # v1 contenait un ~/.symfony5 sans binaire (il était déplacé avant la sauvegarde du cache)
         - name: Cache Symfony CLI
           uses: actions/cache@v4
-          id: symfony-cli-cache
           with:
               path: ~/.symfony5
-              key: symfony-cli-${{ runner.os }}-v1
+              key: symfony-cli-${{ runner.os }}-v2
 
         - name: Configure Git safe.directory
           shell: bash
@@ -49,19 +49,17 @@ runs:
           run: yarn install --frozen-lockfile --ignore-scripts
           working-directory: ${{ inputs.backend_path }}
 
+        # Le binaire reste dans ~/.symfony5 (mis en cache) : on le lie au lieu de le déplacer,
+        # et on réinstalle s'il manque même en cas de cache-hit.
         - name: Install Symfony CLI
-          if: steps.symfony-cli-cache.outputs.cache-hit != 'true'
           shell: bash
           run: |
-              curl -sS https://get.symfony.com/cli/installer | bash
-              mv ~/.symfony*/bin/symfony /usr/local/bin/symfony
-
-        - name: Link Symfony CLI from cache
-          if: steps.symfony-cli-cache.outputs.cache-hit == 'true'
-          shell: bash
-          run: |
-              SYMFONY_BIN=$(find "${HOME}/.symfony5" -name symfony -type f | head -1)
+              SYMFONY_BIN="${HOME}/.symfony5/bin/symfony"
+              if [ ! -x "${SYMFONY_BIN}" ]; then
+                  curl -sS https://get.symfony.com/cli/installer | bash
+              fi
               sudo ln -sf "${SYMFONY_BIN}" /usr/local/bin/symfony
+              symfony version
 
         - name: Install JWT keys
           shell: bash

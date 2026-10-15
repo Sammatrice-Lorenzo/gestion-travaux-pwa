@@ -1,13 +1,12 @@
-import { describe } from 'node:test'
 import { type Download, expect, test } from '@playwright/test'
 import { goToHome } from './helper/homeHelper'
 
-describe('WorkEventDay search test', () => {
+test.describe('WorkEventDay search test', () => {
   test.beforeEach(async ({ page, baseURL }) => {
     await page.goto(baseURL as string)
     await goToHome(page)
 
-    page.getByRole('link', { name: 'calendar Calendrier' }).click()
+    await page.getByRole('link', { name: 'calendar Calendrier' }).click()
 
     await page.waitForSelector('#page-calendar-work-event-day', {
       state: 'visible',
@@ -21,7 +20,7 @@ describe('WorkEventDay search test', () => {
   }) => {
     const title = `Peinture recherche ${defaultBrowserType}`
 
-    page.getByTestId('open-modal-work-event-day').click()
+    await page.getByTestId('open-modal-work-event-day').click()
     await page.waitForSelector('#form-calendar')
     await page.locator('input[name="title"]').fill(title)
     await page.locator('input[name="startHours"]').fill('08:00')
@@ -42,7 +41,10 @@ describe('WorkEventDay search test', () => {
 
     const resultCount = page.getByTestId('search-work-event-day-count')
     await expect(resultCount).toBeVisible()
-    await expect(page.getByText(title)).toBeVisible()
+    // Scoped to the popup: the event is also listed in #calendar-events behind it
+    await expect(
+      page.locator('.popup-search-work-event-day').getByText(title),
+    ).toBeVisible()
 
     await page
       .locator('.popup-search-work-event-day select[name="export-format"]')

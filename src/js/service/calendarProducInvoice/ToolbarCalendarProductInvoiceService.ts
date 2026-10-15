@@ -1,10 +1,10 @@
 import type Framework7 from 'framework7'
 import type { Calendar } from 'framework7/components/calendar'
-import type ProductInvoiceInterface from '../../../intefaces/ProductInvoice/ProductInvoiceInterface.js'
-import { monthsEnum } from '../../enum/monthEnum.js'
-import { getProductsInvoicesByUser } from '../../productInvoice.js'
-import productInvoiceStore from '../../store/productInvoiceStore.js'
-import type Pagination from '../Pagination.ts'
+import type ProductInvoiceInterface from '../../../intefaces/ProductInvoice/ProductInvoiceInterface'
+import { monthsEnum } from '../../enum/monthEnum'
+import { getProductsInvoicesByUser } from '../../productInvoice'
+import productInvoiceStore from '../../store/productInvoiceStore'
+import type Pagination from '../Pagination'
 import type InvoicePaginatorService from '../productInvoices/InvoicePaginatorService'
 
 export default class ToolbarCalendarProductInvoiceService {

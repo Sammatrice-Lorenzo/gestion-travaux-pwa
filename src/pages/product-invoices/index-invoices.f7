@@ -215,7 +215,7 @@
                 <li>
                   <i class="f7-icons meta-icon">calendar</i>
                   <span class="meta-label">Date</span>
-                  <span class="meta-value">${new Date(invoice.date).toLocaleDateString('fr-FR')}</span>
+                  <span class="meta-value">${parseApiDate(invoice.date).toLocaleDateString('fr-FR')}</span>
                 </li>
                 <li>
                   <i class="f7-icons meta-icon">doc_text</i>
@@ -345,27 +345,27 @@
 </template>
 <script>
   import Framework7 from 'framework7/bundle'
-  import { loadTabbar } from '../../js/components/tabbar.js'
-  import { getProductsInvoicesByUser} from '../../js/productInvoice.js'
+  import { loadTabbar } from '../../js/components/tabbar'
+  import { getProductsInvoicesByUser} from '../../js/productInvoice'
   import DataTableProductInvoiceService from '../../js/service/productInvoices/DataTableProductInvoiceService'
   import { openPdfPreviewFromUrl } from '../../js/service/productInvoices/previewPdfService'
   import ProductInvoiceManagerService from '../../js/service/productInvoices/ProductInvoiceManagerService'
   import { createCalendar } from '../../js/service/calendar/calendarProductInvoiceInput'
-  import { createSheet } from '../../js/components/modalUploadFiles.ts'
+  import { createSheet } from '../../js/components/modalUploadFiles'
 
-  import { pdfPreviewPopup } from '../../js/components/pdfPreviewPopup.ts'
-  import { getMontYear } from '../../js/helper/date.ts'
-  import { sendEmail } from '../../js/service/mailService.ts'
-  import sheetModalProductInvoiceFormatter from '../../js/formatter/sheetModalProductInvoiceFormatter.ts'
-  import ProductInvoiceFormService from '../../js/service/productInvoices/ProductInvoiceFormService.ts'
+  import { pdfPreviewPopup } from '../../js/components/pdfPreviewPopup'
+  import { getMontYear, parseApiDate } from '../../js/helper/date'
+  import { sendEmail } from '../../js/service/mailService'
+  import sheetModalProductInvoiceFormatter from '../../js/formatter/sheetModalProductInvoiceFormatter'
+  import ProductInvoiceFormService from '../../js/service/productInvoices/ProductInvoiceFormService'
   import ToolbarCalendarProductInvoiceService from '../../js/service/calendarProducInvoice/ToolbarCalendarProductInvoiceService'
-  import ProductInvoiceFilterService from '../../js/service/productInvoices/ProductInvoiceFilterService.ts'
+  import ProductInvoiceFilterService from '../../js/service/productInvoices/ProductInvoiceFilterService'
   import ProductInvoiceFileManagement from '../../js/service/productInvoices/productInvoicesFile/ProductInvoiceFileManagement'
-  import InvoicePaginatorService from '../../js/service/productInvoices/InvoicePaginatorService.ts'
-  import Supplier from '../../js/Supplier.ts'
+  import InvoicePaginatorService from '../../js/service/productInvoices/InvoicePaginatorService'
+  import Supplier from '../../js/Supplier'
   import productInvoiceStore from '../../js/store/productInvoiceStore'
-  import Pagination from '../../js/service/Pagination.ts'
-  import { consumeHighlightedProductInvoiceId, navigateToLinkedSupplierReturn } from '../../js/service/supplierReturns/supplierReturnLinkedInvoiceHelper.ts'
+  import Pagination from '../../js/service/Pagination'
+  import { consumeHighlightedProductInvoiceId, navigateToLinkedSupplierReturn } from '../../js/service/supplierReturns/supplierReturnLinkedInvoiceHelper'
 
   const highlightLinkedProductInvoice = () => {
     const highlightId = consumeHighlightedProductInvoiceId()

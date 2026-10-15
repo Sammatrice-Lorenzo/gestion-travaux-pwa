@@ -1,4 +1,3 @@
-import { describe } from 'node:test'
 import { type Locator, type Page, expect, test } from '@playwright/test'
 import { goToHome } from './helper/homeHelper'
 
@@ -9,12 +8,12 @@ interface Box {
   height: number
 }
 
-describe('WorkEventDay test', () => {
+test.describe('WorkEventDay test', () => {
   test.beforeEach(async ({ page, baseURL }) => {
     await page.goto(baseURL as string)
     await goToHome(page)
 
-    page.getByRole('link', { name: 'calendar Calendrier' }).click()
+    await page.getByRole('link', { name: 'calendar Calendrier' }).click()
 
     await page.waitForSelector('#page-calendar-work-event-day', {
       state: 'visible',
@@ -34,13 +33,13 @@ describe('WorkEventDay test', () => {
       .first()
       .click()
 
-    expect(
-      await page.getByText("Pas d'événement ce jour").first(),
-    ).not.toBeNull()
+    await expect(
+      page.getByText("Pas d'événement ce jour").first(),
+    ).toBeVisible()
   })
 
   test('Create WorkEventDay', async ({ page, defaultBrowserType }) => {
-    page.getByTestId('open-modal-work-event-day').click()
+    await page.getByTestId('open-modal-work-event-day').click()
     await page.waitForSelector('#form-calendar')
 
     const title: string = `Présation du jour ${defaultBrowserType}`
@@ -83,7 +82,7 @@ const handleSumbitForm = async (
   await page.locator('#btn-send').click()
 
   await page.locator('.dialog-button').click()
-  expect(await page.getByText(title).first()).not.toBeNull()
+  await expect(page.getByText(title).first()).toBeVisible()
 }
 
 const handleSwipeout = async (page: Page): Promise<void> => {

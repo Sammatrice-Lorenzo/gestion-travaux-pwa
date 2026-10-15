@@ -1,6 +1,5 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { describe } from 'node:test'
 import {
   type ElementHandle,
   type Locator,
@@ -12,7 +11,7 @@ import { goToHome } from './helper/homeHelper'
 
 const NAME_FILE: string = 'facture_test.pdf'
 
-describe('Product Invoice test', () => {
+test.describe('Product Invoice test', () => {
   test.beforeEach(async ({ page, baseURL }) => {
     await page.goto(baseURL as string)
     await goToHome(page)
@@ -49,7 +48,7 @@ describe('Product Invoice test', () => {
       },
     ])
 
-    const sendButton: Locator = page.locator('#btn-send-files')
+    const sendButton: Locator = page.locator('#btn-send-form-product-invoices')
     await sendButton.click()
 
     await page.locator('.dialog-button').click()
@@ -82,13 +81,17 @@ describe('Product Invoice test', () => {
     await expect(page.locator('#popup-preview-pdf')).toBeVisible({
       timeout: 15000,
     })
+    // pdf.js actually rendered at least one page
+    await expect(
+      page.locator('#pdf-pages-container canvas').first(),
+    ).toBeVisible({ timeout: 15000 })
   })
 
   test('should delete a selected invoice', async ({ page }) => {
     const invoiceCard = await getInvoiceCard(page)
     const trashButton: Locator = invoiceCard.locator('.f7-icons:text("trash")')
     await expect(trashButton).toBeVisible({ timeout: 5000 })
-    trashButton.click()
+    await trashButton.click()
 
     const idProductInvoice = (await invoiceCard.getAttribute(
       'data-testid',

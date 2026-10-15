@@ -1,81 +1,81 @@
-# name: Playwright Tests
-# on:
-#   push:
-#     branches: [dev]
-#   pull_request:
-#     branches: [dev]
+name: Playwright Tests
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [dev]
 
-# concurrency:
-#   group: playwright-${{ github.workflow }}-${{ github.ref }}
-#   cancel-in-progress: true
+concurrency:
+  group: playwright-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
-# jobs:
-#   test:
-#     timeout-minutes: 35
-#     runs-on: ubuntu-latest
+jobs:
+  test:
+    timeout-minutes: 35
+    runs-on: ubuntu-latest
 
-#     services:
-#       mysql:
-#         image: mysql:8.4
-#         env:
-#           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-#           MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-#         ports:
-#           - 3306:3306
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+        ports:
+          - 3306:3306
 
-#     steps:
-#     - name: Checkout front
-#       uses: actions/checkout@v4
+    steps:
+    - name: Checkout front
+      uses: actions/checkout@v4
 
-#     - uses: actions/setup-node@v4
-#       with:
-#         node-version: lts/*
-#         cache: 'yarn'
+    - uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+        cache: 'yarn'
 
-#     - name: Install frontend dependencies
-#       run: yarn install --frozen-lockfile
+    - name: Install frontend dependencies
+      run: yarn install --frozen-lockfile
 
-#     - name: Install Playwright browsers
-#       uses: ./.github/actions/install-playwright
+    - name: Install Playwright browsers
+      uses: ./.github/actions/install-playwright
 
-#     - name: Checkout back
-#       uses: actions/checkout@v4
-#       with:
-#         repository: ${{ secrets.REPOSITORY_BACK }}
-#         ref: dev
-#         path: backend
+    - name: Checkout back
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ secrets.REPOSITORY_BACK }}
+        ref: dev
+        path: backend
 
-#     - name: Configure backend database
-#       shell: bash
-#       env:
-#         MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-#         MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-#       run: |
-#         echo "DATABASE_URL=mysql://root:${MYSQL_ROOT_PASSWORD}@127.0.0.1:3306/${MYSQL_DATABASE}" > backend/.env.test.local
-#         echo "APP_ENV=test" >> backend/.env.test.local
-#         echo "DATABASE_SERVER_VERSION=8.4" >> backend/.env.test.local
+    - name: Configure backend database
+      shell: bash
+      env:
+        MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+        MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+      run: |
+        echo "DATABASE_URL=mysql://root:${MYSQL_ROOT_PASSWORD}@127.0.0.1:3306/${MYSQL_DATABASE}" > backend/.env.test.local
+        echo "APP_ENV=test" >> backend/.env.test.local
+        echo "DATABASE_SERVER_VERSION=8.4" >> backend/.env.test.local
 
-#     - name: Setup backend
-#       uses: ./.github/actions/setup-backend
-#       with:
-#         backend_path: backend
+    - name: Setup backend
+      uses: ./.github/actions/setup-backend
+      with:
+        backend_path: backend
 
-#     - name: Run Backend
-#       run: |
-#         mkdir -p config/jwt
-#         cp backend/config/jwt/public.pem config/jwt/public.pem
-#         (cd backend && yarn test-front -d)
+    - name: Run Backend
+      run: |
+        mkdir -p config/jwt
+        cp backend/config/jwt/public.pem config/jwt/public.pem
+        (cd backend && yarn test-front -d)
 
-#     - uses: ./.github/actions/set-env-vars
-#     - name: Run Playwright tests
-#       run: yarn test:e2e
+    - uses: ./.github/actions/set-env-vars
+    - name: Run Playwright tests
+      run: yarn test:e2e
 
-#     - name: Upload Artifacts
-#       if: ${{ failure() }}
-#       uses: actions/upload-artifact@v4
-#       with:
-#         name: playwright-report
-#         path: |
-#           playwright-report/
-#           ./tests/test-results/
-#         retention-days: 3
+    - name: Upload Artifacts
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-report
+        path: |
+          playwright-report/
+          ./tests/test-results/
+        retention-days: 3

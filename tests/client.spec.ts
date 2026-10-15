@@ -1,4 +1,3 @@
-import { describe } from 'node:test'
 import {
   type ElementHandle,
   type Locator,
@@ -8,7 +7,7 @@ import {
 } from '@playwright/test'
 import { goToHome } from './helper/homeHelper'
 
-describe('Client test', () => {
+test.describe('Client test', () => {
   test.beforeEach(async ({ page, baseURL }) => {
     await page.goto(baseURL as string)
     await goToHome(page)
@@ -56,8 +55,9 @@ describe('Client test', () => {
 
     await page.locator('.dialog-button').click()
 
-    const element = await page.$(`text="${firstname} ${lastname}"`)
-    expect(element).not.toBeNull()
+    await expect(
+      page.getByText(`${firstname} ${lastname}`, { exact: true }).first(),
+    ).toBeVisible()
   })
 })
 

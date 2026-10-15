@@ -106,10 +106,10 @@
   import Framework7 from 'framework7/bundle';
   import Dom7 from 'dom7';
 
-  import { getPhoneNumberInString } from '../../js/helper/phoneNumberHelper.ts'
-  import { findClientById, deleteClient } from '../../js/client/client.js'
-  import { CONFIRMATION_TO_DELETE } from '../../js/messages.js'
-  import { loadTabbar } from '../../js/components/tabbar.js'
+  import { getPhoneNumberInString } from '../../js/helper/phoneNumberHelper'
+  import { findClientById, deleteClient } from '../../js/client/client'
+  import { CONFIRMATION_TO_DELETE } from '../../js/messages'
+  import { loadTabbar } from '../../js/components/tabbar'
 
   export default async (props, { $, $on, $f7 }) => {
     const $$ = Dom7

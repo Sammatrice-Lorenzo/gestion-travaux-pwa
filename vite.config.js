@@ -84,6 +84,8 @@ export default async () => {
         JWT_PUBLIC_KEY: publicKey,
         VAPID_KEY: env.VAPID_KEY,
         APP_VERSION: env.APP_VERSION,
+        SENTRY_DSN: env.SENTRY_DSN,
+        NODE_ENV: process.env.NODE_ENV,
       },
     },
   }
