@@ -1,6 +1,7 @@
 import type Framework7 from 'framework7'
 import type { Popup } from 'framework7/components/popup'
 import * as pdfjsLib from 'pdfjs-dist'
+import { reportError } from '../../errorMonitoring'
 import { getUrl } from '../../urlGenerator'
 import { apiCredentials } from '../SessionService'
 
@@ -68,6 +69,7 @@ async function openPdfPreviewFromUrl(
     }
   } catch (error) {
     console.error('Erreur lors du chargement du PDF:', error)
+    reportError(error)
     app.dialog.alert('Impossible de charger le PDF.')
   }
 }

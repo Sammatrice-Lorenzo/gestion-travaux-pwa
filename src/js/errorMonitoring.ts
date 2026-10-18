@@ -16,3 +16,9 @@ export function setupErrorMonitoring(): void {
     tracesSampleRate: 0,
   })
 }
+
+// Pour les erreurs attrapées dans un catch : sans cet appel elles ne remontent pas.
+// Sans effet si le monitoring n'est pas initialisé.
+export function reportError(error: unknown): void {
+  Sentry.captureException(error)
+}
