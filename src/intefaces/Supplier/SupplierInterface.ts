@@ -3,9 +3,9 @@ import type ProductInvoiceInterface from '../ProductInvoice/ProductInvoiceInterf
 export default interface SupplierInterface {
   id?: number | null
   name: string
-  address: string
-  city: string
-  country: string
+  address?: string | null
+  city?: string | null
+  country?: string | null
   phone?: string | null
   vatNumber?: string | null
   productInvoiceFiles?: ProductInvoiceInterface[]

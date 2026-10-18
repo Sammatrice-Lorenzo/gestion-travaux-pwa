@@ -31,25 +31,40 @@
               <div class="item-inner">
                 <div class="item-title-row">
                   <div class="item-title font-medium text-color-primary">${supplier.name}</div>
+                  ${!supplier.address ? $h`
+                  <div class="item-after">
+                    <span data-testid="supplier-to-complete" class="badge color-orange">À compléter</span>
+                  </div>
+                  ` : ''}
                 </div>
                 <div class="item-text">
+                  ${supplier.address ? $h`
                   <p class="no-margin">
                     <i class="icon f7-icons color-red">map_pin</i> ${supplier.address}
                   </p>
+                  ` : ''}
+                  ${supplier.city ? $h`
                   <p class="no-margin">
                     <i class="icon f7-icons color-red">map_pin</i> ${supplier.city}
                   </p>
+                  ` : ''}
+                  ${supplier.country ? $h`
                   <p class="no-margin">
                     <i class="icon f7-icons color-red">map_pin</i> ${supplier.country}
                   </p>
+                  ` : ''}
+                  ${supplier.phone ? $h`
                   <p class="no-margin">
                     <i class="icon f7-icons color-green">phone_fill</i>
                     <a href="tel:${supplier.phone}" class="link">${supplier.phone}</a>
                   </p>
+                  ` : ''}
+                  ${supplier.vatNumber ? $h`
                   <p class="no-margin">
                     <i class="icon f7-icons color-blue">envelope_fill</i>
                     <p class="link">${supplier.vatNumber}</p>
                   </p>
+                  ` : ''}
                 </div>
               </div>
             </a>

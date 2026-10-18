@@ -62,6 +62,38 @@ test.describe('Supplier test', () => {
     await fillFormSupplier(page, name)
     await assertInformationsForm(page, name)
   })
+
+  test('Form Supplier with only name', async ({ page, defaultBrowserType }) => {
+    await page
+      .locator('#index-suppliers')
+      .getByRole('link', { name: 'Ajouter plus_app_fill' })
+      .click()
+    await page.waitForSelector('#form-supplier')
+
+    const name: string = `Fournisseur sans adresse ${defaultBrowserType}`
+    await page.locator('input[name=name]').fill(name)
+    await page.getByRole('button').click()
+
+    await page.locator('.dialog-button').click()
+
+    const card: Locator = page
+      .locator('#index-suppliers .index-card')
+      .filter({ hasText: name })
+      .first()
+    await expect(card).toBeVisible()
+    await expect(card.getByTestId('supplier-to-complete')).toBeVisible()
+
+    await card.click()
+    await expect(page.locator('#show-suppliers')).toBeVisible({
+      timeout: 60000,
+    })
+    await expect(
+      page.locator('#show-suppliers').getByTestId('supplier-to-complete'),
+    ).toBeVisible()
+    await expect(
+      page.locator('#show-suppliers').getByText('Adresse'),
+    ).toHaveCount(0)
+  })
 })
 
 const assertInformationsForm = async (page: Page, elementToSearch: string) => {
