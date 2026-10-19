@@ -37,7 +37,7 @@
                   </div>
                   <div class="item-inner">
                     <div data-testid="name-supplier" class="item-title">${supplier.name}</div>
-                    ${!supplier.address ? $h`
+                    ${isSupplierToComplete(supplier) ? $h`
                     <div class="item-after">
                       <span data-testid="supplier-to-complete" class="badge color-orange">À compléter</span>
                     </div>
@@ -122,6 +122,7 @@
   import Dom7 from 'dom7';
 
   import { getPhoneNumberInString } from '../../js/helper/phoneNumberHelper'
+  import { isSupplierToComplete } from '../../js/helper/supplierHelper'
   import { CONFIRMATION_TO_DELETE } from '../../js/messages'
   import { loadTabbar } from '../../js/components/tabbar'
   import Supplier from '../../js/Supplier'

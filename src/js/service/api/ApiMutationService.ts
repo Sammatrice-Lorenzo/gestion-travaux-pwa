@@ -138,6 +138,40 @@ export class ApiMutationService {
     }
   }
 
+  /**
+   * Action traitée en différé par le serveur (réponse 202) : ni dialogue ni navigation, l'appelant affiche sa
+   * confirmation. Un refus (403) affiche le message renvoyé par l'API.
+   *
+   * @returns true si la demande a été acceptée
+   */
+  public async requestAsyncAction(routeDTO: RouteDTO): Promise<boolean> {
+    try {
+      const response = await fetch(routeDTO.getUrlAPI(), {
+        method: routeDTO.getMethod(),
+        credentials: apiCredentials,
+        headers: this.getHeaders(),
+        body: routeDTO.getBody(),
+      })
+
+      if (response.ok) {
+        return true
+      }
+
+      if (response.status === 403) {
+        const data = await response.json().catch(() => ({}))
+        toastError(this._app, data.message || messages.ERROR_SERVER)
+        return false
+      }
+
+      this.handleErrorResponse(response.status)
+      return false
+    } catch (error) {
+      console.error(error)
+      toastError(this._app, messages.ERROR_SERVER)
+      return false
+    }
+  }
+
   public async fetchJson<T>(routeDTO: RouteDTO): Promise<T[]> {
     try {
       const response = await fetch(routeDTO.getUrlAPI(), {

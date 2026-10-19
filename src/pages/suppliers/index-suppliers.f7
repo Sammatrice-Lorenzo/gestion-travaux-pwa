@@ -15,12 +15,19 @@
     <div class="page-content">
       <!-- Header Block -->
       <div class="block-title display-flex justify-content-space-between align-items-center">
-        <span class="text-lg font-bold">Mes fournisseurs</span>
+        <span class="text-lg font-bold">${onlyToComplete ? 'Fournisseurs à compléter' : 'Mes fournisseurs'}</span>
         <a href="/form-supplier/" class="button-small button-outline">
           <span class="ml-5">Ajouter</span>
           <i class="icon f7-icons">plus_app_fill</i>
         </a>
       </div>
+
+      ${onlyToComplete ? $h`
+      <div class="block display-flex justify-content-space-between align-items-center">
+        <span>${suppliers.length} fournisseur${suppliers.length > 1 ? 's' : ''} sans adresse</span>
+        <a data-testid="show-all-suppliers" href="/suppliers/" class="button button-small button-outline">Tous les fournisseurs</a>
+      </div>
+      ` : ''}
 
       <!-- Modern Supplier Cards List -->
       <div id="index-row-card" class="list list-strong-ios list-outline-ios media-list list-dividers-ios list-container">
@@ -31,7 +38,7 @@
               <div class="item-inner">
                 <div class="item-title-row">
                   <div class="item-title font-medium text-color-primary">${supplier.name}</div>
-                  ${!supplier.address ? $h`
+                  ${isSupplierToComplete(supplier) ? $h`
                   <div class="item-after">
                     <span data-testid="supplier-to-complete" class="badge color-orange">À compléter</span>
                   </div>
@@ -81,12 +88,17 @@
 
   import Supplier from '../../js/Supplier'
   import { loadTabbar } from '../../js/components/tabbar'
+  import { isSupplierToComplete } from '../../js/helper/supplierHelper'
 
-  export default async (props, { $, $on, $f7 }) => {
+  export default async (props, { $, $on, $f7, $f7route }) => {
     const supplier = new Supplier($f7)
 
+    // /suppliers/?toComplete=1 : uniquement les fournisseurs sans adresse (créés par l'import Qonto, par exemple)
+    const onlyToComplete = $f7route?.query?.toComplete === '1'
     const suppliersByUser = await supplier.getSuppliersByUser($f7)
-    let suppliers = suppliersByUser.reverse()
+    let suppliers = suppliersByUser
+      .reverse()
+      .filter((supplier) => !onlyToComplete || isSupplierToComplete(supplier))
 
     $on('pageInit', function (page) {
       loadTabbar('index-suppliers', $f7)
