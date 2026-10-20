@@ -4,6 +4,14 @@
       <div class="navbar-inner">
         <div class="title">Factures insérés</div>
         <div class="right">
+          <a
+            data-testid="qonto-sync-button"
+            class="link icon-only tooltip-init ${qontoSyncService.isRunning() ? 'disabled' : ''}"
+            data-tooltip="Synchroniser Qonto"
+            @click="${syncQonto}"
+          >
+            <i class="f7-icons">arrow_2_circlepath</i>
+          </a>
           <a class="link icon-only panel-open ripple-inset" data-panel="right">
             <i class="icon material-icons md-only">menu</i>
             <i class="icon f7-icons if-not-md">menu</i>
@@ -58,6 +66,19 @@
     <div class="page-content">
         
       <div class="block-title">Factures de vos produits de ${getMontYear(toolbarCalendarProductInvoiceService.getDate())}</div>
+
+      ${suppliersToComplete.length > 0 ? $h`
+        <div class="block">
+          <a
+            data-testid="suppliers-to-complete-link"
+            href="/suppliers/?toComplete=1"
+            class="button button-small button-tonal color-orange"
+          >
+            <i class="f7-icons">exclamationmark_circle</i>
+            <span>${suppliersToComplete.length} fournisseur${suppliersToComplete.length > 1 ? 's' : ''} à compléter</span>
+          </a>
+        </div>
+      ` : ''}
 
       <div class="block calendar-input-container-modern">
         <label for="calendar-input-product-invoice-file" class="calendar-product-invoice-label">
@@ -188,9 +209,14 @@
           <div data-testid="invoice-card-${invoice.id}" class="card invoice-card tooltip-init" data-id="${invoice.id}">
             <div class="card-content">
               <div class="card-header-row">
-                <span class="invoice-badge">
-                  <i class="f7-icons">doc_text</i>
-                  Facture
+                <span class="display-flex align-items-center" style="gap: 0.4rem;">
+                  <span class="invoice-badge">
+                    <i class="f7-icons">doc_text</i>
+                    Facture
+                  </span>
+                  ${invoice.source === productInvoiceSourceEnum.QONTO ? $h`
+                    <span data-testid="qonto-badge-${invoice.id}" class="badge color-purple">Qonto</span>
+                  ` : ''}
                 </span>
                 <a
                   class="link icon-only tooltip-init popover-open"
@@ -366,6 +392,9 @@
   import productInvoiceStore from '../../js/store/productInvoiceStore'
   import Pagination from '../../js/service/Pagination'
   import { consumeHighlightedProductInvoiceId, navigateToLinkedSupplierReturn } from '../../js/service/supplierReturns/supplierReturnLinkedInvoiceHelper'
+  import ProductInvoiceQontoSyncService from '../../js/service/productInvoices/ProductInvoiceQontoSyncService'
+  import { productInvoiceSourceEnum } from '../../js/enum/productInvoiceSourceEnum'
+  import { isSupplierToComplete } from '../../js/helper/supplierHelper'
 
   const highlightLinkedProductInvoice = () => {
     const highlightId = consumeHighlightedProductInvoiceId()
@@ -417,9 +446,33 @@
     const productInvoiceFileManagement = new ProductInvoiceFileManagement($f7)
     const productInvoiceManagerService = new ProductInvoiceManagerService($f7, toolbarCalendarProductInvoiceService)
     const supplierManager = new Supplier($f7)
-    const suppliers = await supplierManager.getSuppliersByUser()
+    let suppliers = await supplierManager.getSuppliersByUser()
+    let suppliersToComplete = suppliers.filter(isSupplierToComplete)
 
     toolbarCalendarProductInvoiceService.invoicePaginatorService = invoicePaginatorService
+
+    // La synchro crée des factures et des fournisseurs sans adresse : les deux listes sont rechargées,
+    // et la page est redessinée même si le rechargement échoue (bouton réactivé).
+    const refreshAfterQontoSync = async () => {
+      try {
+        suppliers = await supplierManager.getSuppliersByUser()
+        suppliersToComplete = suppliers.filter(isSupplierToComplete)
+        await toolbarCalendarProductInvoiceService.refreshProductInvoicesInDom($f7)
+        if (searchTerm || selectedSupplier) {
+          await refreshInvoices()
+        }
+      } finally {
+        await $update()
+      }
+    }
+    const qontoSyncService = new ProductInvoiceQontoSyncService($f7, refreshAfterQontoSync)
+
+    const syncQonto = async () => {
+      const synchronization = qontoSyncService.synchronize()
+      await $update()
+      await synchronization
+      await $update()
+    }
 
     const handleSearch = (value) => {
       searchTerm = value || ''
@@ -442,9 +495,14 @@
       navigateToLinkedSupplierReturn($f7, returnId, returnDate)
     }
 
+    $on('pageBeforeRemove', () => {
+      qontoSyncService.dispose()
+    })
+
     $on('pageInit', async function (page) {
       loadTabbar('index-invoices', $f7)
       createCalendar($f7, new Date(), toolbarCalendarProductInvoiceService)
+      qontoSyncService.resume()
 
       await productInvoiceManagerService.initializeProductInvoices(pagination, date, invoicePaginatorService)
       const invoices = productInvoiceStore.getters.getInvoices.value || []
