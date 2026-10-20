@@ -36,6 +36,27 @@ const createSheet = (
   const supplierBlock = suppliers?.length
     ? buildSupplierSelectHtml(suppliers)
     : ''
+  const fileHint =
+    sheetModal.fileHint ?? 'Appuyez pour choisir un ou plusieurs PDF'
+  // Champ à part : avec capture, le mobile ouvre l'appareil photo sans proposer de choisir un fichier.
+  const captureBlock = sheetModal.captureInputId
+    ? `
+            <div class="upload-sheet-file-wrap">
+              <label class="item-input item-input-outline upload-sheet-file-label">
+                <span class="upload-sheet-file-hint">
+                  <i class="f7-icons">camera_fill</i>
+                  Prendre une photo du ticket
+                </span>
+                <input
+                  id="${sheetModal.captureInputId}"
+                  type="file"
+                  name="${sheetModal.nameInput}"
+                  accept="image/*"
+                  capture="environment"
+                />
+              </label>
+            </div>`
+    : ''
 
   return app.sheet.create({
     content: `
@@ -55,7 +76,7 @@ const createSheet = (
             <p class="text-align-center text-color-gray upload-sheet-desc">${sheetModal.description}</p>
             <div class="upload-sheet-file-wrap">
               <label class="item-input item-input-outline upload-sheet-file-label">
-                <span class="upload-sheet-file-hint">Appuyez pour choisir un ou plusieurs PDF</span>
+                <span class="upload-sheet-file-hint">${fileHint}</span>
                 <input
                   id="${sheetModal.inputId}"
                   type="file"
@@ -65,6 +86,7 @@ const createSheet = (
                 />
               </label>
             </div>
+            ${captureBlock}
             ${supplierBlock}
             <div class="upload-sheet-actions">
               <a href="#" id="btn-send-${sheetModal.formId}" class="button button-fill button-small button-round upload-sheet-submit">
@@ -82,6 +104,13 @@ const createSheet = (
           sheetModal.inputId,
         ) as HTMLInputElement
         if (filesInput) filesInput.value = ''
+
+        const captureInput = sheetModal.captureInputId
+          ? (document.getElementById(
+              sheetModal.captureInputId,
+            ) as HTMLInputElement | null)
+          : null
+        if (captureInput) captureInput.value = ''
 
         const supplierSelect = document.getElementById(
           SUPPLIER_SELECT_ID,
