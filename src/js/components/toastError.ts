@@ -1,15 +1,12 @@
 import type Framework7 from 'framework7'
+import createToast from './toast'
 
 const toastError = (app: Framework7, text: string) => {
-  app.toast
-    .create({
-      text: text,
-      icon: '<i class="f7-icons">exclamationmark_triangle_fill</i>',
-      cssClass: 'bg-color-red text-color-white',
-      position: 'center',
-      closeTimeout: 2000,
-    })
-    .open()
+  createToast(app, text, {
+    icon: 'exclamationmark_triangle_fill',
+    cssClass: 'bg-color-red text-color-white',
+    closeTimeout: 2000,
+  })
 }
 
 export default toastError

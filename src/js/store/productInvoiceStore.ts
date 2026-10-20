@@ -4,6 +4,8 @@ import type ProductInvoiceInterface from '../../intefaces/ProductInvoice/Product
 interface StateProductInvoice {
   productInvoices: ProductInvoiceInterface[]
   filteredInvoices: ProductInvoiceInterface[]
+  /** Début de la synchro Qonto en cours (ms), partagé entre les instances de la page des factures */
+  qontoSyncStartedAt: number | null
 }
 
 type State = {
@@ -14,6 +16,7 @@ const productInvoiceStore = createStore({
   state: {
     productInvoices: [] as ProductInvoiceInterface[],
     filteredInvoices: [] as ProductInvoiceInterface[],
+    qontoSyncStartedAt: null as number | null,
   },
   getters: {
     getInvoices({ state }: State) {
@@ -21,6 +24,9 @@ const productInvoiceStore = createStore({
     },
     getFilteredInvoices({ state }: State) {
       return state.filteredInvoices
+    },
+    getQontoSyncStartedAt({ state }: State) {
+      return state.qontoSyncStartedAt
     },
     getInvoiceById:
       ({ state }: State) =>
@@ -50,6 +56,12 @@ const productInvoiceStore = createStore({
     },
     addInvoice({ state }: State, newInvoice: ProductInvoiceInterface) {
       state.productInvoices.push(newInvoice)
+    },
+    startQontoSync({ state }: State, startedAt: number) {
+      state.qontoSyncStartedAt = startedAt
+    },
+    endQontoSync({ state }: State) {
+      state.qontoSyncStartedAt = null
     },
     removeInvoice({ state }: State, id: number) {
       state.productInvoices = state.productInvoices.filter(

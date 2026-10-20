@@ -446,11 +446,26 @@
     const productInvoiceFileManagement = new ProductInvoiceFileManagement($f7)
     const productInvoiceManagerService = new ProductInvoiceManagerService($f7, toolbarCalendarProductInvoiceService)
     const supplierManager = new Supplier($f7)
-    const suppliers = await supplierManager.getSuppliersByUser()
-    const suppliersToComplete = suppliers.filter(isSupplierToComplete)
-    const qontoSyncService = new ProductInvoiceQontoSyncService($f7, toolbarCalendarProductInvoiceService)
+    let suppliers = await supplierManager.getSuppliersByUser()
+    let suppliersToComplete = suppliers.filter(isSupplierToComplete)
 
     toolbarCalendarProductInvoiceService.invoicePaginatorService = invoicePaginatorService
+
+    // La synchro crée des factures et des fournisseurs sans adresse : les deux listes sont rechargées,
+    // et la page est redessinée même si le rechargement échoue (bouton réactivé).
+    const refreshAfterQontoSync = async () => {
+      try {
+        suppliers = await supplierManager.getSuppliersByUser()
+        suppliersToComplete = suppliers.filter(isSupplierToComplete)
+        await toolbarCalendarProductInvoiceService.refreshProductInvoicesInDom($f7)
+        if (searchTerm || selectedSupplier) {
+          await refreshInvoices()
+        }
+      } finally {
+        await $update()
+      }
+    }
+    const qontoSyncService = new ProductInvoiceQontoSyncService($f7, refreshAfterQontoSync)
 
     const syncQonto = async () => {
       const synchronization = qontoSyncService.synchronize()
@@ -480,9 +495,14 @@
       navigateToLinkedSupplierReturn($f7, returnId, returnDate)
     }
 
+    $on('pageBeforeRemove', () => {
+      qontoSyncService.dispose()
+    })
+
     $on('pageInit', async function (page) {
       loadTabbar('index-invoices', $f7)
       createCalendar($f7, new Date(), toolbarCalendarProductInvoiceService)
+      qontoSyncService.resume()
 
       await productInvoiceManagerService.initializeProductInvoices(pagination, date, invoicePaginatorService)
       const invoices = productInvoiceStore.getters.getInvoices.value || []

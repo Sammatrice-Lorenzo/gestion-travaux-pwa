@@ -117,12 +117,27 @@ test.describe('Qonto sync', () => {
       message: 'Synchronisation lancée.',
     })
 
-    await page.getByTestId('qonto-sync-button').click()
+    const button: Locator = page.getByTestId('qonto-sync-button')
+    await button.click()
 
     await expect(page.locator('.toast')).toContainText(
       'Synchronisation Qonto lancée',
     )
+    // Pas de seconde synchro tant que la première est suivie
+    await expect(button).toHaveClass(/disabled/)
     expect(sync.calls).toBe(1)
+  })
+
+  test('shows the API Platform reason of a refusal', async ({ page }) => {
+    const reason = 'Une synchro est déjà en cours.'
+    await mockSync(page, 409, { 'hydra:description': reason })
+
+    await page.getByTestId('qonto-sync-button').click()
+
+    await expect(page.locator('.toast')).toContainText(reason)
+    await expect(page.getByTestId('qonto-sync-button')).not.toHaveClass(
+      /disabled/,
+    )
   })
 
   test('shows the reason when sync is refused', async ({ page }) => {

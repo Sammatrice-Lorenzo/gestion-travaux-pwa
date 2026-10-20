@@ -91,14 +91,14 @@
   import { isSupplierToComplete } from '../../js/helper/supplierHelper'
 
   export default async (props, { $, $on, $f7, $f7route }) => {
-    const supplier = new Supplier($f7)
+    const supplierManager = new Supplier($f7)
 
     // /suppliers/?toComplete=1 : uniquement les fournisseurs sans adresse (créés par l'import Qonto, par exemple)
     const onlyToComplete = $f7route?.query?.toComplete === '1'
-    const suppliersByUser = await supplier.getSuppliersByUser($f7)
+    const suppliersByUser = await supplierManager.getSuppliersByUser($f7)
     let suppliers = suppliersByUser
       .reverse()
-      .filter((supplier) => !onlyToComplete || isSupplierToComplete(supplier))
+      .filter((supplierRow) => !onlyToComplete || isSupplierToComplete(supplierRow))
 
     $on('pageInit', function (page) {
       loadTabbar('index-suppliers', $f7)

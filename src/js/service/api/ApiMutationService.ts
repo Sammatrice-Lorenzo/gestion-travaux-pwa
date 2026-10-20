@@ -8,6 +8,15 @@ import * as messages from '../../messages'
 import { getUrlById } from '../../urlGenerator'
 import { apiCredentials, clearSession, logout } from '../SessionService'
 
+interface SendOptions {
+  method?: string
+  url?: string | URL
+  headers?: HeadersInit
+  body?: BodyInit | null
+}
+
+const HTTP_ACCEPTED = 202
+
 export class ApiMutationService {
   private _dialog: Dialog.AppMethods['dialog']
   private _app: Framework7
@@ -24,15 +33,53 @@ export class ApiMutationService {
     }
   }
 
-  private handleErrorResponse(statusCode: number): void {
-    if (statusCode === 401) {
+  private send(
+    routeDTO: RouteDTO,
+    options: SendOptions = {},
+  ): Promise<Response> {
+    return fetch(options.url ?? routeDTO.getUrlAPI(), {
+      method: options.method ?? routeDTO.getMethod(),
+      credentials: apiCredentials,
+      headers: options.headers ?? this.getHeaders(),
+      body: options.body === undefined ? routeDTO.getBody() : options.body,
+    })
+  }
+
+  /**
+   * Raison renvoyée par l'API : format API Platform (hydra:description, detail) ou contrôleur Symfony (message).
+   */
+  private async getErrorMessage(response: Response): Promise<string> {
+    const data = await response.json().catch(() => null)
+
+    return (
+      data?.['hydra:description'] ||
+      data?.detail ||
+      data?.message ||
+      messages.ERROR_SERVER
+    )
+  }
+
+  /**
+   * 401 : session expirée, déconnexion. Autre 4xx : la raison donnée par l'API. 5xx : message générique.
+   */
+  private async handleErrorResponse(response: Response): Promise<void> {
+    const status = response.status
+
+    if (status === 401) {
       clearSession()
       this._dialog.alert(messages.TOKEN_EXPIRED, '', async () => {
         await logout(this._app)
       })
-    } else {
-      toastError(this._app, messages.ERROR_SERVER)
+      return
     }
+
+    const isClientError = status >= 400 && status < 500
+    toastError(
+      this._app,
+      isClientError
+        ? await this.getErrorMessage(response)
+        : messages.ERROR_SERVER,
+    )
   }
 
   private async handleResponse(
@@ -60,24 +107,14 @@ export class ApiMutationService {
       return null
     }
 
-    if (status === 422) {
-      const data = await response.json()
-      toastError(this._app, data['hydra:description'] || messages.ERROR_SERVER)
-      return
-    }
-
-    this.handleErrorResponse(status)
+    await this.handleErrorResponse(response)
   }
 
   public async post(routeDTO: RouteDTO, isFormData = false): Promise<void> {
-    const headers = isFormData ? {} : this.getHeaders()
-
     try {
-      const response = await fetch(routeDTO.getUrlAPI(), {
+      const response = await this.send(routeDTO, {
         method: 'POST',
-        credentials: apiCredentials,
-        headers,
-        body: routeDTO.getBody(),
+        headers: isFormData ? {} : this.getHeaders(),
       })
 
       await this.handleResponse(
@@ -92,16 +129,10 @@ export class ApiMutationService {
   }
 
   public async generic(routeDTO: RouteDTO): Promise<unknown> {
-    const method = routeDTO.getMethod()
-    const message = messages.getTypeMessageByMethodAPI(method)
+    const message = messages.getTypeMessageByMethodAPI(routeDTO.getMethod())
 
     try {
-      const response = await fetch(routeDTO.getUrlAPI(), {
-        method,
-        credentials: apiCredentials,
-        headers: this.getHeaders(),
-        body: routeDTO.getBody(),
-      })
+      const response = await this.send(routeDTO)
 
       return await this.handleResponse(
         response,
@@ -117,13 +148,12 @@ export class ApiMutationService {
   }
 
   public async delete(routeDTO: RouteDTO): Promise<void> {
-    const url = getUrlById(routeDTO.getUrlAPI(), routeDTO.getIdElement())
-
     try {
-      const response = await fetch(url, {
+      const response = await this.send(routeDTO, {
         method: 'DELETE',
-        credentials: apiCredentials,
+        url: getUrlById(routeDTO.getUrlAPI(), routeDTO.getIdElement()),
         headers: this.getHeaders('application/ld+json'),
+        body: null,
       })
 
       await this.handleResponse(
@@ -139,31 +169,27 @@ export class ApiMutationService {
   }
 
   /**
-   * Action traitée en différé par le serveur (réponse 202) : ni dialogue ni navigation, l'appelant affiche sa
-   * confirmation. Un refus (403) affiche le message renvoyé par l'API.
+   * Action traitée en différé par le serveur : seule une réponse 202 vaut acceptation. Ni dialogue ni navigation,
+   * l'appelant affiche sa confirmation ; un refus affiche la raison donnée par l'API.
    *
-   * @returns true si la demande a été acceptée
+   * @returns true si la demande a été acceptée (202)
    */
   public async requestAsyncAction(routeDTO: RouteDTO): Promise<boolean> {
     try {
-      const response = await fetch(routeDTO.getUrlAPI(), {
-        method: routeDTO.getMethod(),
-        credentials: apiCredentials,
-        headers: this.getHeaders(),
-        body: routeDTO.getBody(),
-      })
-
-      if (response.ok) {
+      const response = await this.send(routeDTO)
+      if (response.status === HTTP_ACCEPTED) {
         return true
       }
 
-      if (response.status === 403) {
-        const data = await response.json().catch(() => ({}))
-        toastError(this._app, data.message || messages.ERROR_SERVER)
+      if (response.ok) {
+        console.error(
+          `Réponse ${response.status} inattendue : 202 attendu pour une action différée.`,
+        )
+        toastError(this._app, messages.ERROR_SERVER)
         return false
       }
 
-      this.handleErrorResponse(response.status)
+      await this.handleErrorResponse(response)
       return false
     } catch (error) {
       console.error(error)
@@ -174,32 +200,12 @@ export class ApiMutationService {
 
   public async fetchJson<T>(routeDTO: RouteDTO): Promise<T[]> {
     try {
-      const response = await fetch(routeDTO.getUrlAPI(), {
-        method: routeDTO.getMethod(),
-        credentials: apiCredentials,
-        headers: this.getHeaders(),
-        body: routeDTO.getBody(),
-      })
-
+      const response = await this.send(routeDTO)
       if (response.status === 200) {
         return response.json()
       }
 
-      if (response.status === 401) {
-        this.handleErrorResponse(response.status)
-        return []
-      }
-
-      if (response.status === 422) {
-        const data = await response.json()
-        toastError(
-          this._app,
-          data['hydra:description'] || messages.ERROR_SERVER,
-        )
-        return []
-      }
-
-      toastError(this._app, messages.ERROR_SERVER)
+      await this.handleErrorResponse(response)
       return []
     } catch (error) {
       console.error(error)
@@ -210,12 +216,7 @@ export class ApiMutationService {
 
   public async download(routeDTO: RouteDTO, fileName: string): Promise<void> {
     try {
-      const response = await fetch(routeDTO.getUrlAPI(), {
-        method: routeDTO.getMethod(),
-        credentials: apiCredentials,
-        headers: this.getHeaders(),
-        body: routeDTO.getBody(),
-      })
+      const response = await this.send(routeDTO)
 
       if (response.status === 200) {
         const blob = await response.blob()
