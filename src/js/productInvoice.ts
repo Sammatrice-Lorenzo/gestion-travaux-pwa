@@ -1,6 +1,7 @@
 import Framework7 from 'framework7'
 import { checkDataToGetOfAResponseCached, responseIsCached } from './cache'
 import { RouteDTO } from './dto/RouteDTO'
+import sheetModalProductInvoiceFormatter from './formatter/sheetModalProductInvoiceFormatter'
 import { getMontYear, toDateLocalString } from './helper/date'
 import { ApiMutationService } from './service/api/ApiMutationService'
 import { ApiService } from './service/api/ApiService'
@@ -30,15 +31,27 @@ async function getProductsInvoicesByUser($f7, date) {
   return new ApiService($f7).call(url)
 }
 
+/**
+ * Fichiers choisis et photo prise avec l'appareil : tous partent dans la même requête.
+ *
+ * @returns { File[] }
+ */
+const getSelectedFiles = () => {
+  const { inputId, captureInputId } = sheetModalProductInvoiceFormatter
+
+  return [inputId, captureInputId]
+    .filter(Boolean)
+    .flatMap((id) => Array.from(document.getElementById(id)?.files ?? []))
+}
+
 async function createProductInvoices(date, app) {
-  const files = document.getElementById('files').files
+  const files = getSelectedFiles()
   const formattedDate = toDateLocalString(date)
 
   const url = getUrl(URL_PRODUCT_INVOICE)
-  const body = getBody(files, formattedDate)
   if (
     !handleSubmitFormInputFiles(
-      Object.fromEntries(body),
+      { date: formattedDate, files },
       formProductInvoiceFilesSchema,
       app,
     )
@@ -52,7 +65,7 @@ async function createProductInvoices(date, app) {
     .setApp(app)
     .setRoute(URL_TO_REDIRECT)
     .setUrlAPI(url)
-    .setBody(body)
+    .setBody(getBody(files, formattedDate))
     .setMethod('POST')
 
   await new ApiMutationService(app).post(routeDTO, true)

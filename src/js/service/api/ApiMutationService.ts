@@ -46,15 +46,20 @@ export class ApiMutationService {
   }
 
   /**
-   * Raison renvoyée par l'API : format API Platform (hydra:description, detail) ou contrôleur Symfony (message).
+   * Raison renvoyée par l'API : format API Platform (hydra:description, detail), contrôleur Symfony (message)
+   * ou liste d'erreurs de validation d'un DTO (errors).
    */
   private async getErrorMessage(response: Response): Promise<string> {
     const data = await response.json().catch(() => null)
+    const validationErrors = Array.isArray(data?.errors)
+      ? data.errors.join(' ')
+      : ''
 
     return (
       data?.['hydra:description'] ||
       data?.detail ||
       data?.message ||
+      validationErrors ||
       messages.ERROR_SERVER
     )
   }

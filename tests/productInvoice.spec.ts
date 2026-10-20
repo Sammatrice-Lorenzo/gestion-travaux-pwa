@@ -35,7 +35,7 @@ test.describe('Product Invoice test', () => {
     const uploadButton: Locator = page.locator('.fab-label-button').first()
     await uploadButton.click()
 
-    const fileInput: Locator = page.locator('input[type="file"]')
+    const fileInput: Locator = page.locator('#files')
     const fileBuffer: NonSharedBuffer = fs.readFileSync(
       path.resolve(__dirname, './data/InvoiceTemplate.pdf'),
     )
@@ -53,6 +53,53 @@ test.describe('Product Invoice test', () => {
 
     await page.locator('.dialog-button').click()
     await page.locator('.fab > a').click()
+  })
+
+  test('should upload a photo of a ticket', async ({ page }) => {
+    let uploadedBody = ''
+    await page.route(
+      (url) => url.pathname === '/api/product_invoice_files',
+      async (route) => {
+        if (route.request().method() !== 'POST') {
+          return route.continue()
+        }
+
+        uploadedBody = route.request().postData() ?? ''
+        return route.fulfill({
+          status: 201,
+          contentType: 'application/json',
+          body: '[]',
+        })
+      },
+    )
+
+    await openUploadSheet(page)
+    await page.locator('#files-photo').setInputFiles({
+      name: 'ticket.png',
+      mimeType: 'image/png',
+      buffer: PNG_1PX,
+    })
+    await page.locator('#btn-send-form-product-invoices').click()
+    await page.locator('.dialog-button').click()
+
+    expect(uploadedBody).toContain('filename="ticket.png"')
+    expect(uploadedBody).toContain('Content-Type: image/png')
+  })
+
+  test('should refuse a file that is neither a PDF nor a photo', async ({
+    page,
+  }) => {
+    await openUploadSheet(page)
+    await page.locator('#files').setInputFiles({
+      name: 'notes.txt',
+      mimeType: 'text/plain',
+      buffer: Buffer.from('pas une facture'),
+    })
+    await page.locator('#btn-send-form-product-invoices').click()
+
+    await expect(page.locator('.toast')).toContainText(
+      'Seuls les fichiers PDF et les photos',
+    )
   })
 
   test('should display product invoices and interact with UI', async ({
@@ -103,6 +150,17 @@ test.describe('Product Invoice test', () => {
     await expect(invoiceCardToDelete).toBeHidden({ timeout: 5000 })
   })
 })
+
+const PNG_1PX: Buffer = Buffer.from(
+  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==',
+  'base64',
+)
+
+const openUploadSheet = async (page: Page): Promise<void> => {
+  await page.locator('.fab > a').click()
+  await page.locator('.fab-label-button').first().click()
+  await expect(page.locator('#btn-send-form-product-invoices')).toBeVisible()
+}
 
 const getInvoiceCard = async (page: Page): Promise<Locator> => {
   const invoiceCard = page.locator('.invoice-card').first()
