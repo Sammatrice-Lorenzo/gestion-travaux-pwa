@@ -10,15 +10,16 @@ export const supplierSchema = z.object({
     .string()
     .min(1, { message: 'Le nom du fournisseur est obligatoire.' }),
 
-  address: z.string().min(1, { message: "L'adresse est obligatoire." }),
+  address: z.string().nullable().optional(),
 
-  city: z.string().min(1, { message: 'La ville est obligatoire.' }),
+  city: z.string().nullable().optional(),
 
-  country: z.string().min(1, { message: 'Le pays est obligatoire.' }),
+  country: z.string().nullable().optional(),
 
   phone: z
     .string()
     .regex(phoneRegex, { message: 'Numéro de téléphone invalide.' })
+    .or(z.literal(''))
     .nullable()
     .optional(),
 

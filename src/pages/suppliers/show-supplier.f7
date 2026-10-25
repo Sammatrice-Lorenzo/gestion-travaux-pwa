@@ -37,9 +37,15 @@
                   </div>
                   <div class="item-inner">
                     <div data-testid="name-supplier" class="item-title">${supplier.name}</div>
+                    ${isSupplierToComplete(supplier) ? $h`
+                    <div class="item-after">
+                      <span data-testid="supplier-to-complete" class="badge color-orange">À compléter</span>
+                    </div>
+                    ` : ''}
                   </div>
                 </div>
               </li>
+              ${supplier.address ? $h`
               <li>
                 <div class="item-content">
                   <div class="item-media">
@@ -51,6 +57,8 @@
                   </div>
                 </div>
               </li>
+              ` : ''}
+              ${supplier.city ? $h`
               <li>
                 <div class="item-content">
                   <div class="item-media">
@@ -62,6 +70,8 @@
                   </div>
                 </div>
               </li>
+              ` : ''}
+              ${supplier.country ? $h`
               <li>
                 <div class="item-content">
                   <div class="item-media">
@@ -73,6 +83,8 @@
                   </div>
                 </div>
               </li>
+              ` : ''}
+              ${supplier.phone ? $h`
               <li>
                 <div class="item-content">
                   <div class="item-media">
@@ -84,6 +96,8 @@
                   </div>
                 </div>
               </li>
+              ` : ''}
+              ${supplier.vatNumber ? $h`
               <li>
                 <div class="item-content">
                   <div class="item-media">
@@ -95,6 +109,7 @@
                   </div>
                 </div>
               </li>
+              ` : ''}
             </ul>
           </div>
         </div>
@@ -107,6 +122,7 @@
   import Dom7 from 'dom7';
 
   import { getPhoneNumberInString } from '../../js/helper/phoneNumberHelper'
+  import { isSupplierToComplete } from '../../js/helper/supplierHelper'
   import { CONFIRMATION_TO_DELETE } from '../../js/messages'
   import { loadTabbar } from '../../js/components/tabbar'
   import Supplier from '../../js/Supplier'

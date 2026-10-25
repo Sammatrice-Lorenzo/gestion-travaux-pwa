@@ -87,11 +87,11 @@ export default class Supplier {
   private getBody(form: SupplierInterface): string {
     return JSON.stringify({
       name: form.name,
-      address: form.address,
-      city: form.city,
-      country: form.country,
-      phone: form.phone,
-      vatNumber: form.vatNumber,
+      address: form.address || null,
+      city: form.city || null,
+      country: form.country || null,
+      phone: form.phone || null,
+      vatNumber: form.vatNumber || null,
     })
   }
 }
