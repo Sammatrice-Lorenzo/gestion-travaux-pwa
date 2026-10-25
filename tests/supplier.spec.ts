@@ -91,7 +91,7 @@ test.describe('Supplier test', () => {
       page.locator('#show-suppliers').getByTestId('supplier-to-complete'),
     ).toBeVisible()
     await expect(
-      page.locator('#show-suppliers').getByText('Adresse'),
+      page.locator('#show-suppliers').getByText('Adresse', { exact: true }),
     ).toHaveCount(0)
   })
 })
